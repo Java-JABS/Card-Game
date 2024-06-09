@@ -1,4 +1,4 @@
-package server;
+package hokm.server;
 
 public class Game {
     final String token;

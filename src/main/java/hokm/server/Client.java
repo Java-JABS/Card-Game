@@ -1,4 +1,4 @@
-package server;
+package hokm.server;
 
 import java.io.*;
 import java.net.Socket;

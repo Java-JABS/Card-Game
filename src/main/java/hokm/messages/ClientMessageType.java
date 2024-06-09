@@ -1,4 +1,4 @@
-package messages;
+package hokm.messages;
 
 public enum ClientMessageType {
     ;
