@@ -2,9 +2,10 @@ package messages;
 
 public enum ClientMessageType {
     ;
+
     <T extends ClientMessage> ClientMessageType(Class<T> className) {
-        this.className = (Class<ClientMessage>) className;
+        this.className = className;
     }
 
-    final public Class<ClientMessage> className;
+    final public Class<? extends ClientMessage> className;
 }
