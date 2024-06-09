@@ -6,4 +6,5 @@ public class Game {
     public Game(String token) {
         this.token = token;
     }
+    void joinClient(Client client){}
 }
