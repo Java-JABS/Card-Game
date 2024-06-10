@@ -6,7 +6,7 @@ import java.util.Collections;
 public class Dast extends ArrayList<Card> {
     public boolean contains(CardsSuit suit) {
         for (Card card : this) {
-            if (card.cardSuit == suit) return true;
+            if (card.suit == suit) return true;
         }
         return false;
     }

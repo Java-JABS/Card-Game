@@ -1,12 +1,12 @@
 package hokm;
 
 public class Card {
-    public final CardsSuit cardSuit;
-    public final CardValues card;
+    public final CardsSuit suit;
+    public final CardValues value;
 
-    public Card(CardValues card, CardsSuit cardSuit) {
-        this.card = card;
-        this.cardSuit = cardSuit;
+    public Card(CardValues value, CardsSuit suit) {
+        this.value = value;
+        this.suit = suit;
     }
 }
 
