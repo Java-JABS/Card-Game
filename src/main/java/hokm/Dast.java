@@ -11,10 +11,15 @@ public class Dast extends ArrayList<Card> {
         return false;
     }
 
-    Card pop(int index) {
+    public Card pop(int index) {
         Card card = get(index);
         remove(index);
         return card;
+    }
+
+    public Card pop(Card card) {
+        int index = indexOf(card);
+        return (index == -1) ? null : pop(index);
     }
 
     Dast popFromStart(int size) {
