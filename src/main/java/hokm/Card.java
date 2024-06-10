@@ -1,10 +1,8 @@
 package hokm;
 
+import java.util.Collections;
 
-
-import java.util.ArrayList;
-
-public class Card  {
+public class Card {
     public final CardsSuit cardSuit;
     public final CardValues card;
 
@@ -12,13 +10,15 @@ public class Card  {
         this.card = card;
         this.cardSuit = cardSuit;
     }
-    static ArrayList<Card> getCards(){
-        ArrayList<Card> result = new ArrayList<>();
-        for (CardsSuit suit : CardsSuit.values()){
-            for (CardValues cardValues : CardValues.values()){
+
+    public static Dast getCards() {
+        Dast result = new Dast();
+        for (CardsSuit suit : CardsSuit.values()) {
+            for (CardValues cardValues : CardValues.values()) {
                 result.add(new Card(cardValues, suit));
             }
         }
+        Collections.shuffle(result);
         return result;
     }
 }
