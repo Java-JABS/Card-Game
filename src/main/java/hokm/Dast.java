@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Dast extends ArrayList<Card> {
-    boolean contains(CardsSuit suit) {
+    public boolean contains(CardsSuit suit) {
         for (Card card : this) {
             if (card.cardSuit == suit) return true;
         }
@@ -22,7 +22,7 @@ public class Dast extends ArrayList<Card> {
         return (index == -1) ? null : pop(index);
     }
 
-    Dast popFromStart(int size) {
+    public Dast popFromStart(int size) {
         Dast result = new Dast();
         for (int i = 0; i < size; i++) {
             result.add(this.get(i));
