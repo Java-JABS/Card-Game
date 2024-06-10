@@ -17,6 +17,15 @@ public class Dast extends ArrayList<Card> {
         return card;
     }
 
+    Dast popFromStart(int size) {
+        Dast result = new Dast();
+        for (int i = 0; i < size; i++) {
+            result.add(this.get(i));
+        }
+        this.removeRange(0, size);
+        return result;
+    }
+
     public Dast() {
 
     }
