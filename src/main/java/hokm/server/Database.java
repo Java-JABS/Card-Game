@@ -32,12 +32,16 @@ public class Database {
             return null;
         }
     }
-    void createUser(String username ,String token){
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (username, token) VALUES (?, ?);")) {
-            preparedStatement.setString(1,username);
-            preparedStatement.setString(2,token);
+
+    boolean createUser(String username, String token) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (username, token) VALUES (?, ?);")) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, token);
             ResultSet resultSet = preparedStatement.executeQuery();
+            return true;
         } catch (SQLException e) {
+            if (e.getErrorCode() == 1)
+                return false;
             throw new RuntimeException(e);
         }
     }

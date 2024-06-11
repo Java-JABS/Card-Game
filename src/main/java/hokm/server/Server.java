@@ -5,10 +5,13 @@ import com.google.gson.GsonBuilder;
 import hokm.messages.ClientRequest;
 import hokm.messages.ClientRequestType;
 import hokm.messages.JoinRequest;
+import hokm.messages.RegisterRequest;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -21,6 +24,8 @@ public class Server extends Thread {
     private static final Gson gsonAgent = builder.create();
     private DataOutputStream sendBuffer;
     private DataInputStream receiveBuffer;
+    private static Database database;
+
     @Override
     public void run() {
         Socket socket;
@@ -58,6 +63,9 @@ public class Server extends Thread {
             ClientRequest msg = (ClientRequest) gsonAgent
                     .fromJson(clientRequestJson, gsonAgent.fromJson(clientRequestJson, ClientRequest.class).getType().className);
             switch (msg.getType()){
+                case REGISTER:
+                    registerUser((RegisterRequest)msg);
+                    break;
                 case JOIN:
                     //Todo
                     break;
@@ -73,7 +81,7 @@ public class Server extends Thread {
             e.printStackTrace();
         }
     }
-    public void listen() throws IOException {
+    private void listen() throws IOException {
         Socket socket;
         while (true) {
             socket = serverSocket.accept();
@@ -84,7 +92,8 @@ public class Server extends Thread {
         }
     }
 
-    private Server(ServerSocket serverSocket, int workerNumbs) throws IOException {
+    private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
+        database=new Database("database.db");
         Server.serverSocket = serverSocket;
         for (int i = 0; i < workerNumbs; i++) {
             new Server().start();
@@ -95,24 +104,11 @@ public class Server extends Thread {
     private Server() {
     }
 
-    static void runInstance(int port) {
+    public static void runInstance(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             new Server(serverSocket, 10);
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    void createGame(Client client) {
-        Game newGame = new Game(tokenGenerator());
-        games.put(newGame.token, newGame);
-        newGame.joinClient(client);
-    }
-
-    void joinGame(Client client, String token) {
-        Game game;
-        if ((game = games.get(token)) != null) {
-            game.joinClient(client);
         }
     }
 
@@ -124,5 +120,16 @@ public class Server extends Thread {
             token.append("a").append(random.nextInt(26));
         }
         return token.toString();
+    }
+    private void registerUser(RegisterRequest request){
+                String token = DigestUtils.sha256Hex(request.getUsername()+tokenGenerator());
+        try{
+            database.createUser(request.getUsername(), token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // Todo write outputbuffer
+
     }
 }
