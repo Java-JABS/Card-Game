@@ -8,30 +8,30 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
-    // Todo make all these variables private
-    CardsSuit hokm;
-    Player hakem;
-    Player currentPlayer;
-    ArrayList<Player> players = new ArrayList<>();
-    Dast onTableCards;
-    Random random = new Random();
-    Dast dast;
-    Team[] teams = {new Team(), new Team()};
+    private CardsSuit hokm;
+    private Player hakem;
+    private Player currentPlayer;
+    private final ArrayList<Player> players;
+    private Dast onTableCards;
+    private Random random = new Random();
+    private Dast dast;
+    private Team[] teams = {new Team(), new Team()};
 
     public Game(ArrayList<Player> players) {
         if (players.size() != 4) throw new IllegalArgumentException();
+        this.players= new ArrayList<>(players);
         // set next hakem
         newSet(players.get(random.nextInt(3)));
     }
 
-    void newSet(Player hakem) {
+    private void newSet(Player hakem) {
         if (!players.contains(hakem)) throw new RuntimeException();
         dast = new Dast(true);
         hakem.dast.addAll(dast.popFromStart(5));
         this.hakem = hakem;
     }
 
-    boolean newRound() {
+    public boolean newRound() {
         Card highestCard = null;
         boolean isHokmPlayed = false;
         for (Card card : onTableCards) {
@@ -53,7 +53,7 @@ public class Game {
         return false;
     }
 
-    boolean putCard(Player player, Card card) throws Exception {
+    public boolean putCard(Player player, Card card) throws Exception {
         if (!players.contains(player)) throw new Exception();
         if (!player.dast.contains(card)) throw new Exception();
         if (onTableCards.size() == 4) throw new Exception();
@@ -65,7 +65,7 @@ public class Game {
         return onTableCards.size() == 4;
     }
 
-    void hokm(Player player, CardsSuit hokm) throws Exception {
+    public void hokm(Player player, CardsSuit hokm) throws Exception {
         if (!players.contains(player)) throw new Exception();
         if (player != hakem) throw new Exception();
         if (hokm != null) throw new Exception();
