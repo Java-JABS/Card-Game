@@ -20,7 +20,7 @@ public class Team {
     public void kot(){
         this.round += 2;
     }
-    public void hakemKot(){
+    public void rulerKot(){
         this.round += 3;
     }
     public void clearRound(){

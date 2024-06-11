@@ -8,34 +8,34 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
-    private CardsSuit hokm;
-    private Player hakem;
+    private CardsSuit rule;
+    private Player ruler;
     private Player currentPlayer;
     private final ArrayList<Player> players;
     private Dast onTableCards;
-    private Random random = new Random();
     private Dast dast;
-    private Team[] teams = {new Team(), new Team()};
+    private final Team[] teams = {new Team(), new Team()};
 
     public Game(ArrayList<Player> players) {
         if (players.size() != 4) throw new IllegalArgumentException();
         this.players= new ArrayList<>(players);
-        // set next hakem
+        // set next ruler
+        Random random = new Random();
         newSet(players.get(random.nextInt(3)));
     }
 
-    private void newSet(Player hakem) {
-        if (!players.contains(hakem)) throw new RuntimeException();
+    private void newSet(Player ruler) {
+        if (!players.contains(ruler)) throw new RuntimeException();
         dast = new Dast(true);
-        hakem.dast.addAll(dast.popFromStart(5));
-        this.hakem = hakem;
+        ruler.dast.addAll(dast.popFromStart(5));
+        this.ruler = ruler;
     }
 
     public boolean newRound() {
         Card highestCard = null;
         boolean isHokmPlayed = false;
         for (Card card : onTableCards) {
-            if (card.suit == hokm && !isHokmPlayed) {
+            if (card.suit == rule && !isHokmPlayed) {
                 highestCard = card;
                 isHokmPlayed = true;
             }
@@ -67,12 +67,12 @@ public class Game {
 
     public void hokm(Player player, CardsSuit hokm) throws Exception {
         if (!players.contains(player)) throw new Exception();
-        if (player != hakem) throw new Exception();
+        if (player != ruler) throw new Exception();
         if (hokm != null) throw new Exception();
-        this.hokm = hokm;
-        hakem.dast.addAll(dast.popFromStart(8));
+        this.rule = hokm;
+        ruler.dast.addAll(dast.popFromStart(8));
         for (Player playerI : players)
-            if (playerI != hakem) playerI.dast.addAll(dast.popFromStart(13));
+            if (playerI != ruler) playerI.dast.addAll(dast.popFromStart(13));
     }
 
 
