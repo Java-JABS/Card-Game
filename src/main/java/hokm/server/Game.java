@@ -16,11 +16,7 @@ public class Game {
     Dast onTableCards;
     Random random = new Random();
     Dast dast;
-
-    int team1Goals = 0;
-    int team2Goals = 0;
-    int Team1set = 0;
-    int Team2set = 0;
+    Team[] teams = {new Team(), new Team()};
 
     public Game(ArrayList<Player> players) {
         if (players.size() != 4) throw new IllegalArgumentException();
@@ -43,17 +39,13 @@ public class Game {
                 highestCard = card;
                 isHokmPlayed = true;
             }
-            if (highestCard == null) highestCard = card;
+            else if (highestCard == null) highestCard = card;
             else if (card.suit == highestCard.suit && card.value.number > highestCard.value.number) highestCard = card;
         }
         int indexWinnerPlayer = (players.indexOf(currentPlayer) + 1 + onTableCards.indexOf(highestCard)) % 4;
-        if (indexWinnerPlayer % 2 == 0) {
-            team1Goals++;
-        } else {
-            team2Goals++;
-        }
+        teams[indexWinnerPlayer % 2].round();
         currentPlayer = players.get(indexWinnerPlayer);
-        if (team1Goals == 7 || team2Goals == 7) {
+        if (teams[0].getRound() == 7 ||teams[1].getRound() == 7) {
             //Todo:endgame
             return true;
         }
