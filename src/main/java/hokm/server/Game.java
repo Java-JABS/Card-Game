@@ -16,22 +16,26 @@ public class Game {
     Dast onTableCards;
     Random random = new Random();
     Dast dast;
+
     int team1Goals = 0;
     int team2Goals = 0;
+    int Team1set = 0;
+    int Team2set = 0;
 
     public Game(ArrayList<Player> players) {
         if (players.size() != 4) throw new IllegalArgumentException();
-        newBigRound(players.get(random.nextInt(3)));
+        // set next hakem
+        newSet(players.get(random.nextInt(3)));
     }
 
-    void newBigRound(Player hakem) {
+    void newSet(Player hakem) {
         if (!players.contains(hakem)) throw new RuntimeException();
         dast = new Dast(true);
         hakem.dast.addAll(dast.popFromStart(5));
         this.hakem = hakem;
     }
 
-    boolean newSmallRound() {
+    boolean newRound() {
         Card highestCard = null;
         boolean isHokmPlayed = false;
         for (Card card : onTableCards) {
