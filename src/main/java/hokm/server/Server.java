@@ -3,9 +3,8 @@ package hokm.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import hokm.messages.ClientRequest;
-import hokm.messages.ClientRequestType;
-import hokm.messages.JoinRequest;
 import hokm.messages.RegisterRequest;
+import hokm.messages.ServerResponse;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
@@ -42,7 +41,7 @@ public class Server extends Thread {
                 clientRequests.remove(0);
             }
             if (socket != null) {
-                //Todo handleConnection(socket);
+                handleConnection(socket);
             }
         }
     }
@@ -121,15 +120,30 @@ public class Server extends Thread {
         }
         return token.toString();
     }
-    private void registerUser(RegisterRequest request){
-                String token = DigestUtils.sha256Hex(request.getUsername()+tokenGenerator());
-        try{
-            database.createUser(request.getUsername(), token);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+    private void registerUser(RegisterRequest request) {
+        String token = DigestUtils.sha256Hex(request.getUsername() + tokenGenerator());
+        if (database.createUser(request.getUsername(), token)) {
+            sendResponse(true, token);
+        } else {
+            sendResponse(false);
         }
 
         // Todo write outputbuffer
 
+    }
+
+    private void sendResponse(boolean success, String problem) {
+        ServerResponse response = new ServerResponse(success, problem);
+        String responseString = gsonAgent.toJson(response);
+        try {
+            sendBuffer.writeUTF(responseString);
+        } catch (IOException e) {
+            // Todo : handle connection lost
+        }
+    }
+
+    private void sendResponse(boolean success) {
+        sendResponse(success, null);
     }
 }
