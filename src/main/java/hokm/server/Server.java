@@ -2,9 +2,7 @@ package hokm.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import hokm.messages.ClientRequest;
-import hokm.messages.RegisterRequest;
-import hokm.messages.ServerResponse;
+import hokm.messages.*;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
@@ -24,6 +22,8 @@ public class Server extends Thread {
     private DataOutputStream sendBuffer;
     private DataInputStream receiveBuffer;
     private static Database database;
+    private static final HashMap<String, Player> players = new HashMap<>();
+    private static final HashMap<String, Player> rooms = new HashMap<>();
 
     @Override
     public void run() {
@@ -61,15 +61,18 @@ public class Server extends Thread {
             clientRequestJson = receiveBuffer.readUTF();
             ClientRequest msg = (ClientRequest) gsonAgent
                     .fromJson(clientRequestJson, gsonAgent.fromJson(clientRequestJson, ClientRequest.class).getType().className);
-            switch (msg.getType()){
+            switch (msg.getType()) {
                 case REGISTER:
-                    registerUser((RegisterRequest)msg);
+                    registerUser((RegisterRequest) msg);
+                    break;
+                case LOGIN:
+                    loginUser((LoginRequest) msg);
                     break;
                 case JOIN:
-                    //Todo
+                    joinGame((JoinRequest) msg);
                     break;
                 case GAME_CREATE:
-                    //Todo
+                    createRoom((GameCreateRequest) msg);
                     break;
             }
 
@@ -128,9 +131,49 @@ public class Server extends Thread {
         } else {
             sendResponse(false);
         }
+    }
 
-        // Todo write outputbuffer
+    private void loginUser(LoginRequest request) {
+        String username;
+        if ((username = database.getUsername(request.getToken())) != null) {
+            sendResponse(true, username);
+        } else {
+            sendResponse(false);
+        }
+    }
 
+    private void createRoom(GameCreateRequest request) {
+        if (!checkLoggedIn(request)) return;
+        Player player = new Player(request.getToken());
+        if (rooms.containsValue(player))
+            sendResponse(false, "You are already in a room");
+        else {
+            String gameToken = tokenGenerator();
+            rooms.put(gameToken, player);
+            sendResponse(true, gameToken);
+        }
+    }
+
+    private boolean checkLoggedIn(ClientRequest request) {
+        if (!players.containsKey(request.getToken())) {
+            if (database.getUsername(request.getToken()) != null) {
+                players.put(request.getToken(), new Player(request.getToken()));
+                return true;
+            }
+            sendResponse(false,"You are not signed in!");
+            return false;
+        }
+        return true;
+    }
+
+    private void joinGame(JoinRequest request) {
+        if (!checkLoggedIn(request)) return;
+        if (!games.containsKey(request.getGameToken())) {
+            sendResponse(false, "Game doesn't exists!");
+        } else {
+            rooms.put(request.getToken(),players.get(request.getToken()));
+            sendResponse(true);
+        }
     }
 
     private void sendResponse(boolean success, String problem) {
