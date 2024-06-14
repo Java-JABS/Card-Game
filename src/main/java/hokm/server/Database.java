@@ -21,10 +21,10 @@ public class Database {
         }
     }
 
-    String getToken(String username) {
+    String getUsername(String token) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT token FROM users WHERE username = ?")) {
-            preparedStatement.setString(1, username);
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT username FROM users WHERE token = ?")) {
+            preparedStatement.setString(1, token);
             ResultSet resultSet = preparedStatement.executeQuery();
             return (resultSet.next()) ? resultSet.getString(1) : null;
 
