@@ -15,15 +15,15 @@ import java.util.Random;
 
 public class Server extends Thread {
     private static final ArrayList<Socket> clientRequests = new ArrayList<>();
-    private static final HashMap<String, Game> games = new HashMap<>();
     private static ServerSocket serverSocket;
     private static final GsonBuilder builder = new GsonBuilder();
     private static final Gson gsonAgent = builder.create();
     private DataOutputStream sendBuffer;
     private DataInputStream receiveBuffer;
     private static Database database;
-    private static final HashMap<String, Player> players = new HashMap<>();
-    private static final HashMap<String, Player> rooms = new HashMap<>();
+    private static final HashMap<String, Game> games = new HashMap<>();
+    private static final HashMap<String, Room> rooms = new HashMap<>();
+    private static final HashMap<String, Player> playersByToken = new HashMap<>();
 
     @Override
     public void run() {
@@ -69,7 +69,7 @@ public class Server extends Thread {
                     loginUser((LoginRequest) msg);
                     break;
                 case JOIN:
-                    joinGame((JoinRequest) msg);
+                    joinRoom((JoinRequest) msg);
                     break;
                 case GAME_CREATE:
                     createRoom((GameCreateRequest) msg);
@@ -83,6 +83,7 @@ public class Server extends Thread {
             e.printStackTrace();
         }
     }
+
     private void listen() throws IOException {
         Socket socket;
         while (true) {
@@ -95,7 +96,7 @@ public class Server extends Thread {
     }
 
     private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
-        database=new Database("database.db");
+        database = new Database("database.db");
         Server.serverSocket = serverSocket;
         for (int i = 0; i < workerNumbs; i++) {
             new Server().start();
@@ -143,35 +144,35 @@ public class Server extends Thread {
     }
 
     private void createRoom(GameCreateRequest request) {
-        if (!checkLoggedIn(request)) return;
-        Player player = new Player(request.getToken());
+        if (isNotSignedUp(request)) return;
+        /*Player player = new Player(request.getToken());
         if (rooms.containsValue(player))
             sendResponse(false, "You are already in a room");
         else {
             String gameToken = tokenGenerator();
             rooms.put(gameToken, player);
             sendResponse(true, gameToken);
-        }
+        }*/
     }
 
-    private boolean checkLoggedIn(ClientRequest request) {
-        if (!players.containsKey(request.getToken())) {
+    private boolean isNotSignedUp(ClientRequest request) {
+        if (!playersByToken.containsKey(request.getToken())) {
             if (database.getUsername(request.getToken()) != null) {
-                players.put(request.getToken(), new Player(request.getToken()));
-                return true;
+                playersByToken.put(request.getToken(), new Player(request.getToken()));
+                return false;
             }
-            sendResponse(false,"You are not signed in!");
-            return false;
+            sendResponse(false, "You are not signed up!");
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private void joinGame(JoinRequest request) {
-        if (!checkLoggedIn(request)) return;
+    private void joinRoom(JoinRequest request) {
+        if (isNotSignedUp(request)) return;
         if (!games.containsKey(request.getGameToken())) {
             sendResponse(false, "Game doesn't exists!");
         } else {
-            rooms.put(request.getToken(),players.get(request.getToken()));
+            /*rooms.put(request.getToken(), playersByToken.get(request.getToken()));*/
             sendResponse(true);
         }
     }
