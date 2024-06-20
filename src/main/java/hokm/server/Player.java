@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Player {
     String token;
     private Game game;
+    private Room room;
     Dast dast = new Dast();
 
     Player(String token) {
@@ -17,8 +18,7 @@ public class Player {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Player)) return false;
-        Player player = (Player) o;
+        if (!(o instanceof Player player)) return false;
         return Objects.equals(token, player.token);
     }
 
@@ -37,5 +37,17 @@ public class Player {
 
     public void hokm(CardsSuit suit) throws Exception {
         game.hokm(this, suit);
+    }
+
+    public boolean isInARoom() {
+        synchronized (this) {
+            return room != null;
+        }
+    }
+
+    public void setRoom(Room room) {
+        synchronized (this) {
+            this.room = room;
+        }
     }
 }

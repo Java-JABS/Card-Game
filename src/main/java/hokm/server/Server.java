@@ -145,6 +145,20 @@ public class Server extends Thread {
 
     private void createRoom(GameCreateRequest request) {
         if (isNotSignedUp(request)) return;
+        Player player = playersByToken.get(request.getToken());
+        if(player.isInARoom())
+            sendResponse(false,"Player is already in a room!");
+        else {
+            Room room = new Room();
+            String token = tokenGenerator();
+            if(rooms.putIfAbsent(token, room)!=null){
+             sendResponse(false,"Couldn't create room!\nTry again.");
+             return;
+            }
+            room.join(player);
+            sendResponse(true,token);
+        }
+//        if(playersByToken.get(request.getToken()))
         /*Player player = new Player(request.getToken());
         if (rooms.containsValue(player))
             sendResponse(false, "You are already in a room");
@@ -169,12 +183,12 @@ public class Server extends Thread {
 
     private void joinRoom(JoinRequest request) {
         if (isNotSignedUp(request)) return;
-        if (!games.containsKey(request.getGameToken())) {
+        Player player = playersByToken.get(request.getToken());
+        if (player.isInARoom())
+            sendResponse(false, "Player is already in a room!");
+        else if (!rooms.containsKey(request.getGameToken()))
             sendResponse(false, "Game doesn't exists!");
-        } else {
-            /*rooms.put(request.getToken(), playersByToken.get(request.getToken()));*/
-            sendResponse(true);
-        }
+        else sendResponse(true);
     }
 
     private void sendResponse(boolean success, String problem) {
