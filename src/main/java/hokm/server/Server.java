@@ -70,8 +70,8 @@ public class Server extends Thread {
                 case JOIN:
                     joinRoom((JoinRequest) msg);
                     break;
-                case GAME_CREATE:
-                    createRoom((GameCreateRequest) msg);
+                case ROOM_CREATE:
+                    createRoom((RoomCreateRequest) msg);
                     break;
                 case LEAVE:
                     leave((LeaveRequest) msg);
@@ -144,7 +144,7 @@ public class Server extends Thread {
         }
     }
 
-    private void createRoom(GameCreateRequest request) {
+    private void createRoom(RoomCreateRequest request) {
         if (isNotSignedUp(request)) return;
         Player player = playersByToken.get(request.getToken());
         if(player.isInARoom())

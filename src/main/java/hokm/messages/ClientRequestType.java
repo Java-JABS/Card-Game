@@ -4,7 +4,7 @@ public enum ClientRequestType {
     REGISTER(RegisterRequest.class),
     LOGIN(LoginRequest.class),
     JOIN(JoinRequest.class),
-    GAME_CREATE(GameCreateRequest.class),
+    ROOM_CREATE(RoomCreateRequest.class),
     LEAVE(LeaveRequest.class),
     ;
 
