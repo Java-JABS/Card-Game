@@ -45,6 +45,12 @@ public class Player {
         }
     }
 
+    public boolean isInAGame() {
+        synchronized (this) {
+            return game != null;
+        }
+    }
+
     public void setRoom(Room room) {
         synchronized (this) {
             this.room = room;

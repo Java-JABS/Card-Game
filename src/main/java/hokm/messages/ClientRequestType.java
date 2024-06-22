@@ -5,6 +5,7 @@ public enum ClientRequestType {
     LOGIN(LoginRequest.class),
     JOIN(JoinRequest.class),
     GAME_CREATE(GameCreateRequest.class),
+    LEAVE(LeaveRequest.class),
     ;
 
     <T extends ClientRequest> ClientRequestType(Class<T> className) {

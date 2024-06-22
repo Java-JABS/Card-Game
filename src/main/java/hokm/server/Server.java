@@ -74,6 +74,9 @@ public class Server extends Thread {
                 case GAME_CREATE:
                     createRoom((GameCreateRequest) msg);
                     break;
+                case LEAVE:
+                    leave((LeaveRequest) msg);
+                    break;
             }
 
             sendBuffer.close();
@@ -189,6 +192,23 @@ public class Server extends Thread {
         else if (!rooms.containsKey(request.getGameToken()))
             sendResponse(false, "Game doesn't exists!");
         else sendResponse(true);
+    }
+
+    private void leave(LeaveRequest request) {
+        if (isNotSignedUp(request)) return;
+        Player player = playersByToken.get(request.getToken());
+        if (!player.isInARoom()) {
+            sendResponse(false, "not already in a room!");
+        } else {
+            if (player.isInAGame()) {
+                if (request.isForceLeaveGame()) {
+                    // Todo : leave game and room
+                    sendResponse(true);
+                } else sendResponse(false, "Can't leave room while in a game!");
+            }
+            // Todo : leave room
+            else sendResponse(true);
+        }
     }
 
     private void sendResponse(boolean success, String problem) {
