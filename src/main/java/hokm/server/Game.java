@@ -68,7 +68,8 @@ public class Game {
             if (player != currentPlayer) throw new Exception();
             if (!onTableCards.isEmpty()) if (card.suit != onTableCards.get(0).suit)
                 if (player.dast.contains(onTableCards.get(0).suit)) throw new Exception();
-            onTableCards.add(player.dast.pop(card));
+            player.dast.remove(card);
+            onTableCards.add(card);
             currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
             return onTableCards.size() == 4;
         }

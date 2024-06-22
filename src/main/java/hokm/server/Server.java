@@ -37,8 +37,7 @@ public class Server extends Thread {
                         e.printStackTrace();
                     }
                 }
-                socket = clientRequests.get(0);
-                clientRequests.remove(0);
+                socket = clientRequests.remove(0);
             }
             if (socket != null) {
                 handleConnection(socket);
@@ -59,7 +58,7 @@ public class Server extends Thread {
 
 
             clientRequestJson = receiveBuffer.readUTF();
-            ClientRequest msg = (ClientRequest) gsonAgent
+            ClientRequest msg = gsonAgent
                     .fromJson(clientRequestJson, gsonAgent.fromJson(clientRequestJson, ClientRequest.class).getType().className);
             switch (msg.getType()) {
                 case REGISTER:
@@ -121,7 +120,6 @@ public class Server extends Thread {
     public static String tokenGenerator() {
         StringBuilder token = new StringBuilder();
         Random random = new Random();
-        char[] newToken = new char[6];
         for (int i = 0; i < 6; i++) {
             token.append("a").append(random.nextInt(26));
         }
