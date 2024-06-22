@@ -4,6 +4,10 @@ public class ClientRequest {
     protected String token;
     protected ClientRequestType type;
 
+    public ClientRequest(ClientRequestType type) {
+        this.type = type;
+    }
+
     public String getToken() {
         return token;
     }

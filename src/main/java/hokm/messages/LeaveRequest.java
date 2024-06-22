@@ -4,6 +4,7 @@ public class LeaveRequest extends ClientRequest{
     private boolean forceLeaveGame;
 
     public LeaveRequest(boolean forceLeaveGame) {
+        super(ClientRequestType.LEAVE);
         this.forceLeaveGame = forceLeaveGame;
     }
 
