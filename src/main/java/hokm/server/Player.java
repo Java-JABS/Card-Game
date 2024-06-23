@@ -11,7 +11,7 @@ public class Player {
     private Room room;
     Dast dast = new Dast();
 
-    Player(String token) {
+    public Player(String token) {
         this.token = token;
     }
 
@@ -55,5 +55,9 @@ public class Player {
         synchronized (this) {
             this.room = room;
         }
+    }
+
+    public Room getRoom(){
+        return room;
     }
 }

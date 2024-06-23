@@ -6,6 +6,7 @@ public enum ClientRequestType {
     JOIN(JoinRequest.class),
     ROOM_CREATE(RoomCreateRequest.class),
     LEAVE(LeaveRequest.class),
+    GAME_START(GameStartRequest.class),
     ;
 
     <T extends ClientRequest> ClientRequestType(Class<T> className) {

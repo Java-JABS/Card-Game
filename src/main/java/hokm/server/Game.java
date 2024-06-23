@@ -4,8 +4,7 @@ import hokm.Card;
 import hokm.CardsSuit;
 import hokm.Dast;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class Game {
     private CardsSuit rule;
@@ -17,8 +16,8 @@ public class Game {
     private final Team[] teams = {new Team(), new Team()};
 
     public Game(ArrayList<Player> players) {
+        this.players = players;
         if (players.size() != 4) throw new IllegalArgumentException();
-        this.players = new ArrayList<>(players);
         // set next ruler
         Random random = new Random();
         newSet(players.get(random.nextInt(3)));

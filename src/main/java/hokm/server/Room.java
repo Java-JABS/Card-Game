@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Room {
     private final ArrayList<Player> players = new ArrayList<>();
-    private final int capacity;
+    final int capacity;
 
     public Room(int capacity) {
         this.capacity = capacity;
@@ -43,5 +43,9 @@ public class Room {
             }
             return null;
         }
+    }
+
+    public boolean isReady(){
+        return players.size()==capacity;
     }
 }

@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 public class Server extends Thread {
@@ -21,7 +22,7 @@ public class Server extends Thread {
     private DataOutputStream sendBuffer;
     private DataInputStream receiveBuffer;
     private static Database database;
-    private static final HashMap<String, Game> games = new HashMap<>();
+    private static final HashSet< Game> games = new HashSet<>();
     private static final HashMap<String, Room> rooms = new HashMap<>();
     private static final HashMap<String, Player> playersByToken = new HashMap<>();
 
@@ -75,6 +76,9 @@ public class Server extends Thread {
                     break;
                 case LEAVE:
                     leave((LeaveRequest) msg);
+                    break;
+                case GAME_START:
+                    startGame((GameStartRequest) msg);
                     break;
             }
 
@@ -207,6 +211,25 @@ public class Server extends Thread {
             // Todo : leave room
             else sendResponse(true);
         }
+    }
+
+    private void startGame(GameStartRequest request) {
+        if (isNotSignedUp(request)) return;
+        Player player = playersByToken.get(request.getToken());
+        if (player.isInAGame())
+            sendResponse(false, "Already in a game!");
+        else if (player.isInARoom()) {
+            Room room = player.getRoom();
+            synchronized (room) {
+                ArrayList<Player> players = room.getPlayers();
+                if (players.get(0).equals(player)) {
+                    if (room.isReady()) {
+                        games.add(new Game(players));
+                        sendResponse(true);
+                    } else sendResponse(false,"Room must have "+room.capacity+" players!");
+                } else sendResponse(false, "You are not room owner!");
+            }
+        } else sendResponse(false, "Not in a Room!");
     }
 
     private void sendResponse(boolean success, String problem) {
