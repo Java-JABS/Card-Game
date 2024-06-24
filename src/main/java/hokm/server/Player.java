@@ -3,6 +3,7 @@ package hokm.server;
 import hokm.Card;
 import hokm.CardsSuit;
 import hokm.Dast;
+import hokm.messages.ClientState;
 
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ public class Player {
     Dast dast = new Dast();
     private Game game;
     private Room room;
+    private ClientState state;
 
     public Player(String token) {
         this.token = token;
@@ -60,5 +62,13 @@ public class Player {
         synchronized (this) {
             this.room = room;
         }
+    }
+
+    public ClientState getState() {
+        return state;
+    }
+
+    public void setState(ClientState state) {
+        this.state = state;
     }
 }
