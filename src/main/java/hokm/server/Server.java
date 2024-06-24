@@ -28,6 +28,7 @@ public class Server extends Thread {
 
     private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
         database = new Database("database.db");
+        database.initialize();
         Server.serverSocket = serverSocket;
         for (int i = 0; i < workerNumbs; i++) {
             new Server().start();
@@ -50,7 +51,7 @@ public class Server extends Thread {
         StringBuilder token = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
-            token.append("a").append(random.nextInt(26));
+            token.append((char) ('a'+random.nextInt(26)));
         }
         return token.toString();
     }
@@ -176,15 +177,15 @@ public class Server extends Thread {
             if (database.getUsername(request.getToken()) != null) {
                 playersByToken.put(request.getToken(), new Player(request.getToken()));
             }
-            throw new RequestException( "You are not signed up!");
+            else throw new RequestException( "You are not signed up!");
         }
     }
 
     private void isInRoom(Player player,boolean isInRoom) throws RequestException {
         if (player.isInARoom() != isInRoom) {
             if (isInRoom)
-                throw new RequestException("Player is already in a room!");
-            else throw new RequestException("Player is not in a room!");
+                throw new RequestException("Player is not in a room!");
+            else throw new RequestException("Player is already in a room!");
         }
     }
 

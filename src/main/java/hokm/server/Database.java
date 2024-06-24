@@ -13,7 +13,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            statement.execute("create table users (id INT PRIMARY KEY, username varchar(255) UNIQUE NOT NULL,token varchar(64) NOT NULL)");
+            statement.execute("create table users (id INT PRIMARY KEY AUTO_INCREMENT, username varchar(255) UNIQUE NOT NULL,token varchar(64) NOT NULL)");
         } catch (SQLException ignored) {
         }
     }
@@ -33,12 +33,12 @@ public class Database {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (username, token) VALUES (?, ?);")) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, token);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1)
-                return false;
-            throw new RuntimeException(e);
+            if(e.getErrorCode()!=19)
+                e.printStackTrace();
         }
+        return false;
     }
 }
