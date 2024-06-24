@@ -7,7 +7,7 @@ import hokm.Dast;
 import java.util.Objects;
 
 public class Player {
-    String token;
+    final String token;
     Dast dast = new Dast();
     private Game game;
     private Room room;

@@ -124,4 +124,8 @@ public class Game {
             gameState = GameState.PUT_CARD;
         }
     }
+
+    public Dast getOnTableCards() {
+        return onTableCards;
+    }
 }

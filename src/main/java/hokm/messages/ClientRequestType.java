@@ -7,6 +7,8 @@ public enum ClientRequestType {
     ROOM_CREATE(RoomCreateRequest.class),
     LEAVE(LeaveRequest.class),
     GAME_START(GameStartRequest.class),
+    GAME_UPDATE(GameUpdateRequest.class),
+    ROOM_UPDATE(RoomUpdateRequest.class),
     ;
 
     final public Class<? extends ClientRequest> className;
