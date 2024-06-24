@@ -25,7 +25,7 @@ public class Game {
 
     private void newSet(Player ruler) {
         synchronized (this) {
-            if (gameState != GameState.NEWSET)
+            if (gameState != GameState.NEW_SET)
                 throw new RuntimeException();
             if (!players.contains(ruler)) throw new RuntimeException();
             dast = new Dast(true);
@@ -53,7 +53,7 @@ public class Game {
     }
     public void newRound() throws Exception {
         synchronized (this) {
-            if(gameState != GameState.NEXTROUND)
+            if(gameState != GameState.NEXT_ROUND)
                 throw new Exception();
             // what if there is not 4 cards?!
             Card highestCard = null;
@@ -70,10 +70,10 @@ public class Game {
             teams[indexWinnerPlayer % 2].round();
             currentPlayer = players.get(indexWinnerPlayer);
             if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
-                gameState = GameState.NEWSET;
+                gameState = GameState.NEW_SET;
             }
             onTableCards.clear();
-            gameState = GameState.PUTCARD;
+            gameState = GameState.PUT_CARD;
         }
     }
 
@@ -82,7 +82,7 @@ public class Game {
      */
     public boolean putCard(Player player, Card card) throws Exception {
         synchronized (this) {
-            if (gameState != GameState.PUTCARD)
+            if (gameState != GameState.PUT_CARD)
                 throw new Exception();
             //change exeptionTypes :)
             if (!players.contains(player)) throw new Exception();
@@ -95,10 +95,10 @@ public class Game {
             onTableCards.add(card);
             currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
             if (onTableCards.size() == 4) {
-                gameState = GameState.NEXTROUND;
+                gameState = GameState.NEXT_ROUND;
                 return true;
             }
-            gameState = GameState.PUTCARD;
+            gameState = GameState.PUT_CARD;
             return false;
         }
     }
@@ -115,7 +115,7 @@ public class Game {
             ruler.dast.addAll(dast.popFromStart(8));
             for (Player playerI : players)
                 if (playerI != ruler) playerI.dast.addAll(dast.popFromStart(13));
-            gameState = GameState.PUTCARD;
+            gameState = GameState.PUT_CARD;
         }
     }
 
