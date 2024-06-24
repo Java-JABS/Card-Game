@@ -16,15 +16,44 @@ import java.util.Random;
 
 public class Server extends Thread {
     private static final ArrayList<Socket> clientRequests = new ArrayList<>();
-    private static ServerSocket serverSocket;
     private static final GsonBuilder builder = new GsonBuilder();
     private static final Gson gsonAgent = builder.create();
-    private DataOutputStream sendBuffer;
-    private DataInputStream receiveBuffer;
-    private static Database database;
-    private static final HashSet< Game> games = new HashSet<>();
+    private static final HashSet<Game> games = new HashSet<>();
     private static final HashMap<String, Room> rooms = new HashMap<>();
     private static final HashMap<String, Player> playersByToken = new HashMap<>();
+    private static ServerSocket serverSocket;
+    private static Database database;
+    private DataOutputStream sendBuffer;
+    private DataInputStream receiveBuffer;
+
+    private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
+        database = new Database("database.db");
+        Server.serverSocket = serverSocket;
+        for (int i = 0; i < workerNumbs; i++) {
+            new Server().start();
+        }
+        listen();
+    }
+
+    private Server() {
+    }
+
+    public static void runInstance(int port) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            new Server(serverSocket, 10);
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String tokenGenerator() {
+        StringBuilder token = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            token.append("a").append(random.nextInt(26));
+        }
+        return token.toString();
+    }
 
     @Override
     public void run() {
@@ -101,35 +130,6 @@ public class Server extends Thread {
         }
     }
 
-    private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
-        database = new Database("database.db");
-        Server.serverSocket = serverSocket;
-        for (int i = 0; i < workerNumbs; i++) {
-            new Server().start();
-        }
-        listen();
-    }
-
-    private Server() {
-    }
-
-    public static void runInstance(int port) {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            new Server(serverSocket, 10);
-        } catch (IOException | SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String tokenGenerator() {
-        StringBuilder token = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 6; i++) {
-            token.append("a").append(random.nextInt(26));
-        }
-        return token.toString();
-    }
-
     private void registerUser(RegisterRequest request) {
         String token = DigestUtils.sha256Hex(request.getUsername() + tokenGenerator());
         if (database.createUser(request.getUsername(), token)) {
@@ -151,17 +151,17 @@ public class Server extends Thread {
     private void createRoom(RoomCreateRequest request) {
         if (isNotSignedUp(request)) return;
         Player player = playersByToken.get(request.getToken());
-        if(player.isInARoom())
-            sendResponse(false,"Player is already in a room!");
+        if (player.isInARoom())
+            sendResponse(false, "Player is already in a room!");
         else {
             Room room = new Room();
             String token = tokenGenerator();
-            if(rooms.putIfAbsent(token, room)!=null){
-             sendResponse(false,"Couldn't create room!\nTry again.");
-             return;
+            if (rooms.putIfAbsent(token, room) != null) {
+                sendResponse(false, "Couldn't create room!\nTry again.");
+                return;
             }
             room.join(player);
-            sendResponse(true,token);
+            sendResponse(true, token);
         }
 //        if(playersByToken.get(request.getToken()))
         /*Player player = new Player(request.getToken());
@@ -226,7 +226,7 @@ public class Server extends Thread {
                     if (room.isReady()) {
                         games.add(new Game(players));
                         sendResponse(true);
-                    } else sendResponse(false,"Room must have "+room.capacity+" players!");
+                    } else sendResponse(false, "Room must have " + room.capacity + " players!");
                 } else sendResponse(false, "You are not room owner!");
             }
         } else sendResponse(false, "Not in a Room!");

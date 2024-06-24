@@ -1,5 +1,5 @@
 package hokm;
 
 public enum CardsSuit {
-    CLUBS,DIAMONDS,HEARTS,SPADES;
+    CLUBS, DIAMONDS, HEARTS, SPADES
 }

@@ -9,9 +9,9 @@ public enum ClientRequestType {
     GAME_START(GameStartRequest.class),
     ;
 
+    final public Class<? extends ClientRequest> className;
+
     <T extends ClientRequest> ClientRequestType(Class<T> className) {
         this.className = className;
     }
-
-    final public Class<? extends ClientRequest> className;
 }

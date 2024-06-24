@@ -3,13 +3,14 @@ package hokm.server;
 import hokm.Card;
 import hokm.CardsSuit;
 import hokm.Dast;
+
 import java.util.Objects;
 
 public class Player {
     String token;
+    Dast dast = new Dast();
     private Game game;
     private Room room;
-    Dast dast = new Dast();
 
     public Player(String token) {
         this.token = token;
@@ -51,13 +52,13 @@ public class Player {
         }
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
     public void setRoom(Room room) {
         synchronized (this) {
             this.room = room;
         }
-    }
-
-    public Room getRoom(){
-        return room;
     }
 }

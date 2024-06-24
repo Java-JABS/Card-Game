@@ -3,8 +3,8 @@ package hokm.server;
 import java.util.ArrayList;
 
 public class Room {
-    private final ArrayList<Player> players = new ArrayList<>();
     final int capacity;
+    private final ArrayList<Player> players = new ArrayList<>();
 
     public Room(int capacity) {
         this.capacity = capacity;
@@ -16,7 +16,7 @@ public class Room {
 
     public boolean join(Player newPlayer) {
         // Todo : handle null better
-        if(newPlayer==null)throw new NullPointerException();
+        if (newPlayer == null) throw new NullPointerException();
         synchronized (this) {
             if (players.size() >= capacity) return false;
             players.add(newPlayer);
@@ -45,7 +45,7 @@ public class Room {
         }
     }
 
-    public boolean isReady(){
-        return players.size()==capacity;
+    public boolean isReady() {
+        return players.size() == capacity;
     }
 }

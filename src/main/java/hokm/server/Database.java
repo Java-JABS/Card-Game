@@ -2,15 +2,12 @@ package hokm.server;
 
 import java.sql.*;
 
-import static javax.swing.UIManager.getString;
-
 public class Database {
-    private Connection connection;
+    private final Connection connection;
 
     Database(String filename) throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:" + filename);
     }
-
 
     void initialize() {
 
@@ -22,7 +19,6 @@ public class Database {
     }
 
     String getUsername(String token) {
-
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT username FROM users WHERE token = ?")) {
             preparedStatement.setString(1, token);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -45,5 +41,4 @@ public class Database {
             throw new RuntimeException(e);
         }
     }
-
 }

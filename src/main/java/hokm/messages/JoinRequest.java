@@ -1,6 +1,6 @@
 package hokm.messages;
 
-public class JoinRequest extends ClientRequest{
+public class JoinRequest extends ClientRequest {
     private String gameToken;
 
     public JoinRequest() {

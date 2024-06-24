@@ -1,7 +1,7 @@
 package hokm.messages;
 
-public class LeaveRequest extends ClientRequest{
-    private boolean forceLeaveGame;
+public class LeaveRequest extends ClientRequest {
+    private final boolean forceLeaveGame;
 
     public LeaveRequest(boolean forceLeaveGame) {
         super(ClientRequestType.LEAVE);

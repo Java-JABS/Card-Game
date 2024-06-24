@@ -4,17 +4,20 @@ import hokm.Card;
 import hokm.CardsSuit;
 import hokm.Dast;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
 
 public class Game {
+    private final ArrayList<Player> players;
+    private final Team[] teams = {new Team(), new Team()};
     private CardsSuit rule;
     private Player ruler;
     private Player currentPlayer;
-    private final ArrayList<Player> players;
     private Dast onTableCards;
     private Dast dast;
-    private final Team[] teams = {new Team(), new Team()};
     private GameState gameState;
+
     public Game(ArrayList<Player> players) {
         this.players = players;
         if (players.size() != 4) throw new IllegalArgumentException();
@@ -32,28 +35,27 @@ public class Game {
             this.ruler = ruler;
             ruler.dast.addAll(dast.popFromStart(5));
             gameState = GameState.HOKM;
-            goal(teams[0],teams[1]);
+            goal(teams[0], teams[1]);
             goal(teams[1], teams[0]);
             gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
         }
     }
-    public void goal(Team team0, Team team1){
-        
-        if(team0.getRound() == 7){
-            if(team1.getRound() == 0){
-                if(players.indexOf(ruler) % 2 == 0){
+
+    private void goal(Team team0, Team team1) {
+        if (team0.getRound() == 7) {
+            if (team1.getRound() == 0) {
+                if (players.indexOf(ruler) % 2 == 0) {
                     team0.kot();
-                }
-                else{
+                } else {
                     team0.rulerKot();
                 }
-            }
-            else team0.set();
+            } else team0.set();
         }
     }
+
     public void newRound() throws Exception {
         synchronized (this) {
-            if(gameState != GameState.NEXT_ROUND)
+            if (gameState != GameState.NEXT_ROUND)
                 throw new Exception();
             // what if there is not 4 cards?!
             Card highestCard = getHighestCard(onTableCards);
@@ -108,10 +110,9 @@ public class Game {
         }
     }
 
-
     public void hokm(Player player, CardsSuit hokm) throws Exception {
         synchronized (this) {
-            if(gameState != GameState.HOKM)
+            if (gameState != GameState.HOKM)
                 throw new Exception();
             if (!players.contains(player)) throw new Exception();
             if (player != ruler) throw new Exception();
@@ -123,6 +124,4 @@ public class Game {
             gameState = GameState.PUT_CARD;
         }
     }
-
-
 }
