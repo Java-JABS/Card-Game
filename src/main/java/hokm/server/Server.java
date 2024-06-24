@@ -90,25 +90,29 @@ public class Server extends Thread {
             clientRequestJson = receiveBuffer.readUTF();
             ClientRequest msg = gsonAgent
                     .fromJson(clientRequestJson, gsonAgent.fromJson(clientRequestJson, ClientRequest.class).getType().className);
-            switch (msg.getType()) {
-                case REGISTER:
-                    registerUser((RegisterRequest) msg);
-                    break;
-                case LOGIN:
-                    loginUser((LoginRequest) msg);
-                    break;
-                case JOIN:
-                    joinRoom((JoinRequest) msg);
-                    break;
-                case ROOM_CREATE:
-                    createRoom((RoomCreateRequest) msg);
-                    break;
-                case LEAVE:
-                    leave((LeaveRequest) msg);
-                    break;
-                case GAME_START:
-                    startGame((GameStartRequest) msg);
-                    break;
+            try {
+                switch (msg.getType()) {
+                    case REGISTER:
+                        registerUser((RegisterRequest) msg);
+                        break;
+                    case LOGIN:
+                        loginUser((LoginRequest) msg);
+                        break;
+                    case JOIN:
+                        joinRoom((JoinRequest) msg);
+                        break;
+                    case ROOM_CREATE:
+                        createRoom((RoomCreateRequest) msg);
+                        break;
+                    case LEAVE:
+                        leave((LeaveRequest) msg);
+                        break;
+                    case GAME_START:
+                        startGame((GameStartRequest) msg);
+                        break;
+                }
+            } catch (RequestException e) {
+                sendResponse(false, e.getMessage());
             }
 
             sendBuffer.close();
@@ -140,6 +144,7 @@ public class Server extends Thread {
     }
 
     private void loginUser(LoginRequest request) {
+        // Todo : Convert to logout
         String username;
         if ((username = database.getUsername(request.getToken())) != null) {
             sendResponse(true, username);
@@ -148,60 +153,61 @@ public class Server extends Thread {
         }
     }
 
-    private void createRoom(RoomCreateRequest request) {
-        if (isNotSignedUp(request)) return;
-        Player player = playersByToken.get(request.getToken());
-        if (player.isInARoom())
-            sendResponse(false, "Player is already in a room!");
-        else {
-            Room room = new Room();
+    private void createRoom(RoomCreateRequest request) throws RequestException {
+            isLoggedIn(request);
+            Player player = playersByToken.get(request.getToken());
+            isInRoom(player,false);
             String token = tokenGenerator();
-            if (rooms.putIfAbsent(token, room) != null) {
-                sendResponse(false, "Couldn't create room!\nTry again.");
-                return;
-            }
+            Room room = createNewRoom(token);
             room.join(player);
             sendResponse(true, token);
-        }
-//        if(playersByToken.get(request.getToken()))
-        /*Player player = new Player(request.getToken());
-        if (rooms.containsValue(player))
-            sendResponse(false, "You are already in a room");
-        else {
-            String gameToken = tokenGenerator();
-            rooms.put(gameToken, player);
-            sendResponse(true, gameToken);
-        }*/
     }
 
-    private boolean isNotSignedUp(ClientRequest request) {
+    private Room createNewRoom(String token) throws RequestException {
+        Room room = new Room();
+        if (rooms.putIfAbsent(token, room) != null) {
+            throw new RequestException("Couldn't create room!\nTry again.");
+        }
+        return room;
+    }
+
+    private void isLoggedIn(ClientRequest request) throws RequestException {
         if (!playersByToken.containsKey(request.getToken())) {
             if (database.getUsername(request.getToken()) != null) {
                 playersByToken.put(request.getToken(), new Player(request.getToken()));
-                return false;
             }
-            sendResponse(false, "You are not signed up!");
-            return true;
+            throw new RequestException( "You are not signed up!");
         }
-        return false;
     }
 
-    private void joinRoom(JoinRequest request) {
-        if (isNotSignedUp(request)) return;
-        Player player = playersByToken.get(request.getToken());
-        if (player.isInARoom())
-            sendResponse(false, "Player is already in a room!");
-        else if (!rooms.containsKey(request.getGameToken()))
-            sendResponse(false, "Game doesn't exists!");
-        else sendResponse(true);
+    private void isInRoom(Player player,boolean isInRoom) throws RequestException {
+        if (player.isInARoom() != isInRoom) {
+            if (isInRoom)
+                throw new RequestException("Player is already in a room!");
+            else throw new RequestException("Player is not in a room!");
+        }
     }
 
-    private void leave(LeaveRequest request) {
-        if (isNotSignedUp(request)) return;
+    private void joinRoom(JoinRequest request) throws RequestException {
+        isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        if (!player.isInARoom()) {
-            sendResponse(false, "not already in a room!");
-        } else {
+        isInRoom(player,false);
+        joinPlayerToRoom(player,request.getGameToken());
+        sendResponse(true);
+    }
+
+    private void joinPlayerToRoom(Player player,String roomToken) throws RequestException {
+        Room room = rooms.get(roomToken);
+        if (room==null) throw new RequestException("Room doesn't exists!");
+        room.join(player);
+    }
+
+    private void leave(LeaveRequest request) throws RequestException {
+        isLoggedIn(request);
+        Player player = playersByToken.get(request.getToken());
+        isInRoom(player,true);
+        // Todo: create a leaveGame method
+         {
             if (player.isInAGame()) {
                 if (request.isForceLeaveGame()) {
                     // Todo : leave game and room
@@ -213,25 +219,28 @@ public class Server extends Thread {
         }
     }
 
-    private void startGame(GameStartRequest request) {
-        if (isNotSignedUp(request)) return;
+    private void startGame(GameStartRequest request) throws RequestException {
+        isLoggedIn(request);
+        // Todo
         Player player = playersByToken.get(request.getToken());
-        if (player.isInAGame())
-            sendResponse(false, "Already in a game!");
-        else if (player.isInARoom()) {
-            Room room = player.getRoom();
-            synchronized (room) {
-                ArrayList<Player> players = room.getPlayers();
-                if (players.get(0).equals(player)) {
-                    if (room.isReady()) {
-                        games.add(new Game(players));
-                        sendResponse(true);
-                    } else sendResponse(false, "Room must have " + room.capacity + " players!");
-                } else sendResponse(false, "You are not room owner!");
-            }
-        } else sendResponse(false, "Not in a Room!");
+        isInGame(player, false);
+        isInRoom(player, true);
+        Room room = player.getRoom();
+        synchronized (room) {
+            if (room.getPlayers().get(0).equals(player))
+                games.add(room.startGame());
+            else throw new RequestException("You are not room owner!");
+        }
+        sendResponse(true);
     }
 
+    private void isInGame(Player player, boolean isInGame) throws RequestException {
+        if (player.isInAGame() != isInGame) {
+            if (isInGame)
+                throw new RequestException("Player is already in a game!");
+            else throw new RequestException("Player is not in a game!");
+        }
+    }
     private void sendResponse(boolean success, String problem) {
         ServerResponse response = new ServerResponse(success, problem);
         String responseString = gsonAgent.toJson(response);

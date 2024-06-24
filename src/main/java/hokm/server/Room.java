@@ -14,17 +14,16 @@ public class Room {
         this(4);
     }
 
-    public boolean join(Player newPlayer) {
-        // Todo : handle null better
-        if (newPlayer == null) throw new NullPointerException();
+    public void join(Player newPlayer) throws RequestException {
         synchronized (this) {
-            if (players.size() >= capacity) return false;
+            if (newPlayer.getRoom() != null) throw new RequestException("You are already in a room!");
+            if (players.size() >= capacity) throw new RequestException("Room is full!");
             players.add(newPlayer);
-            return true;
+            newPlayer.setRoom(this);
         }
     }
 
-    public boolean left(Player player) {
+    public boolean leave(Player player) {
         synchronized (this) {
             return players.remove(player);
         }
@@ -36,16 +35,18 @@ public class Room {
         }
     }
 
-    public Game startGame() {
+    public Game startGame() throws RequestException {
         synchronized (this) {
             if (players.size() == capacity) {
-                Game game = new Game(players);
+                return new Game(players);
             }
-            return null;
+            throw new RequestException("Room is not reached its capacity! (" + capacity + ")");
         }
     }
 
     public boolean isReady() {
-        return players.size() == capacity;
+        synchronized (this) {
+            return players.size() == capacity;
+        }
     }
 }
