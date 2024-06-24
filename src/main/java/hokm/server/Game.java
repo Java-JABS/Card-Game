@@ -56,16 +56,7 @@ public class Game {
             if(gameState != GameState.NEXT_ROUND)
                 throw new Exception();
             // what if there is not 4 cards?!
-            Card highestCard = null;
-            boolean isHokmPlayed = false;
-            for (Card card : onTableCards) {
-                if (card.suit == rule && !isHokmPlayed) {
-                    highestCard = card;
-                    isHokmPlayed = true;
-                } else if (highestCard == null) highestCard = card;
-                else if (card.suit == highestCard.suit && card.value.number > highestCard.value.number)
-                    highestCard = card;
-            }
+            Card highestCard = getHighestCard(onTableCards);
             int indexWinnerPlayer = (players.indexOf(currentPlayer) + 1 + onTableCards.indexOf(highestCard)) % 4;
             teams[indexWinnerPlayer % 2].round();
             currentPlayer = players.get(indexWinnerPlayer);
@@ -75,6 +66,20 @@ public class Game {
             onTableCards.clear();
             gameState = GameState.PUT_CARD;
         }
+    }
+
+    private Card getHighestCard(Collection<Card> onTableCards) {
+        Card highestCard = null;
+        boolean isHokmPlayed = false;
+        for (Card card : onTableCards) {
+            if (card.suit() == rule && !isHokmPlayed) {
+                highestCard = card;
+                isHokmPlayed = true;
+            } else if (highestCard == null) highestCard = card;
+            else if (card.suit() == highestCard.suit() && card.value().number > highestCard.value().number)
+                highestCard = card;
+        }
+        return highestCard;
     }
 
     /**
@@ -89,8 +94,8 @@ public class Game {
             if (!player.dast.contains(card)) throw new Exception();
             if (onTableCards.size() == 4) throw new Exception();
             if (player != currentPlayer) throw new Exception();
-            if (!onTableCards.isEmpty()) if (card.suit != onTableCards.get(0).suit)
-                if (player.dast.contains(onTableCards.get(0).suit)) throw new Exception();
+            if (!onTableCards.isEmpty()) if (card.suit() != onTableCards.get(0).suit())
+                if (player.dast.contains(onTableCards.get(0).suit())) throw new Exception();
             player.dast.remove(card);
             onTableCards.add(card);
             currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
