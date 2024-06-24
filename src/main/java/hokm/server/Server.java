@@ -38,9 +38,9 @@ public class Server extends Thread {
     private Server() {
     }
 
-    public static void runInstance(int port) {
+    public static Server runInstance(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            new Server(serverSocket, 10);
+            return new Server(serverSocket, 10);
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
