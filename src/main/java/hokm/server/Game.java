@@ -26,6 +26,7 @@ public class Game {
         if (players.size() != 4) throw new IllegalArgumentException();
         // set next ruler
         Random random = new Random();
+        this.gameState=GameState.NEW_SET;
         newSet(players.get(random.nextInt(3)));
     }
 
