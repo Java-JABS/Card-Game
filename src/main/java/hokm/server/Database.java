@@ -13,7 +13,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            statement.execute("create table users (id INT PRIMARY KEY AUTO_INCREMENT, username varchar(255) UNIQUE NOT NULL,token varchar(64) NOT NULL)");
+            statement.execute("create table users (id INT PRIMARY KEY, username varchar(255) UNIQUE NOT NULL,token varchar(64) NOT NULL)");
         } catch (SQLException ignored) {
         }
     }
