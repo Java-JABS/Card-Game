@@ -161,4 +161,7 @@ public class Game {
     public GameUpdate getMinorUpdate() {
         return minorUpdate;
     }
+    public int getPlayerIndex(Player player){
+        return players.indexOf(player);
+    }
 }

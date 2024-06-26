@@ -75,4 +75,13 @@ public class Player {
     public void setState(ClientState state) {
         this.state = state;
     }
+
+    public GameUpdate getUpdate(boolean isMajorUpdate){
+        GameUpdate gameUpdate = getGameUpdate(isMajorUpdate);
+        if(isMajorUpdate){
+            gameUpdate.setDast(this.dast);
+            gameUpdate.setYourIndex(this.game.getPlayerIndex(this));
+        }
+        return gameUpdate;
+    }
 }

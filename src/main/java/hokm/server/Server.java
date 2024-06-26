@@ -256,7 +256,7 @@ public class Server extends Thread {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
         isInGame(player,true);
-        sendResponse(true, gsonAgent.toJson(player.getGameUpdate(request.isMajorUpdate())));
+        sendResponse(true, gsonAgent.toJson(player.getUpdate(request.isMajorUpdate())));
     }
 
     private void putCard(PutCardRequest request) throws RequestException {

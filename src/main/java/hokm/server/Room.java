@@ -38,7 +38,11 @@ public class Room {
     public Game startGame() throws RequestException {
         synchronized (this) {
             if (players.size() == capacity) {
-                return new Game(players);
+                Game game = new Game(players);
+                for (Player player : players)
+                    player.setGame(game);
+                return game;
+
             }
             throw new RequestException("Room is not reached its capacity! (" + capacity + ")");
         }
