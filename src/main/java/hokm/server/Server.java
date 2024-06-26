@@ -111,6 +111,15 @@ public class Server extends Thread {
                     case GAME_START:
                         startGame((GameStartRequest) msg);
                         break;
+                    case GAME_UPDATE:
+                        gameUpdate((GameUpdateRequest) msg);
+                        break;
+                    case PUT_CARD:
+                        putCard((PutCardRequest) msg);
+                        break;
+                    case HOKM:
+                        hokm((HokmRequest) msg);
+                        break;
                 }
             } catch (RequestException e) {
                 sendResponse(false, e.getMessage());
@@ -242,6 +251,25 @@ public class Server extends Thread {
             else throw new RequestException("Player is not in a game!");
         }
     }
+
+    private void gameUpdate(GameUpdateRequest request) throws RequestException {
+        isLoggedIn(request);
+        Player player = playersByToken.get(request.getToken());
+        isInGame(player,true);
+        sendResponse(true, gsonAgent.toJson(player.getGameUpdate(request.isMajorUpdate())));
+    }
+
+    private void putCard(PutCardRequest request) throws RequestException {
+        isLoggedIn(request);
+        Player player = playersByToken.get(request.getToken());
+        isInGame(player,true);
+        player.putCard(request.getCard());
+        sendResponse(true);
+    }
+
+    private void hokm(HokmRequest request) {
+    }
+
     private void sendResponse(boolean success, String problem) {
         ServerResponse response = new ServerResponse(success, problem);
         String responseString = gsonAgent.toJson(response);

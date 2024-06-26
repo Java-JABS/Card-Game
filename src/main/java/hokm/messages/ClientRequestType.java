@@ -9,6 +9,8 @@ public enum ClientRequestType {
     GAME_START(GameStartRequest.class),
     GAME_UPDATE(GameUpdateRequest.class),
     ROOM_UPDATE(RoomUpdateRequest.class),
+    PUT_CARD(PutCardRequest.class),
+    HOKM(HokmRequest.class),
     ;
 
     final public Class<? extends ClientRequest> className;

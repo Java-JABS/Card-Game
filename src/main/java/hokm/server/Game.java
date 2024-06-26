@@ -153,4 +153,12 @@ public class Game {
     public Dast getOnTableCards() {
         return onTableCards;
     }
+
+    public GameUpdate getMajorUpdate() {
+        return majorUpdate;
+    }
+
+    public GameUpdate getMinorUpdate() {
+        return minorUpdate;
+    }
 }

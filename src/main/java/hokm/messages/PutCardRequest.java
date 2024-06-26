@@ -1,0 +1,19 @@
+package hokm.messages;
+
+import hokm.Card;
+
+public class PutCardRequest extends ClientRequest {
+    private Card card;
+
+    public PutCardRequest() {
+        super(ClientRequestType.PUT_CARD);
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+}

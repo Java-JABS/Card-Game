@@ -3,6 +3,7 @@ package hokm.server;
 import hokm.Card;
 import hokm.CardsSuit;
 import hokm.Dast;
+import hokm.GameUpdate;
 import hokm.messages.ClientState;
 
 import java.util.Objects;
@@ -32,6 +33,9 @@ public class Player {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+    public GameUpdate getGameUpdate(boolean isMajorUpdate){
+        return (isMajorUpdate)? game.getMajorUpdate():game.getMinorUpdate();
     }
 
     public boolean putCard(Card card) throws Exception {
