@@ -267,7 +267,11 @@ public class Server extends Thread {
         sendResponse(true);
     }
 
-    private void hokm(HokmRequest request) {
+    private void hokm(HokmRequest request) throws RequestException {
+        isLoggedIn(request);
+        Player player = playersByToken.get(request.getToken());
+        isInGame(player,true);
+        player.hokm(request.getHokm());
     }
 
     private void sendResponse(boolean success, String problem) {

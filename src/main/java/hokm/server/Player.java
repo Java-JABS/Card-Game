@@ -38,11 +38,11 @@ public class Player {
         return (isMajorUpdate)? game.getMajorUpdate():game.getMinorUpdate();
     }
 
-    public boolean putCard(Card card) throws Exception {
+    public boolean putCard(Card card) throws RequestException {
         return game.putCard(this, card);
     }
 
-    public void hokm(CardsSuit suit) throws Exception {
+    public void hokm(CardsSuit suit) throws RequestException {
         game.hokm(this, suit);
     }
 

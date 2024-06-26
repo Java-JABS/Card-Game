@@ -102,17 +102,17 @@ public class Game {
     /**
      * @return if 4 card has been put and newRound should be started
      */
-    public boolean putCard(Player player, Card card) throws Exception {
+    public boolean putCard(Player player, Card card) throws RequestException {
         synchronized (this) {
             if (gameState != GameState.PUT_CARD)
-                throw new Exception();
+                throw new RequestException("Can not put card right now!");
             //change exeptionTypes :)
-            if (!players.contains(player)) throw new Exception();
-            if (!player.dast.contains(card)) throw new Exception();
-            if (onTableCards.size() == 4) throw new Exception();
-            if (player != currentPlayer) throw new Exception();
+            if (!players.contains(player)) throw new RuntimeException();
+            if (!player.dast.contains(card)) throw new RequestException("You don't Have this Card!");
+            if (onTableCards.size() == 4) throw new RequestException("You can not put card right now!");
+            if (player != currentPlayer) throw new RequestException("It's not your turn!");
             if (!onTableCards.isEmpty()) if (card.suit() != onTableCards.get(0).suit())
-                if (player.dast.contains(onTableCards.get(0).suit())) throw new Exception();
+                if (player.dast.contains(onTableCards.get(0).suit())) throw new RequestException("You should select a "+onTableCards.get(0).suit().toString().toLowerCase()+ " card!");
             minorUpdate = new GameUpdate(majorUpdate);
             player.dast.remove(card);
             onTableCards.add(card);
@@ -130,13 +130,13 @@ public class Game {
         }
     }
 
-    public void hokm(Player player, CardsSuit rule) throws Exception {
+    public void hokm(Player player, CardsSuit rule) throws RequestException {
         synchronized (this) {
             if (gameState != GameState.HOKM)
-                throw new Exception();
-            if (!players.contains(player)) throw new Exception();
-            if (player != ruler) throw new Exception();
-            if (rule != null) throw new Exception();
+                throw new RequestException("Can not hokm right now!");
+            if (!players.contains(player)) throw new RuntimeException();
+            if (player != ruler) throw new RequestException("You are not the ruler!");
+            if (rule == null) throw new RuntimeException();
             this.rule = rule;
             minorUpdate = new GameUpdate(majorUpdate);
             minorUpdate.setRule(this.rule);
