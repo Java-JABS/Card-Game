@@ -18,7 +18,9 @@ public class Game {
     private Dast onTableCards;
     private Dast dast;
     private GameState gameState;
-    private final GameUpdate update = new GameUpdate();
+    private final GameUpdate majorUpdate = new GameUpdate();
+    private  GameUpdate minorUpdate;
+
     public Game(ArrayList<Player> players) {
         this.players = players;
         if (players.size() != 4) throw new IllegalArgumentException();
@@ -34,14 +36,17 @@ public class Game {
             if (!players.contains(ruler)) throw new RuntimeException();
             dast = new Dast(true);
             this.ruler = ruler;
-            update.setCurrentRuler(players.indexOf(ruler));
+            minorUpdate=new GameUpdate(majorUpdate);
+            minorUpdate.setCurrentRuler(players.indexOf(ruler));
             ruler.dast.addAll(dast.popFromStart(5));
             gameState = GameState.HOKM;
-            update.setGameState(gameState);
+            minorUpdate.setGameState(gameState);
             goal(teams[0], teams[1]);
             goal(teams[1], teams[0]);
             gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
-            update.setGameState(gameState);
+            minorUpdate.setTeams(teams);
+            minorUpdate.setGameState(gameState);
+            majorUpdate.update(minorUpdate);
         }
     }
 
@@ -61,18 +66,22 @@ public class Game {
         synchronized (this) {
             if (gameState != GameState.NEXT_ROUND)
                 throw new Exception();
+            minorUpdate=new GameUpdate(majorUpdate);
             // what if there is not 4 cards?!
             Card highestCard = getHighestCard(onTableCards);
             int indexWinnerPlayer = (players.indexOf(currentPlayer) + 1 + onTableCards.indexOf(highestCard)) % 4;
             teams[indexWinnerPlayer % 2].round();
             currentPlayer = players.get(indexWinnerPlayer);
+            minorUpdate.setCurrentPlayer(indexWinnerPlayer);
             if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
                 gameState = GameState.NEW_SET;
-                update.setGameState(gameState);
+                minorUpdate.setGameState(gameState);
             }
             onTableCards.clear();
+            minorUpdate.setOnTableCards(onTableCards);
             gameState = GameState.PUT_CARD;
-            update.setGameState(gameState);
+            minorUpdate.setGameState(gameState);
+            majorUpdate.update(minorUpdate);
         }
     }
 
@@ -104,17 +113,19 @@ public class Game {
             if (player != currentPlayer) throw new Exception();
             if (!onTableCards.isEmpty()) if (card.suit() != onTableCards.get(0).suit())
                 if (player.dast.contains(onTableCards.get(0).suit())) throw new Exception();
+            minorUpdate = new GameUpdate(majorUpdate);
             player.dast.remove(card);
             onTableCards.add(card);
+            minorUpdate.setOnTableCards(onTableCards);
             currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
-            update.setCurrentPlayer(players.indexOf(currentPlayer));
+            minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             if (onTableCards.size() == 4) {
                 gameState = GameState.NEXT_ROUND;
-                update.setGameState(gameState);
                 return true;
             }
             gameState = GameState.PUT_CARD;
-            update.setGameState(gameState);
+            minorUpdate.setGameState(gameState);
+            majorUpdate.update(minorUpdate);
             return false;
         }
     }
@@ -127,11 +138,15 @@ public class Game {
             if (player != ruler) throw new Exception();
             if (rule != null) throw new Exception();
             this.rule = rule;
-            update.setRule(this.rule);
+            minorUpdate = new GameUpdate(majorUpdate);
+            minorUpdate.setRule(this.rule);
             ruler.dast.addAll(dast.popFromStart(8));
             for (Player playerI : players)
                 if (playerI != ruler) playerI.dast.addAll(dast.popFromStart(13));
+            minorUpdate.setOnTableCards(onTableCards);
             gameState = GameState.PUT_CARD;
+            minorUpdate.setGameState(gameState);
+            majorUpdate.update(minorUpdate);
         }
     }
 

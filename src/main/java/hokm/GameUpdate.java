@@ -19,12 +19,18 @@ public class GameUpdate {
     int currentPlayer;
     int yourIndex;
 
+    public GameUpdate() {
+    }
+
+    public GameUpdate(GameUpdate update) {
+        this.number=update.number++;
+    }
+
     public GameState getGameState() {
         return gameState;
     }
 
     public void setGameState(GameState gameState) {
-        number++;
         this.gameState = gameState;
     }
 
@@ -33,7 +39,6 @@ public class GameUpdate {
     }
 
     public void setRule(CardsSuit rule) {
-        number++;
         this.rule = rule;
     }
 
@@ -42,7 +47,6 @@ public class GameUpdate {
     }
 
     public void setCurrentRuler(int currentRuler) {
-        number++;
         this.currentRuler = currentRuler;
     }
 
@@ -51,7 +55,6 @@ public class GameUpdate {
     }
 
     public void setCurrentPlayer(int currentPlayer) {
-        number++;
         this.currentPlayer = currentPlayer;
     }
 
@@ -60,11 +63,42 @@ public class GameUpdate {
     }
 
     public void setYourIndex(int yourIndex) {
-        number++;
         this.yourIndex = yourIndex;
     }
 
-    void update(GameUpdate update) {
+    public Dast getDast() {
+        return dast;
+    }
+
+    public void setDast(Dast dast) {
+        this.dast = dast;
+    }
+
+    public Dast getOnTableCards() {
+        return onTableCards;
+    }
+
+    public void setOnTableCards(Dast onTableCards) {
+        this.onTableCards = onTableCards;
+    }
+
+    public Team[] getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Team[] teams) {
+        this.teams = teams;
+    }
+
+    public ArrayList<String> getPlayerNames() {
+        return playerNames;
+    }
+
+    public void setPlayerNames(ArrayList<String> playerNames) {
+        this.playerNames = playerNames;
+    }
+
+    public void update(GameUpdate update) {
         for (Field field : GameUpdate.class.getDeclaredFields()) {
             try {
                 Object object = field.get(update);
