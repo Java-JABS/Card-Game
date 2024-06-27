@@ -1,4 +1,6 @@
 package hokm.client.masoud_gui;
+import hokm.Card;
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Array;
@@ -6,6 +8,7 @@ import java.util.ArrayList;
 
 public class NewJFrame2 extends JPanel {
 
+    private int cardWidth = 80;
     private JPanel right =new JPanel();
     private JPanel left = new JPanel();
     private JPanel up = new JPanel();
@@ -21,6 +24,14 @@ public class NewJFrame2 extends JPanel {
         initComponents();
     }
 
+    public ImageIcon getCardIcon(Card card){
+        return new ImageIcon(new ImageIcon("pictures/"+card.suit()+"/"+card.value()).getImage().getScaledInstance(80, -1,Image.SCALE_SMOOTH ));
+    }
+    public void setCard(ArrayList<Card> list, int index){
+        for(int i = 0;i < list.size();i++){
+            cards[(i + (list.size() - index))%4].setIcon(getCardIcon(list.get(i)));
+        }
+    }
     public void setName(ArrayList<String> list, int index){
         for(int i = 0;i < list.size();i++){
             names[(i + (list.size() - index))%4].setText(list.get(i));
