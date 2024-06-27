@@ -1,31 +1,39 @@
 package hokm;
 
 import hokm.server.GameState;
-import hokm.server.Player;
 import hokm.server.Team;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class GameUpdate {
-    int number = 0;
+public class GameUpdate implements Cloneable {
+    Integer number = 0;
     Dast dast;
     Dast onTableCards;
     GameState gameState;
     CardsSuit rule;
     Team[] teams;
     ArrayList<String> playerNames;
-    int currentRuler;
-    int currentPlayer;
-    int yourIndex;
+    Integer currentRuler;
+    Integer currentPlayer;
+    Integer yourIndex;
 
     public GameUpdate() {
     }
 
     public GameUpdate(GameUpdate update) {
-        this.number=update.number++;
+        this.number = update.number + 1;
     }
 
+    public GameUpdate clone() {
+        try {
+            return (GameUpdate) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public GameState getGameState() {
         return gameState;
     }
@@ -110,4 +118,9 @@ public class GameUpdate {
             }
         }
     }
+
+    public int getNumber() {
+        return number;
+    }
+
 }

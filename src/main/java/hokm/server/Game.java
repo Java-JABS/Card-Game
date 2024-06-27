@@ -6,6 +6,7 @@ import hokm.Dast;
 import hokm.GameUpdate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
@@ -15,18 +16,19 @@ public class Game {
     private CardsSuit rule;
     private Player ruler;
     private Player currentPlayer;
-    private Dast onTableCards;
+    private final Dast onTableCards = new Dast();
     private Dast dast;
     private GameState gameState;
     private final GameUpdate majorUpdate = new GameUpdate();
-    private  GameUpdate minorUpdate;
+    private GameUpdate minorUpdate;
+    private final int[] lastUpdate = new int[4];
 
     public Game(ArrayList<Player> players) {
         this.players = players;
         if (players.size() != 4) throw new IllegalArgumentException();
         // set next ruler
         Random random = new Random();
-        this.gameState=GameState.NEW_SET;
+        this.gameState = GameState.NEW_SET;
         newSet(players.get(random.nextInt(3)));
     }
 
@@ -37,7 +39,9 @@ public class Game {
             if (!players.contains(ruler)) throw new RuntimeException();
             dast = new Dast(true);
             this.ruler = ruler;
-            minorUpdate=new GameUpdate(majorUpdate);
+            currentPlayer = ruler;
+            minorUpdate = new GameUpdate(majorUpdate);
+            minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             minorUpdate.setCurrentRuler(players.indexOf(ruler));
             ruler.dast.addAll(dast.popFromStart(5));
             gameState = GameState.HOKM;
@@ -63,14 +67,21 @@ public class Game {
         }
     }
 
-    public void newRound() throws Exception {
+    public void newRound() {
         synchronized (this) {
             if (gameState != GameState.NEXT_ROUND)
-                throw new Exception();
-            minorUpdate=new GameUpdate(majorUpdate);
+                throw new RuntimeException();
+            while (Arrays.stream(lastUpdate).min().getAsInt() != majorUpdate.getNumber()) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            minorUpdate = new GameUpdate(majorUpdate);
             // what if there is not 4 cards?!
             Card highestCard = getHighestCard(onTableCards);
-            int indexWinnerPlayer = (players.indexOf(currentPlayer) + 1 + onTableCards.indexOf(highestCard)) % 4;
+            int indexWinnerPlayer = (players.indexOf(currentPlayer) + onTableCards.indexOf(highestCard)) % 4;
             teams[indexWinnerPlayer % 2].round();
             currentPlayer = players.get(indexWinnerPlayer);
             minorUpdate.setCurrentPlayer(indexWinnerPlayer);
@@ -113,15 +124,19 @@ public class Game {
             if (onTableCards.size() == 4) throw new RequestException("You can not put card right now!");
             if (player != currentPlayer) throw new RequestException("It's not your turn!");
             if (!onTableCards.isEmpty()) if (card.suit() != onTableCards.get(0).suit())
-                if (player.dast.contains(onTableCards.get(0).suit())) throw new RequestException("You should select a "+onTableCards.get(0).suit().toString().toLowerCase()+ " card!");
+                if (player.dast.contains(onTableCards.get(0).suit()))
+                    throw new RequestException("You should select a " + onTableCards.get(0).suit().toString().toLowerCase() + " card!");
             minorUpdate = new GameUpdate(majorUpdate);
             player.dast.remove(card);
             onTableCards.add(card);
             minorUpdate.setOnTableCards(onTableCards);
-            currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
+            currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % 4);
             minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             if (onTableCards.size() == 4) {
                 gameState = GameState.NEXT_ROUND;
+                minorUpdate.setGameState(gameState);
+                majorUpdate.update(minorUpdate);
+                new Thread(this::newRound).start();
                 return true;
             }
             gameState = GameState.PUT_CARD;
@@ -151,18 +166,18 @@ public class Game {
         }
     }
 
-    public Dast getOnTableCards() {
-        return onTableCards;
-    }
-
-    public GameUpdate getMajorUpdate() {
-        return majorUpdate;
-    }
-
-    public GameUpdate getMinorUpdate() {
-        return minorUpdate;
-    }
-    public int getPlayerIndex(Player player){
-        return players.indexOf(player);
+    public GameUpdate getUpdate(Player player, boolean isMajorUpdate) {
+        synchronized (this) {
+            if (!players.contains(player)) throw new RuntimeException();
+            lastUpdate[players.indexOf(player)] = majorUpdate.getNumber();
+            GameUpdate gameUpdate;
+            if (isMajorUpdate) {
+                gameUpdate = majorUpdate.clone();
+                gameUpdate.setYourIndex(players.indexOf(player));
+                gameUpdate.setDast(player.dast);
+            } else gameUpdate = minorUpdate.clone();
+            notify();
+            return gameUpdate;
+        }
     }
 }

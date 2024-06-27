@@ -34,8 +34,9 @@ public class Player {
     public void setGame(Game game) {
         this.game = game;
     }
-    public GameUpdate getGameUpdate(boolean isMajorUpdate){
-        return (isMajorUpdate)? game.getMajorUpdate():game.getMinorUpdate();
+
+    public GameUpdate getGameUpdate(boolean isMajorUpdate) {
+        return game.getUpdate(this, isMajorUpdate);
     }
 
     public boolean putCard(Card card) throws RequestException {
@@ -66,22 +67,5 @@ public class Player {
         synchronized (this) {
             this.room = room;
         }
-    }
-
-    public ClientState getState() {
-        return state;
-    }
-
-    public void setState(ClientState state) {
-        this.state = state;
-    }
-
-    public GameUpdate getUpdate(boolean isMajorUpdate){
-        GameUpdate gameUpdate = getGameUpdate(isMajorUpdate);
-        if(isMajorUpdate){
-            gameUpdate.setDast(this.dast);
-            gameUpdate.setYourIndex(this.game.getPlayerIndex(this));
-        }
-        return gameUpdate;
     }
 }
