@@ -123,6 +123,9 @@ public class Server extends Thread {
                 }
             } catch (RequestException e) {
                 sendResponse(false, e.getMessage());
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                sendResponse(false, "Server Side Error!");
             }
 
             sendBuffer.close();
@@ -247,8 +250,8 @@ public class Server extends Thread {
     private void isInGame(Player player, boolean isInGame) throws RequestException {
         if (player.isInAGame() != isInGame) {
             if (isInGame)
-                throw new RequestException("Player is already in a game!");
-            else throw new RequestException("Player is not in a game!");
+                throw new RequestException("Player is not in a game!");
+            else throw new RequestException("Player is already in a game!");
         }
     }
 
@@ -272,6 +275,7 @@ public class Server extends Thread {
         Player player = playersByToken.get(request.getToken());
         isInGame(player,true);
         player.hokm(request.getHokm());
+        sendResponse(true);
     }
 
     private void sendResponse(boolean success, String problem) {
