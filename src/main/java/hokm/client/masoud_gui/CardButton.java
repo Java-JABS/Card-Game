@@ -1,5 +1,6 @@
 package hokm.client.masoud_gui;
 
+import hokm.Card;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
@@ -9,11 +10,7 @@ import java.io.IOException;
 public class CardButton extends JButton {
     private int width;
     private int height;
-    private String path;
-
-    public void setPicToCard(){
-        setIcon(new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(this.width,this.height, Image.SCALE_SMOOTH)));
-    }
+    private Card card;
     public static void playSound(String soundFile) {
         try {
             // Load the sound file
@@ -29,5 +26,15 @@ public class CardButton extends JButton {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.out.println("Wrong step. :-|");
         }
+    }
+
+    public Card getCard(){ return this.card; }
+    public void setCard(Card _card){
+        this.card = _card;
+    }
+
+    public CardButton(){
+        // Mouse-listener
+        // ToDo
     }
 }
