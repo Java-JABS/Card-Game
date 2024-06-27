@@ -186,8 +186,9 @@ public class Server extends Thread {
 
     private void isLoggedIn(ClientRequest request) throws RequestException {
         if (!playersByToken.containsKey(request.getToken())) {
-            if (database.getUsername(request.getToken()) != null) {
-                playersByToken.put(request.getToken(), new Player(request.getToken()));
+            String name = database.getUsername(request.getToken());
+            if (name != null) {
+                playersByToken.put(request.getToken(), new Player(name, request.getToken()));
             }
             else throw new RequestException( "You are not signed up!");
         }

@@ -1,10 +1,14 @@
 package hokm.server;
 
+import hokm.RoomUpdate;
+
 import java.util.ArrayList;
 
 public class Room {
     final int capacity;
     private final ArrayList<Player> players = new ArrayList<>();
+    RoomUpdate roomUpdate = new RoomUpdate();
+    ArrayList<String> names = new ArrayList<>();
 
     public Room(int capacity) {
         this.capacity = capacity;
@@ -20,11 +24,15 @@ public class Room {
             if (players.size() >= capacity) throw new RequestException("Room is full!");
             players.add(newPlayer);
             newPlayer.setRoom(this);
+            names.add(newPlayer.name);
+            roomUpdate.setPlayerNames(names);
         }
     }
 
     public boolean leave(Player player) {
         synchronized (this) {
+            names.remove(player.name);
+            roomUpdate.setPlayerNames(names);
             return players.remove(player);
         }
     }
@@ -38,9 +46,10 @@ public class Room {
     public Game startGame() throws RequestException {
         synchronized (this) {
             if (players.size() == capacity) {
-                Game game = new Game(players);
+                Game game = new Game(players,this);
                 for (Player player : players)
                     player.setGame(game);
+                roomUpdate.setGameStarted(true);
                 return game;
 
             }
@@ -52,5 +61,13 @@ public class Room {
         synchronized (this) {
             return players.size() == capacity;
         }
+    }
+    public RoomUpdate getUpdate(Player player){
+        synchronized (this) {
+            return  roomUpdate;
+        }
+    }
+    public  void endGame(){
+        roomUpdate.setGameStarted(false);
     }
 }

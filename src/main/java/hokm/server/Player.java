@@ -9,13 +9,15 @@ import hokm.messages.ClientState;
 import java.util.Objects;
 
 public class Player {
+    final String name;
     final String token;
     Dast dast = new Dast();
     private Game game;
     private Room room;
     private ClientState state;
 
-    public Player(String token) {
+    public Player(String name,String token) {
+        this.name = name;
         this.token = token;
     }
 

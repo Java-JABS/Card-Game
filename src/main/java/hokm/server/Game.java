@@ -22,9 +22,10 @@ public class Game {
     private final GameUpdate majorUpdate = new GameUpdate();
     private GameUpdate minorUpdate;
     private final int[] lastUpdate = new int[4];
-
-    public Game(ArrayList<Player> players) {
+    private Room room;
+    public Game(ArrayList<Player> players,Room room) {
         this.players = players;
+        this.room = room;
         if (players.size() != 4) throw new IllegalArgumentException();
         // set next ruler
         Random random = new Random();
