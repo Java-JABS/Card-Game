@@ -9,6 +9,7 @@ public class Room {
     private final ArrayList<Player> players = new ArrayList<>();
     RoomUpdate roomUpdate = new RoomUpdate();
     ArrayList<String> names = new ArrayList<>();
+    private Game game;
 
     public Room(int capacity) {
         this.capacity = capacity;
@@ -33,6 +34,7 @@ public class Room {
         synchronized (this) {
             names.remove(player.name);
             roomUpdate.setPlayerNames(names);
+            player.setRoom(null);
             return players.remove(player);
         }
     }
@@ -46,7 +48,7 @@ public class Room {
     public Game startGame() throws RequestException {
         synchronized (this) {
             if (players.size() == capacity) {
-                Game game = new Game(players,this);
+                game = new Game(players, this);
                 for (Player player : players)
                     player.setGame(game);
                 roomUpdate.setGameStarted(true);
@@ -62,12 +64,20 @@ public class Room {
             return players.size() == capacity;
         }
     }
-    public RoomUpdate getUpdate(Player player){
+
+    public RoomUpdate getUpdate(Player player) {
         synchronized (this) {
-            return  roomUpdate;
+            return roomUpdate.clone();
         }
     }
-    public  void endGame(){
-        roomUpdate.setGameStarted(false);
+
+    public void endGame() {
+        synchronized (this) {
+            for (Player player : players)
+                player.setGame(null);
+            game = null;
+            roomUpdate.setGameStarted(false);
+        }
+
     }
 }

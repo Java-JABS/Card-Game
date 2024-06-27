@@ -22,8 +22,20 @@ public class Game {
     private final GameUpdate majorUpdate = new GameUpdate();
     private GameUpdate minorUpdate;
     private final int[] lastUpdate = new int[4];
-    private Room room;
-    public Game(ArrayList<Player> players,Room room) {
+    private final Room room;
+    private final Runnable waitForEveryoneToGetUpdate = () -> {
+        synchronized (this) {
+            while (Arrays.stream(lastUpdate).min().getAsInt() != majorUpdate.getNumber()) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    public Game(ArrayList<Player> players, Room room) {
         this.players = players;
         this.room = room;
         if (players.size() != 4) throw new IllegalArgumentException();
@@ -53,6 +65,10 @@ public class Game {
             minorUpdate.setTeams(teams);
             minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
+            if (gameState == GameState.END) {
+                waitForEveryoneToGetUpdate.run();
+                room.endGame();
+            }
         }
     }
 
@@ -70,15 +86,7 @@ public class Game {
 
     public void newRound() {
         synchronized (this) {
-            if (gameState != GameState.NEXT_ROUND)
-                throw new RuntimeException();
-            while (Arrays.stream(lastUpdate).min().getAsInt() != majorUpdate.getNumber()) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            waitForEveryoneToGetUpdate.run();
             minorUpdate = new GameUpdate(majorUpdate);
             // what if there is not 4 cards?!
             Card highestCard = getHighestCard(onTableCards);
