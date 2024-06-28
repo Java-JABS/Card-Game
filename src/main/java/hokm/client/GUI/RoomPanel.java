@@ -1,5 +1,8 @@
 package hokm.client.GUI;
 
+import hokm.messages.GameStartRequest;
+import hokm.server.RequestException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -20,15 +23,23 @@ public class RoomPanel extends JPanel {
         startButtonGrid.insets = new Insets(5,5,5,5);
         startButton.setFocusable(false);
         startButton.addActionListener(actionEvent -> {
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.remove(this);
-            topFrame.add(new OuterGamePanel());
-            topFrame.revalidate();
-            topFrame.repaint();
+
         });
         startButton.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {}
+            public void mouseClicked(MouseEvent mouseEvent) {
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
+                try{
+                    topFrame.client.sendMessage(new GameStartRequest());
+                    topFrame.remove(RoomPanel.this);
+                    topFrame.add(new OuterGamePanel());
+                    topFrame.repaint();
+                    topFrame.revalidate();
+                } catch (RequestException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+
+            }
             @Override
             public void mousePressed(MouseEvent mouseEvent) {}
             @Override

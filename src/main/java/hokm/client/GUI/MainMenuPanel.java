@@ -1,17 +1,15 @@
 package hokm.client.GUI;
 
+import hokm.messages.RoomCreateRequest;
+import hokm.server.RequestException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class MainMenuPanel extends JPanel {
-    String SERVER_IP;
-    int SERVER_PORT;
-
     MainMenuPanel(){
-        SERVER_IP = JOptionPane.showInputDialog("Please Enter Server IP.");
-        SERVER_PORT = Integer.parseInt(JOptionPane.showInputDialog("Please Enter Server PORT."));
         //main frame :
         //this.setSize(getMaximumSize());
         //this.setResizable(false);
@@ -37,11 +35,16 @@ public class MainMenuPanel extends JPanel {
         createNewGameButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
-                topFrame.remove(MainMenuPanel.this);
-                topFrame.add(new RoomPanel());
-                topFrame.revalidate();
-                topFrame.repaint();
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
+                try {
+                    JOptionPane.showMessageDialog(null, topFrame.client.sendMessage(new RoomCreateRequest()), "gameToken", JOptionPane.INFORMATION_MESSAGE);
+                    topFrame.remove(MainMenuPanel.this);
+                    topFrame.add(new RoomPanel());
+                    topFrame.revalidate();
+                    topFrame.repaint();
+                } catch (RequestException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                }
             }
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
