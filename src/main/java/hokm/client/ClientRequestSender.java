@@ -13,8 +13,8 @@ import java.net.Socket;
 public class ClientRequestSender {
     final String hostAddress;
     final int port;
-    public static transient final GsonBuilder builder = new GsonBuilder();
-    public static transient final Gson gsonAgent = builder.create();
+    public static final GsonBuilder builder = new GsonBuilder();
+    public static final Gson gsonAgent = builder.create();
     private String token;
 
     public ClientRequestSender(String hostAddress, int port) {
