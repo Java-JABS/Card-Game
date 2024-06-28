@@ -69,8 +69,8 @@ public class RoomPanel extends JPanel {
         add(names, namesGrid);
         new Thread(()->{
             while (true){
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
-                    MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                     RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
                     if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
                         if(!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())){
@@ -93,6 +93,10 @@ public class RoomPanel extends JPanel {
                     throw new RuntimeException(e);
                 }catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                    topFrame.remove(RoomPanel.this);
+                    topFrame.add(new MainMenuPanel());
+                    topFrame.repaint();
+                    topFrame.revalidate();
                 }
             }
         }).start();
