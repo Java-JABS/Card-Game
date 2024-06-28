@@ -43,7 +43,7 @@ public class RoomPanel extends JPanel {
                 try{
                     topFrame.client.sendMessage(new GameStartRequest());
                     topFrame.remove(RoomPanel.this);
-                    topFrame.add(new OuterGamePanel());
+                    topFrame.add(new OuterGameLabel());
                     topFrame.repaint();
                     topFrame.revalidate();
                 } catch (RequestException e) {
@@ -109,7 +109,7 @@ public class RoomPanel extends JPanel {
                     }
                     if(roomUpdate.getGameStarted()){
                         topFrame.remove(RoomPanel.this);
-                        topFrame.add(new OuterGamePanel());
+                        topFrame.add(new OuterGameLabel());
                         topFrame.repaint();
                         topFrame.revalidate();
                     }
