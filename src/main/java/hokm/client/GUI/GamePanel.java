@@ -169,11 +169,11 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < 13; i++) {
             cardDeckButtons[i] = new JButton();
             cardDeckButtons[i].setLayout(new GridBagLayout());
-            JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon("pictures/cards/DIAMONDS/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
+            JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon("pictures/cards/DIAMONDS/KING.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
             cardDeckButtons[i].add(iconLabel);
             cardDeckButtons[i].setVerticalTextPosition(SwingConstants.BOTTOM);
             cardDeckButtons[i].setHorizontalTextPosition(SwingConstants.CENTER);
-            cardDeckButtons[i].setPreferredSize(new Dimension(60, 90));
+            cardDeckButtons[i].setPreferredSize(cardsDimension);
             GridBagConstraints bGrid = new GridBagConstraints();
             bGrid.gridx = i + 1;
             bGrid.gridy = 5;

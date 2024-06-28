@@ -1,5 +1,6 @@
 package hokm.client.GUI;
 
+import hokm.messages.JoinRequest;
 import hokm.messages.RoomCreateRequest;
 import hokm.server.RequestException;
 
@@ -72,7 +73,18 @@ public class MainMenuPanel extends JPanel {
         joinExistingGameButtonGrid.insets = new Insets(5,5,5,5);
         joinExistingGameButton.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {}
+            public void mouseClicked(MouseEvent mouseEvent) {
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
+                try {
+                    topFrame.client.sendMessage(new JoinRequest(JOptionPane.showInputDialog("Enter room token:")));
+                    topFrame.remove(MainMenuPanel.this);
+                    topFrame.add(new RoomPanel());
+                    topFrame.revalidate();
+                    topFrame.repaint();
+                } catch (RequestException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            }
             @Override
             public void mousePressed(MouseEvent mouseEvent) {}
             @Override

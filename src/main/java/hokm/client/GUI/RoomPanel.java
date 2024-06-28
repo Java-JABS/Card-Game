@@ -1,6 +1,9 @@
 package hokm.client.GUI;
 
+import hokm.RoomUpdate;
+import hokm.client.ClientRequestSender;
 import hokm.messages.GameStartRequest;
+import hokm.messages.RoomUpdateRequest;
 import hokm.server.RequestException;
 
 import javax.swing.*;
@@ -13,7 +16,7 @@ import static java.lang.Thread.sleep;
 public class RoomPanel extends JPanel {
     JTextArea names= new JTextArea();
     JButton startButton = new JButton("Start");
-
+    RoomUpdate roomUpdate = new RoomUpdate();
     public RoomPanel(){
         startButton.setPreferredSize(new Dimension(300,100));
         startButton.setFont(new Font("Arial", Font.BOLD, 25));
@@ -65,13 +68,27 @@ public class RoomPanel extends JPanel {
         add(startButton, startButtonGrid);
         add(names, namesGrid);
         new Thread(()->{
-            Integer a=0;
             while (true){
                 try {
+                    MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
+                    RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
+                    if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
+                        if(!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())){
+                            names.setText(newRoomUpdate.getNumber()+" players: "+newRoomUpdate.getPlayerNames().toString());
+                        }
+                    }
+                    if(roomUpdate.getGameStarted()){
+                        topFrame.remove(RoomPanel.this);
+                        topFrame.add(new OuterGamePanel());
+                        topFrame.repaint();
+                        topFrame.revalidate();
+                    }
+                    roomUpdate=newRoomUpdate;
                     sleep(1000);
-                    names.setText(String.valueOf(a++));
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
+                }catch (RequestException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
         }).start();
