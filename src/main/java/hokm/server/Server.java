@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import hokm.messages.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -25,6 +27,7 @@ public class Server extends Thread {
     private static Database database;
     private DataOutputStream sendBuffer;
     private DataInputStream receiveBuffer;
+    private static Logger logger = LoggerFactory.getLogger(Server.class);
 
     private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
         database = new Database("database.db");
@@ -141,6 +144,7 @@ public class Server extends Thread {
 
     private void listen() throws IOException {
         Socket socket;
+        logger.info("listening");
         while (true) {
             socket = serverSocket.accept();
             synchronized (clientRequests) {
