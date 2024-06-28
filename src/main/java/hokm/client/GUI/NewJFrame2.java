@@ -1,12 +1,15 @@
-package hokm.client.masoud_gui;
+package hokm.client.GUI;
 import hokm.Card;
+import hokm.CardValues;
+import hokm.CardsSuit;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class NewJFrame2 extends JPanel {
+public class NewJFrame2 extends JFrame {
 
     private int cardWidth = 80;
     private JPanel right =new JPanel();
@@ -19,18 +22,22 @@ public class NewJFrame2 extends JPanel {
     private JLabel[] profiles = {new JLabel(),new JLabel(),new JLabel(),new JLabel()};
     private JLabel[] names = {new JLabel(),new JLabel(),new JLabel(),new JLabel()};
     private JLabel[] cards = {new JLabel(),new JLabel(),new JLabel(),new JLabel()};
+    JButton[] cardButtons= new JButton[13];
     public NewJFrame2() {
         setLayout(new BorderLayout());
         initComponents();
     }
 
     public ImageIcon getCardIcon(Card card){
-        return new ImageIcon(new ImageIcon("pictures/"+card.suit()+"/"+card.value()).getImage().getScaledInstance(80, -1,Image.SCALE_SMOOTH ));
+        return new ImageIcon(new ImageIcon("pictures/"+card.suit()+"/"+card.value()+".png").getImage().getScaledInstance(80, -1,Image.SCALE_SMOOTH ));
     }
     public void setCard(ArrayList<Card> list, int index){
         for(int i = 0;i < list.size();i++){
             cards[(i + (list.size() - index))%4].setIcon(getCardIcon(list.get(i)));
         }
+    }
+    public void setdeckCards(ArrayList<Card> list, int index){
+
     }
     public void setName(ArrayList<String> list, int index){
         for(int i = 0;i < list.size();i++){
@@ -39,7 +46,7 @@ public class NewJFrame2 extends JPanel {
     }
     public void setPic_toProfile(){
         for(JLabel label : profiles){
-            label.setIcon(new ImageIcon(new ImageIcon("pictures/Person/person.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
+            label.setIcon(new ImageIcon(new ImageIcon("pictures/Person.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
         }
     }
 
@@ -73,8 +80,8 @@ public class NewJFrame2 extends JPanel {
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new Insets(0,0,0,10);
         right.add(cards[1], gridBagConstraints);
-
         add(right, BorderLayout.LINE_END);
 
         left.setLayout(new GridBagLayout());
@@ -90,6 +97,7 @@ public class NewJFrame2 extends JPanel {
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets=new Insets(0,10,0,0);
         left.add(cards[3], gridBagConstraints);
 
         profiles[3].setPreferredSize(new Dimension(80, 80));
@@ -145,6 +153,8 @@ public class NewJFrame2 extends JPanel {
         cardDeck.setLayout(new GridBagLayout());
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
+        gridBagConstraints.insets=new Insets(10,0,0,0);
+        cardDeck.setPreferredSize(new Dimension(800,170));
         down.add(cardDeck, gridBagConstraints);
 
         add(down, BorderLayout.PAGE_END);
@@ -153,7 +163,86 @@ public class NewJFrame2 extends JPanel {
         add(center, BorderLayout.CENTER);
         setPic_toProfile();
         setName(l, 3);
-        //pack();
+        ArrayList<Card> a=  new ArrayList<>();
+        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
+        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
+        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
+        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
+        setCard(a,0);
+
+        for (int i = 0; i < 13; i++) {
+
+            cardButtons[i] = new JButton();
+
+
+            cardButtons[i].setLayout(new GridBagLayout());
+
+            JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon("pictures/DIAMONDS/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
+            cardButtons[i].add(iconLabel);
+
+            cardButtons[i].setVerticalTextPosition(SwingConstants.BOTTOM);
+            cardButtons[i].setHorizontalTextPosition(SwingConstants.CENTER);
+            cardButtons[i].setPreferredSize(new Dimension(60, 90));
+            //cardButtons[i].setIcon(new ImageIcon(new ImageIcon("Cards/Diamond/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
+            GridBagConstraints bGrid = new GridBagConstraints();
+            bGrid.gridx = i + 1;
+            bGrid.gridy = 5;
+            bGrid.insets = new Insets(0, -10, 0, -10);
+            cardDeck.add(cardButtons[i], bGrid);
+            int finalI = i;
+
+            cardButtons[i].setOpaque(false);
+            cardButtons[i].setContentAreaFilled(false);
+            cardButtons[i].setBorderPainted(false);
+            int finalI1 = i;
+            cardButtons[i].addMouseListener(new MouseListener() {
+                private int y = 40;
+
+                @Override
+                public void mouseClicked(MouseEvent mouseEvent) {
+//                    remove(cardButtons[finalI]);
+//                    repaint();
+//                    revalidate();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent mouseEvent) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent mouseEvent) {
+                    Dimension size = cardButtons[finalI].getSize();
+                    size.height += y;
+                    cardButtons[finalI].setSize(size);
+                    //cardButtons[finalI].setIconTextGap(0);
+                    Point point = cardButtons[finalI].getLocation();
+                    point.y -= y;
+                    cardButtons[finalI].setLocation(point);
+                    cardButtons[finalI1].setVerticalTextPosition(SwingConstants.BOTTOM);
+                    cardButtons[finalI1].setHorizontalTextPosition(SwingConstants.CENTER);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent mouseEvent) {
+                    Dimension size = cardButtons[finalI].getSize();
+                    size.height -= y;
+                    cardButtons[finalI].setSize(size);
+                    Point point = cardButtons[finalI].getLocation();
+                    point.y += y;
+                    cardButtons[finalI].setLocation(point);
+                    cardButtons[finalI1].setVerticalTextPosition(SwingConstants.BOTTOM);
+                    cardButtons[finalI1].setHorizontalTextPosition(SwingConstants.CENTER);
+                }
+            });
+        }
+
+        pack();
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

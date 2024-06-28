@@ -5,22 +5,21 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class MainFrame extends JFrame {
+public class MainMenuPanel extends JPanel {
     String SERVER_IP;
     int SERVER_PORT;
-    MainFrame(){
+
+    MainMenuPanel(){
         SERVER_IP = JOptionPane.showInputDialog("Please Enter Server IP.");
         SERVER_PORT = Integer.parseInt(JOptionPane.showInputDialog("Please Enter Server PORT."));
-
         //main frame :
-        this.setSize(getMaximumSize());
-        this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //this.setSize(getMaximumSize());
+        //this.setResizable(false);
         this.setLayout(new GridLayout(1,1));
 
         //main menu panel :
-        JPanel mainMenuPanel = new JPanel();
-        mainMenuPanel.setLayout(new GridLayout(1,1));
+
+        setLayout(new GridLayout(1,1));
 
         JLabel mainMenuLabel = new JLabel();
         mainMenuLabel.setLayout(new GridBagLayout());
@@ -37,9 +36,17 @@ public class MainFrame extends JFrame {
         createNewGameButtonGrid.insets = new Insets(5,5,5,5);
         createNewGameButton.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {}
+            public void mouseClicked(MouseEvent mouseEvent) {
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
+                topFrame.remove(MainMenuPanel.this);
+                topFrame.add(new RoomPanel());
+                topFrame.revalidate();
+                topFrame.repaint();
+            }
             @Override
-            public void mousePressed(MouseEvent mouseEvent) {}
+            public void mousePressed(MouseEvent mouseEvent) {
+
+            }
             @Override
             public void mouseReleased(MouseEvent mouseEvent) {}
             @Override
@@ -80,14 +87,6 @@ public class MainFrame extends JFrame {
         mainMenuLabel.add(joinExistingGameButton, joinExistingGameButtonGrid);
         mainMenuLabel.add(createNewGameButton, createNewGameButtonGrid);
 
-        mainMenuPanel.add(mainMenuLabel);
-        this.add(mainMenuPanel);
-
-        //join existing game panel :
-
-        // create new game panel :
-
-
-        this.setVisible(true);
+        add(mainMenuLabel);
     }
 }
