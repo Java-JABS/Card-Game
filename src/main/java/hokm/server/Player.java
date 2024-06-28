@@ -1,9 +1,6 @@
 package hokm.server;
 
-import hokm.Card;
-import hokm.CardsSuit;
-import hokm.Dast;
-import hokm.GameUpdate;
+import hokm.*;
 import hokm.messages.ClientState;
 
 import java.util.Objects;
@@ -70,4 +67,8 @@ public class Player {
             this.room = room;
         }
     }
+    public RoomUpdate getRoomUpdate() {
+        return room.getUpdate(this);
+    }
+
 }

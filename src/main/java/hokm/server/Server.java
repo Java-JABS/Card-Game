@@ -120,6 +120,9 @@ public class Server extends Thread {
                     case HOKM:
                         hokm((HokmRequest) msg);
                         break;
+                    case ROOM_UPDATE:
+                        roomUpdate((RoomUpdateRequest) msg);
+                        break;
                 }
             } catch (RequestException e) {
                 sendResponse(false, e.getMessage());
@@ -277,6 +280,13 @@ public class Server extends Thread {
         isInGame(player,true);
         player.hokm(request.getHokm());
         sendResponse(true);
+    }
+
+    private void roomUpdate(RoomUpdateRequest request) throws RequestException {
+        isLoggedIn(request);
+        Player player = playersByToken.get(request.getToken());
+        isInRoom(player,true);
+        sendResponse(true,gsonAgent.toJson(player.getRoomUpdate()));
     }
 
     private void sendResponse(boolean success, String problem) {
