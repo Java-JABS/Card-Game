@@ -8,7 +8,10 @@ public class HokmRequest extends ClientRequest {
     public HokmRequest() {
         super(ClientRequestType.HOKM);
     }
-
+    public HokmRequest(CardsSuit cardsSuit){
+        this();
+        this.hokm=cardsSuit;
+    }
     public CardsSuit getHokm() {
         return hokm;
     }

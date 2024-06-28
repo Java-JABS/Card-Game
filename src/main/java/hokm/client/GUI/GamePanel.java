@@ -1,13 +1,12 @@
 package hokm.client.GUI;
 
 import hokm.Card;
-import hokm.CardValues;
-import hokm.CardsSuit;
+
+import hokm.messages.PutCardRequest;
+import hokm.server.RequestException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
@@ -20,13 +19,13 @@ public class GamePanel extends JPanel {
     private final JPanel centerPanel = new JPanel();
 
     private final JPanel myProfilePanel = new JPanel();
-    private final JPanel cardDeckPanel = new JPanel();
+    private final JPanel cardDeckPanel = new JPanel(new GridBagLayout());
 
     private final JLabel[] profilePictureLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private final JLabel[] profileNameLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private final JLabel[] playedCardLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
+    private final ArrayList<CardButton> cardButtons = new ArrayList<>(13);
 
-    JButton[] cardDeckButtons = new JButton[13];
 
     public GamePanel() {
         setLayout(new BorderLayout());
@@ -34,28 +33,42 @@ public class GamePanel extends JPanel {
     }
 
     public ImageIcon getCardIcon(Card card) {
-        return new ImageIcon(new ImageIcon("pictures/cards/" + card.suit() + "/" + card.value() + ".png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
+        return new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
     }
 
     public void setPlayedCardLabelsIcon(ArrayList<Card> list, int index) {
+        for(JLabel label:playedCardLabels){
+            label.setIcon(null);
+        }
         for (int i = 0; i < list.size(); i++) {
-            playedCardLabels[(i + (list.size() - index)) % 4].setIcon(getCardIcon(list.get(i)));
+            playedCardLabels[(i - list.size()-index+8) % 4].setIcon(getCardIcon(list.get(i)));
         }
     }
 
-    public void setDeckCardButtons(ArrayList<Card> list, int index) {
-
+    public void setDeckCardButtons(ArrayList<Card> list) {
+        cardDeckPanel.removeAll();
+        for (int i = 0; i < list.size() ; i++) {
+            CardButton cardButton=cardButtons.get(i);
+            cardButton.setCard(list.get(i));
+            add(cardButton);
+            GridBagConstraints bGrid = new GridBagConstraints();
+            bGrid.gridx = i;
+            bGrid.insets = new Insets(0, -15, 0, -15);
+            cardDeckPanel.add(cardButton, bGrid);
+        }
+        repaint();
+        revalidate();
     }
 
     public void setProfileNameLabelsText(ArrayList<String> list, int index) {
         for (int i = 0; i < list.size(); i++) {
-            profileNameLabels[(i + (list.size() - index)) % 4].setText(list.get(i));
+            profileNameLabels[(i +   index + 4) % 4].setText(list.get(i));
         }
     }
 
     public void setProfilePictureLabelsIcon() {
         for (JLabel label : profilePictureLabels) {
-            label.setIcon(new ImageIcon(new ImageIcon("pictures/Person.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
+            label.setIcon(new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/Person.png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
         }
     }
 
@@ -151,7 +164,7 @@ public class GamePanel extends JPanel {
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.insets = new Insets(10, 0, 0, 0);
-        cardDeckPanel.setPreferredSize(new Dimension(800, 170));
+        cardDeckPanel.setPreferredSize(new Dimension(800, 200));
         downPanel.add(cardDeckPanel, gridBagConstraints);
 
         add(downPanel, BorderLayout.PAGE_END);
@@ -159,62 +172,23 @@ public class GamePanel extends JPanel {
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
         setProfilePictureLabelsIcon();
-        ArrayList<Card> a = new ArrayList<>();
-        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
-        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
-        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
-        a.add(new Card(CardValues.FIVE, CardsSuit.CLUBS));
-        setPlayedCardLabelsIcon(a, 0);
 
         for (int i = 0; i < 13; i++) {
-            cardDeckButtons[i] = new JButton();
-            cardDeckButtons[i].setLayout(new GridBagLayout());
-            JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon("pictures/cards/DIAMONDS/KING.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
-            cardDeckButtons[i].add(iconLabel);
-            cardDeckButtons[i].setVerticalTextPosition(SwingConstants.BOTTOM);
-            cardDeckButtons[i].setHorizontalTextPosition(SwingConstants.CENTER);
-            cardDeckButtons[i].setPreferredSize(cardsDimension);
-            GridBagConstraints bGrid = new GridBagConstraints();
-            bGrid.gridx = i + 1;
-            bGrid.gridy = 5;
-            bGrid.insets = new Insets(0, -10, 0, -10);
-            cardDeckPanel.add(cardDeckButtons[i], bGrid);
             int finalI = i;
-            cardDeckButtons[i].setOpaque(false);
-            cardDeckButtons[i].setContentAreaFilled(false);
-            cardDeckButtons[i].setBorderPainted(false);
-            int finalI1 = i;
-            cardDeckButtons[i].addMouseListener(new MouseListener() {
-                private int y = 40;
-                @Override
-                public void mouseClicked(MouseEvent mouseEvent) {}
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {}
-                @Override
-                public void mouseReleased(MouseEvent mouseEvent) {}
-                @Override
-                public void mouseEntered(MouseEvent mouseEvent) {
-                    Dimension size = cardDeckButtons[finalI].getSize();
-                    size.height += y;
-                    cardDeckButtons[finalI].setSize(size);
-                    Point point = cardDeckButtons[finalI].getLocation();
-                    point.y -= y;
-                    cardDeckButtons[finalI].setLocation(point);
-                    cardDeckButtons[finalI1].setVerticalTextPosition(SwingConstants.BOTTOM);
-                    cardDeckButtons[finalI1].setHorizontalTextPosition(SwingConstants.CENTER);
+            cardButtons.add(new CardButton(()->{
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+                try {
+                    topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
+                } catch (RequestException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-                @Override
-                public void mouseExited(MouseEvent mouseEvent) {
-                    Dimension size = cardDeckButtons[finalI].getSize();
-                    size.height -= y;
-                    cardDeckButtons[finalI].setSize(size);
-                    Point point = cardDeckButtons[finalI].getLocation();
-                    point.y += y;
-                    cardDeckButtons[finalI].setLocation(point);
-                    cardDeckButtons[finalI1].setVerticalTextPosition(SwingConstants.BOTTOM);
-                    cardDeckButtons[finalI1].setHorizontalTextPosition(SwingConstants.CENTER);
-                }
-            });
+            },cardsDimension));
         }
+    }
+
+    public static void main(String[] args) {
+        JFrame tmp = new JFrame();
+        tmp.add(new GamePanel());
+        tmp.setVisible(true);
     }
 }

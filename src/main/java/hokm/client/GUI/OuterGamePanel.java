@@ -1,18 +1,29 @@
 package hokm.client.GUI;
 
+import hokm.CardsSuit;
+import hokm.GameUpdate;
+import hokm.client.ClientRequestSender;
+import hokm.messages.GameUpdateRequest;
+import hokm.messages.HokmRequest;
+import hokm.server.GameState;
+import hokm.server.RequestException;
+
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
+
+import static java.lang.Thread.sleep;
 
 public class OuterGamePanel extends JPanel {
     JLabel team1Sets = new JLabel("0",SwingConstants.CENTER);
     JLabel team1Rounds = new JLabel("0",SwingConstants.CENTER);
     JLabel team2Sets = new JLabel("0",SwingConstants.CENTER);
     JLabel team2Rounds = new JLabel("0",SwingConstants.CENTER);
+    GamePanel gamePanel = new GamePanel();
+    GameUpdate gameUpdate = new GameUpdate();
 
     OuterGamePanel(){
         setLayout(new BorderLayout());
-        add(new GamePanel(),BorderLayout.CENTER);
+        add(gamePanel,BorderLayout.CENTER);
 
         JPanel upperPanel = new JPanel();
         upperPanel.setLayout(new GridBagLayout());
@@ -95,7 +106,53 @@ public class OuterGamePanel extends JPanel {
         upperPanel.add(this.team1Rounds, team1RoundsGrid);
         upperPanel.add(this.team2Sets, team2SetsGrid);
         upperPanel.add(this.team2Rounds, team2RoundsGrid);
-
         this.add(upperPanel, BorderLayout.NORTH);
+
+        new Thread(()->{
+            while (true){
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+                try {
+                    String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
+                    GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
+                    switch (newGameUpdate.getNumber() - gameUpdate.getNumber()){
+                        case 0:
+                            break;
+                        default:
+                            newGameUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new GameUpdateRequest(true)), GameUpdate.class);
+                        case 1:
+                            if(newGameUpdate.getDast()!=null){
+                                gamePanel.setDeckCardButtons(newGameUpdate.getDast());
+                            }
+                            if(newGameUpdate.getOnTableCards()!=null){
+                                System.out.println(newGameUpdate.getOnTableCards().toString()   );
+                                gamePanel.setPlayedCardLabelsIcon(newGameUpdate.getOnTableCards(),newGameUpdate.getYourIndex()-newGameUpdate.getCurrentPlayer());
+                            }
+                            if(newGameUpdate.getPlayerNames()!=null){
+                                gamePanel.setProfileNameLabelsText(newGameUpdate.getPlayerNames(),newGameUpdate.getYourIndex());
+                            }
+                            if(newGameUpdate.getGameState()== GameState.HOKM&&newGameUpdate.getYourIndex()== newGameUpdate.getCurrentRuler()){
+                                CardsSuit[] buttons = CardsSuit.values();
+                                int returnValue = JOptionPane.showOptionDialog(null, "Narrative", "Narrative",
+                                        JOptionPane.WARNING_MESSAGE, 0, null, buttons, null);
+                                topFrame.client.sendMessage(new HokmRequest(buttons[returnValue]));
+                            }
+                    }
+
+                    gameUpdate=newGameUpdate;
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }catch (RequestException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                    topFrame.remove(OuterGamePanel.this);
+                    topFrame.add(new MainMenuPanel());
+                    topFrame.repaint();
+                    topFrame.revalidate();
+                } catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 }

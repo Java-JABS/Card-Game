@@ -23,7 +23,7 @@ public class RoomPanel extends JPanel {
     public RoomPanel(){
 
         roomLabel.setLayout(new GridBagLayout());
-        ImageIcon roomLabelPicture = new ImageIcon("pictures/MainMenuLabelPicture.jpeg");
+        ImageIcon roomLabelPicture = new ImageIcon(this.getClass().getClassLoader().getResource("pictures/MainMenuLabelPicture.jpeg"));
         roomLabel.setIcon(roomLabelPicture);
 
         startButton.setPreferredSize(new Dimension(300,100));
@@ -123,6 +123,8 @@ public class RoomPanel extends JPanel {
                     topFrame.add(new MainMenuPanel());
                     topFrame.repaint();
                     topFrame.revalidate();
+                }catch (Exception e){
+                    break;
                 }
             }
         }).start();

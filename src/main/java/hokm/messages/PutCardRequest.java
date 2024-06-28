@@ -9,6 +9,11 @@ public class PutCardRequest extends ClientRequest {
         super(ClientRequestType.PUT_CARD);
     }
 
+    public PutCardRequest(Card card){
+        this();
+        this.card = card;
+    }
+
     public Card getCard() {
         return card;
     }
