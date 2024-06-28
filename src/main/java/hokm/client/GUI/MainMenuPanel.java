@@ -40,8 +40,8 @@ public class MainMenuPanel extends JPanel {
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
                 topFrame.remove(MainMenuPanel.this);
                 topFrame.add(new RoomPanel());
-                topFrame.revalidate();
                 topFrame.repaint();
+                topFrame.revalidate();
             }
             @Override
             public void mousePressed(MouseEvent mouseEvent) {

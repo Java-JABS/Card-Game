@@ -23,8 +23,8 @@ public class RoomPanel extends JPanel {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.remove(this);
             topFrame.add(new OuterGamePanel());
-            topFrame.revalidate();
             topFrame.repaint();
+            topFrame.revalidate();
         });
         startButton.addMouseListener(new MouseListener() {
             @Override
