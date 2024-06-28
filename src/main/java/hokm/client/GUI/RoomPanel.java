@@ -57,8 +57,8 @@ public class RoomPanel extends JPanel {
             }
         });
 
-        names.setPreferredSize(new Dimension(300,150));
-        names.setFont(new Font("Arial", Font.BOLD, 20));
+        names.setPreferredSize(new Dimension(300,300));
+        names.setFont(new Font("Arial", Font.BOLD, 13));
         GridBagConstraints namesGrid = new GridBagConstraints();
         namesGrid.gridx = 0;
         namesGrid.gridy = 1;
