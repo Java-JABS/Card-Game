@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class NewJFrame2 extends JFrame {
+public class GamePanel extends JPanel {
 
     private int cardWidth = 80;
     private JPanel right =new JPanel();
@@ -23,13 +23,13 @@ public class NewJFrame2 extends JFrame {
     private JLabel[] names = {new JLabel(),new JLabel(),new JLabel(),new JLabel()};
     private JLabel[] cards = {new JLabel(),new JLabel(),new JLabel(),new JLabel()};
     JButton[] cardButtons= new JButton[13];
-    public NewJFrame2() {
+    public GamePanel() {
         setLayout(new BorderLayout());
         initComponents();
     }
 
     public ImageIcon getCardIcon(Card card){
-        return new ImageIcon(new ImageIcon("pictures/"+card.suit()+"/"+card.value()+".png").getImage().getScaledInstance(80, -1,Image.SCALE_SMOOTH ));
+        return new ImageIcon(new ImageIcon("pictures/cards/"+card.suit()+"/"+card.value()+".png").getImage().getScaledInstance(80, -1,Image.SCALE_SMOOTH ));
     }
     public void setCard(ArrayList<Card> list, int index){
         for(int i = 0;i < list.size();i++){
@@ -177,13 +177,13 @@ public class NewJFrame2 extends JFrame {
 
             cardButtons[i].setLayout(new GridBagLayout());
 
-            JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon("pictures/DIAMONDS/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
+            JLabel iconLabel = new JLabel(new ImageIcon(new ImageIcon("pictures/cards/DIAMONDS/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
             cardButtons[i].add(iconLabel);
 
             cardButtons[i].setVerticalTextPosition(SwingConstants.BOTTOM);
             cardButtons[i].setHorizontalTextPosition(SwingConstants.CENTER);
             cardButtons[i].setPreferredSize(new Dimension(60, 90));
-            //cardButtons[i].setIcon(new ImageIcon(new ImageIcon("Cards/Diamond/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
+//            cardButtons[i].setIcon(new ImageIcon(new ImageIcon("cards/KING.png").getImage().getScaledInstance(60, -1, Image.SCALE_SMOOTH)));
             GridBagConstraints bGrid = new GridBagConstraints();
             bGrid.gridx = i + 1;
             bGrid.gridy = 5;
@@ -242,7 +242,7 @@ public class NewJFrame2 extends JFrame {
             });
         }
 
-        pack();
+
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -256,14 +256,12 @@ public class NewJFrame2 extends JFrame {
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GamePanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewJFrame2().setVisible(true);
+                new GamePanel().setVisible(true);
             }
         });
     }
