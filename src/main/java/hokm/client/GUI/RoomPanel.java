@@ -27,7 +27,7 @@ public class RoomPanel extends JPanel {
         startButton.addActionListener(actionEvent -> {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.remove(this);
-            topFrame.add(new GamePanel());
+            topFrame.add(new OuterGamePanel());
             topFrame.revalidate();
             topFrame.repaint();
         });
