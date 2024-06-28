@@ -6,10 +6,7 @@ import hokm.messages.RegisterRequest;
 import hokm.server.RequestException;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class MainFrame extends JFrame {
@@ -50,17 +47,22 @@ public class MainFrame extends JFrame {
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(null, "couldn't connect to server!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        while (client == null) {
+
+        while (newClient == null) {
             try {
-                client = new ClientRequestSender(JOptionPane.showInputDialog("Please Enter Server IP."), Integer.parseInt(JOptionPane.showInputDialog("Please Enter Server PORT.")));
-                client.sendMessage(new RegisterRequest());
+                newClient = new ClientRequestSender(JOptionPane.showInputDialog("Please Enter Server IP."), Integer.parseInt(JOptionPane.showInputDialog("Please Enter Server PORT.")));
+                newClient.sendMessage(new RegisterRequest());
             } catch (RequestException e) {
                 trySignup(newClient);
             } catch (RuntimeException e) {
                 JOptionPane.showMessageDialog(null, "couldn't connect to server!", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         }
-
+        client = newClient;
+        try (FileWriter file = new FileWriter("config.txt");) {
+            file.write(ClientRequestSender.gsonAgent.toJson(client));
+        } catch (IOException ignored) {
+        }
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(new MainMenuPanel());
         pack();
