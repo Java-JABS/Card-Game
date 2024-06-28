@@ -14,15 +14,23 @@ import java.awt.event.MouseListener;
 import static java.lang.Thread.sleep;
 
 public class RoomPanel extends JPanel {
-    JLabel names= new JLabel("",SwingConstants.CENTER);
+
+    JLabel roomLabel = new JLabel();
+    JTextArea names= new JTextArea();
+    JTextField showToken = new JTextField(SwingConstants.CENTER);
     JButton startButton = new JButton("Start");
     RoomUpdate roomUpdate = new RoomUpdate();
     public RoomPanel(){
+
+        roomLabel.setLayout(new GridBagLayout());
+        ImageIcon roomLabelPicture = new ImageIcon("pictures/MainMenuLabelPicture.jpeg");
+        roomLabel.setIcon(roomLabelPicture);
+
         startButton.setPreferredSize(new Dimension(300,100));
-        startButton.setFont(new Font("Arial", Font.BOLD, 25));
+        startButton.setFont(new Font("Arial", Font.BOLD, 30));
         GridBagConstraints startButtonGrid = new GridBagConstraints();
         startButtonGrid.gridx = 0;
-        startButtonGrid.gridy = 0;
+        startButtonGrid.gridy = 1;
         startButtonGrid.insets = new Insets(5,5,5,5);
         startButton.setFocusable(false);
         startButton.addActionListener(actionEvent -> {
@@ -57,26 +65,44 @@ public class RoomPanel extends JPanel {
             }
         });
 
-        names.setPreferredSize(new Dimension(300,300));
-        names.setFont(new Font("Arial", Font.BOLD, 13));
+        names.setEditable(false);
+        names.setPreferredSize(new Dimension(300,150));
+        names.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        names.setLineWrap(true);
+        names.setWrapStyleWord(true);
+        names.setFont(new Font("Arial", Font.BOLD, 20));
         GridBagConstraints namesGrid = new GridBagConstraints();
         namesGrid.gridx = 0;
-        namesGrid.gridy = 1;
+        namesGrid.gridy = 2;
         namesGrid.insets = new Insets(5,5,5,5);
 
-        setLayout(new GridBagLayout());
-        add(startButton, startButtonGrid);
-        add(names, namesGrid);
+        showToken.setPreferredSize(new Dimension(300,30));
+        showToken.setEditable(false);
+        showToken.setBackground(Color.WHITE);
+        showToken.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        showToken.setFont(new Font("Arial", Font.BOLD, 15));
+        GridBagConstraints showTokenGrid = new GridBagConstraints();
+        showTokenGrid.gridx = 0;
+        showTokenGrid.gridy = 0;
+        showTokenGrid.insets = new Insets(5,5,5,5);
+
+        setLayout(new GridLayout(1,1));
+        this.roomLabel.add(startButton, startButtonGrid);
+        this.roomLabel.add(names, namesGrid);
+        this.roomLabel.add(showToken, showTokenGrid);
+
+        this.add(roomLabel);
         new Thread(()->{
+            showToken.setText(" Room token : ");
             while (true){
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
                     RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
                     if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
                         if(!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())){
-                            String roomMembers = "Players in room : <4 players needed to start>\n";
+                            String roomMembers = " Players in room :\n";
                             for (int i = 0; i < newRoomUpdate.getPlayerNames().size(); i++) {
-                                roomMembers = roomMembers +"Player " + (i+1) + " : " + newRoomUpdate.getPlayerNames().get(i) + "\n";
+                                roomMembers = roomMembers +" Player <" + (i+1) + ">: " + newRoomUpdate.getPlayerNames().get(i) + "\n";
                             }
                             names.setText(roomMembers);
                         }
