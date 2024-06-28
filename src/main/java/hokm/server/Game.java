@@ -85,8 +85,10 @@ public class Game {
     }
 
     public void newRound() {
+        waitForEveryoneToGetUpdate.run();
         synchronized (this) {
-            waitForEveryoneToGetUpdate.run();
+            if(gameState!=GameState.NEXT_ROUND)
+                System.out.println("this shouldn't happen!");
             minorUpdate = new GameUpdate(majorUpdate);
             // what if there is not 4 cards?!
             Card highestCard = getHighestCard(onTableCards);
