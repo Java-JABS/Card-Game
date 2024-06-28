@@ -14,7 +14,7 @@ import java.awt.event.MouseListener;
 import static java.lang.Thread.sleep;
 
 public class RoomPanel extends JPanel {
-    JTextArea names= new JTextArea();
+    JLabel names= new JLabel("",SwingConstants.CENTER);
     JButton startButton = new JButton("Start");
     RoomUpdate roomUpdate = new RoomUpdate();
     public RoomPanel(){
@@ -57,8 +57,8 @@ public class RoomPanel extends JPanel {
             }
         });
 
-        names.setPreferredSize(new Dimension(300,100));
-        names.setFont(new Font("Arial", Font.BOLD, 25));
+        names.setPreferredSize(new Dimension(300,150));
+        names.setFont(new Font("Arial", Font.BOLD, 20));
         GridBagConstraints namesGrid = new GridBagConstraints();
         namesGrid.gridx = 0;
         namesGrid.gridy = 1;
@@ -74,7 +74,11 @@ public class RoomPanel extends JPanel {
                     RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
                     if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
                         if(!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())){
-                            names.setText(newRoomUpdate.getNumber()+" players: "+newRoomUpdate.getPlayerNames().toString());
+                            String roomMembers = "Players in room : <4 players needed to start>\n";
+                            for (int i = 0; i < newRoomUpdate.getPlayerNames().size(); i++) {
+                                roomMembers = roomMembers +"Player " + (i+1) + " : " + newRoomUpdate.getPlayerNames().get(i) + "\n";
+                            }
+                            names.setText(roomMembers);
                         }
                     }
                     if(roomUpdate.getGameStarted()){
