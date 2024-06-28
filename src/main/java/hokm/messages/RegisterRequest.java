@@ -7,6 +7,11 @@ public class RegisterRequest extends ClientRequest {
         super(ClientRequestType.REGISTER);
     }
 
+    public RegisterRequest(String username) {
+        this();
+        this.username = username;
+    }
+
     public String getUsername() {
 
         return username;
