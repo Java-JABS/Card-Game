@@ -4,12 +4,17 @@ import java.util.ArrayList;
 
 public class RoomUpdate implements Cloneable{
     ArrayList<String> playerNames;
-    Boolean isGameStarted;
+
+    Boolean isGameStarted =false;
+
     Integer number = 0;
     Integer yourIndex;
-
     public void setGameStarted(Boolean gameStarted) {
         isGameStarted = gameStarted;
+    }
+
+    public Boolean getGameStarted() {
+        return isGameStarted;
     }
 
     public ArrayList<String> getPlayerNames() {
