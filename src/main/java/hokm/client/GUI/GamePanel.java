@@ -26,53 +26,22 @@ public class GamePanel extends JPanel {
     private final JLabel[] playedCardLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private final ArrayList<CardButton> cardButtons = new ArrayList<>(13);
 
-
-    public GamePanel() {
-        setLayout(new BorderLayout());
-        initComponents();
-    }
-
-    public ImageIcon getCardIcon(Card card) {
-        return new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
-    }
-
-    public void setPlayedCardLabelsIcon(ArrayList<Card> list, int index) {
-        for(JLabel label:playedCardLabels){
-            label.setIcon(null);
-        }
-        for (int i = 0; i < list.size(); i++) {
-            playedCardLabels[(i - list.size()-index+8) % 4].setIcon(getCardIcon(list.get(i)));
-        }
-    }
-
-    public void setDeckCardButtons(ArrayList<Card> list) {
-        cardDeckPanel.removeAll();
-        for (int i = 0; i < list.size() ; i++) {
-            CardButton cardButton=cardButtons.get(i);
-            cardButton.setCard(list.get(i));
-            add(cardButton);
-            GridBagConstraints bGrid = new GridBagConstraints();
-            bGrid.gridx = i;
-            bGrid.insets = new Insets(0, -15, 0, -15);
-            cardDeckPanel.add(cardButton, bGrid);
-        }
-        repaint();
-        revalidate();
-    }
-
-    public void setProfileNameLabelsText(ArrayList<String> list, int index) {
-        for (int i = 0; i < list.size(); i++) {
-            profileNameLabels[(i +   index + 4) % 4].setText(list.get(i));
-        }
-    }
-
-    public void setProfilePictureLabelsIcon() {
-        for (JLabel label : profilePictureLabels) {
-            label.setIcon(new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/Person.png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
-        }
-    }
-
     private void initComponents() {
+
+        this.setLayout(new BorderLayout());
+        this.rightPlayerPanel.setOpaque(false);
+        this.leftPlayerPanel.setOpaque(false);
+        this.myProfilePanel.setOpaque(false);
+        this.upPlayerPanel.setOpaque(false);
+        this.downPanel.setOpaque(false);
+        this.centerPanel.setOpaque(false);
+        this.cardDeckPanel.setOpaque(false);
+        this.setOpaque(false);
+        for (int i = 0; i < this.profileNameLabels.length; i++) {
+            this.profileNameLabels[i].setForeground(Color.WHITE);
+        }
+
+
 
         Dimension cardsDimension = new Dimension(80, 120);
         Dimension profilePicturesDimension = new Dimension(80, 80);
@@ -179,4 +148,52 @@ public class GamePanel extends JPanel {
             },cardsDimension));
         }
     }
+
+
+    GamePanel() {
+
+        initComponents();
+    }
+
+    public ImageIcon getCardIcon(Card card) {
+        return new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
+    }
+
+    public void setPlayedCardLabelsIcon(ArrayList<Card> list, int index) {
+        for(JLabel label:playedCardLabels){
+            label.setIcon(null);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            playedCardLabels[(i - list.size()-index+8) % 4].setIcon(getCardIcon(list.get(i)));
+        }
+    }
+
+    public void setDeckCardButtons(ArrayList<Card> list) {
+        cardDeckPanel.removeAll();
+        for (int i = 0; i < list.size() ; i++) {
+            CardButton cardButton=cardButtons.get(i);
+            cardButton.setCard(list.get(i));
+            add(cardButton);
+            GridBagConstraints bGrid = new GridBagConstraints();
+            bGrid.gridx = i;
+            bGrid.insets = new Insets(0, -15, 0, -15);
+            cardDeckPanel.add(cardButton, bGrid);
+        }
+        repaint();
+        revalidate();
+    }
+
+    public void setProfileNameLabelsText(ArrayList<String> list, int index) {
+        for (int i = 0; i < list.size(); i++) {
+            profileNameLabels[(i +   index + 4) % 4].setText(list.get(i));
+        }
+    }
+
+    public void setProfilePictureLabelsIcon() {
+        for (JLabel label : profilePictureLabels) {
+            label.setIcon(new ImageIcon(new ImageIcon("pictures/Person.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
+        }
+    }
+
+
 }

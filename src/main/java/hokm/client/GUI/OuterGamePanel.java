@@ -23,13 +23,32 @@ public class OuterGamePanel extends JPanel {
     GameUpdate gameUpdate = new GameUpdate();
 
     OuterGamePanel(){
+        team1Sets.setOpaque(true);
+        team1Sets.setBackground(Color.GRAY);
+        team1Sets.setForeground(Color.WHITE);
+        team2Sets.setOpaque(true);
+        team2Sets.setBackground(Color.GRAY);
+        team2Sets.setForeground(Color.WHITE);
+        team1Rounds.setOpaque(true);
+        team1Rounds.setBackground(Color.GRAY);
+        team1Rounds.setForeground(Color.WHITE);
+        team2Rounds.setOpaque(true);
+        team2Rounds.setBackground(Color.GRAY);
+        team2Rounds.setForeground(Color.WHITE);
+
+        this.setOpaque(false);
+
         setLayout(new BorderLayout());
         add(gamePanel,BorderLayout.CENTER);
 
         JPanel upperPanel = new JPanel();
+        upperPanel.setOpaque(false);
         upperPanel.setLayout(new GridBagLayout());
 
         JLabel team = new JLabel("Team",SwingConstants.CENTER);
+        team.setBackground(Color.GRAY);
+        team.setForeground(Color.WHITE);
+        team.setOpaque(true);
         team.setPreferredSize(new Dimension(50,25));
         team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints teamGrid = new GridBagConstraints();
@@ -38,6 +57,9 @@ public class OuterGamePanel extends JPanel {
         teamGrid.insets = new Insets(1,1,1,1);
 
         JLabel sets = new JLabel("Set",SwingConstants.CENTER);
+        sets.setBackground(Color.GRAY);
+        sets.setForeground(Color.WHITE);
+        sets.setOpaque(true);
         sets.setPreferredSize(new Dimension(50,25));
         sets.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints setsGrid = new GridBagConstraints();
@@ -46,6 +68,9 @@ public class OuterGamePanel extends JPanel {
         setsGrid.insets = new Insets(1,1,1,1);
 
         JLabel round = new JLabel("Round",SwingConstants.CENTER);
+        round.setBackground(Color.GRAY);
+        round.setForeground(Color.WHITE);
+        round.setOpaque(true);
         round.setPreferredSize(new Dimension(50,25));
         round.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints roundGrid = new GridBagConstraints();
@@ -55,6 +80,9 @@ public class OuterGamePanel extends JPanel {
 
 
         JLabel team1 = new JLabel("Team1",SwingConstants.CENTER);
+        team1.setBackground(Color.GRAY);
+        team1.setForeground(Color.WHITE);
+        team1.setOpaque(true);
         team1.setPreferredSize(new Dimension(50,25));
         team1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team1Grid = new GridBagConstraints();
@@ -62,7 +90,11 @@ public class OuterGamePanel extends JPanel {
         team1Grid.gridy = 1;
         team1Grid.insets = new Insets(1,1,1,1);
 
+
         JLabel team2 = new JLabel("Team2",SwingConstants.CENTER);
+        team2.setOpaque(true);
+        team2.setBackground(Color.GRAY);
+        team2.setForeground(Color.WHITE);
         team2.setPreferredSize(new Dimension(50,25));
         team2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team2Grid = new GridBagConstraints();
