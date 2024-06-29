@@ -6,10 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 public class CardButton extends JButton {
     private Card card;
-    private JLabel iconLabel = new JLabel();
+    private final JLabel iconLabel = new JLabel();
     private final int deltaY = 40;
     final Runnable mouseClick;
 
@@ -68,7 +69,7 @@ public class CardButton extends JButton {
     }
 
     public void setCard(Card card) {
-        iconLabel.setIcon(new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
+        iconLabel.setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png"))).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
         this.card = card;
     }
 }

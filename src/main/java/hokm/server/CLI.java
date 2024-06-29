@@ -1,10 +1,6 @@
 package hokm.server;
-
-import java.util.Arrays;
-
 public class CLI {
     static Server server;
-
     public static void main(String[] args) {
         if(args.length < 2)
             throw new RuntimeException("please enter port");

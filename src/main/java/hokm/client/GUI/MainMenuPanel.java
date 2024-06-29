@@ -38,9 +38,9 @@ public class MainMenuPanel extends JPanel {
             public void mouseClicked(MouseEvent mouseEvent) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
                 try {
-                    JOptionPane.showMessageDialog(null, topFrame.client.sendMessage(new RoomCreateRequest()), "gameToken", JOptionPane.INFORMATION_MESSAGE);
+                    String roomToken = topFrame.client.sendMessage(new RoomCreateRequest());
                     topFrame.remove(MainMenuPanel.this);
-                    topFrame.add(new RoomPanel());
+                    topFrame.add(new RoomPanel(roomToken));
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
@@ -76,9 +76,10 @@ public class MainMenuPanel extends JPanel {
             public void mouseClicked(MouseEvent mouseEvent) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
                 try {
-                    topFrame.client.sendMessage(new JoinRequest(JOptionPane.showInputDialog("Enter room token:")));
+                    String token = JOptionPane.showInputDialog("Enter room token:");
+                    topFrame.client.sendMessage(new JoinRequest(token));
                     topFrame.remove(MainMenuPanel.this);
-                    topFrame.add(new RoomPanel());
+                    topFrame.add(new RoomPanel(token));
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {

@@ -15,13 +15,15 @@ import static java.lang.Thread.sleep;
 
 public class RoomPanel extends JPanel {
 
+    String gameToken;
     JLabel roomLabel = new JLabel();
     JTextArea names= new JTextArea();
     JTextField showToken = new JTextField(SwingConstants.CENTER);
     JButton startButton = new JButton("Start");
     RoomUpdate roomUpdate = new RoomUpdate();
-    public RoomPanel(){
+    public RoomPanel(String gameToken){
 
+        this.gameToken = gameToken;
         roomLabel.setLayout(new GridBagLayout());
         ImageIcon roomLabelPicture = new ImageIcon(this.getClass().getClassLoader().getResource("pictures/MainMenuLabelPicture.jpeg"));
         roomLabel.setIcon(roomLabelPicture);
@@ -93,7 +95,7 @@ public class RoomPanel extends JPanel {
 
         this.add(roomLabel);
         new Thread(()->{
-            showToken.setText(" Room token : ");
+            showToken.setText(" Room token : " + this.gameToken);
             while (true){
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
