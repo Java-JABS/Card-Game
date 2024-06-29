@@ -21,7 +21,7 @@ public class MainMenuPanel extends JPanel {
 
         JLabel mainMenuLabel = new JLabel();
         mainMenuLabel.setLayout(new GridBagLayout());
-        ImageIcon mainMenuLabelPicture = Assets.getImageIcon("MainMenuLabelPicture.jpeg");
+        ImageIcon mainMenuLabelPicture = Assets.getImageIcon("src/main/resources/pictures/hokm_new_intro.png");
         mainMenuLabel.setIcon(mainMenuLabelPicture);
         JButton createNewGameButton = new JButton("Create New Game");
         createNewGameButton.setFocusable(false);
