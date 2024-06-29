@@ -7,6 +7,8 @@ import hokm.messages.GameUpdateRequest;
 import hokm.messages.HokmRequest;
 import hokm.server.GameState;
 import hokm.server.RequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +23,7 @@ public class OuterGamePanel extends JPanel {
     JLabel team2Rounds = new JLabel("0",SwingConstants.CENTER);
     GamePanel gamePanel = new GamePanel();
     GameUpdate gameUpdate = new GameUpdate();
+    private Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
 
     OuterGamePanel(){
         setLayout(new BorderLayout());
@@ -113,6 +116,7 @@ public class OuterGamePanel extends JPanel {
             while (true){
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
+                    logger.info("Request for Game Update :-)");
                     String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
                     GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
                     switch (newGameUpdate.getNumber() - gameUpdate.getNumber()){
@@ -142,8 +146,10 @@ public class OuterGamePanel extends JPanel {
                     gameUpdate=newGameUpdate;
                     sleep(1000);
                 } catch (InterruptedException e) {
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     throw new RuntimeException(e);
                 }catch (RequestException e) {
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                     topFrame.remove(OuterGamePanel.this);
                     topFrame.add(new MainMenuPanel());
