@@ -44,19 +44,21 @@ public class Game {
         ArrayList<String> names = new ArrayList<>();
         for (Player player : players)
             names.add(player.name);
+        minorUpdate = new GameUpdate(majorUpdate);
         minorUpdate.setPlayerNames(names);
         newSet(players.get(random.nextInt(3)));
     }
 
     private void newSet(Player ruler) {
+
         synchronized (this) {
-            if (gameState != GameState.NEW_SET)
+            if (gameState != GameState.NEW_SET) {
                 throw new RuntimeException();
+            }
             if (!players.contains(ruler)) throw new RuntimeException();
             dast = new Dast(true);
             this.ruler = ruler;
             currentPlayer = ruler;
-            minorUpdate = new GameUpdate(majorUpdate);
             minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             minorUpdate.setCurrentRuler(players.indexOf(ruler));
             ruler.dast.addAll(dast.popFromStart(5));
