@@ -4,6 +4,8 @@ import hokm.client.ClientRequestSender;
 import hokm.messages.LoginRequest;
 import hokm.messages.RegisterRequest;
 import hokm.server.RequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.*;
@@ -11,7 +13,7 @@ import java.util.Scanner;
 
 public class MainFrame extends JFrame {
     ClientRequestSender client;
-
+    private Logger logger = LoggerFactory.getLogger(MainFrame.class);
     static void trySignup(ClientRequestSender newClient) {
         while (true) {
             try {
@@ -35,8 +37,9 @@ public class MainFrame extends JFrame {
                 while (scanner.hasNextLine()) {
                     a.append(scanner.nextLine());
                 }
-
+                logger.info("A config found, connect to server");
                 newClient = ClientRequestSender.gsonAgent.fromJson(a.toString(), ClientRequestSender.class);
+                logger.info("Trying to connect to the server :");
                 newClient.sendMessage(new LoginRequest());
                 client = newClient;
             }
@@ -50,6 +53,7 @@ public class MainFrame extends JFrame {
 
         while (newClient == null) {
             try {
+                logger.info("Couldn't connect to server, Try to getting server information from user: ");
                 newClient = new ClientRequestSender(JOptionPane.showInputDialog("Please Enter Server IP."), Integer.parseInt(JOptionPane.showInputDialog("Please Enter Server PORT.")));
                 newClient.sendMessage(new RegisterRequest());
             } catch (RequestException e) {
@@ -60,6 +64,7 @@ public class MainFrame extends JFrame {
         }
         client = newClient;
         try (FileWriter file = new FileWriter("config.txt");) {
+            logger.info("Saving server information to config.txt :");
             file.write(ClientRequestSender.gsonAgent.toJson(client));
         } catch (IOException ignored) {
         }
@@ -67,6 +72,7 @@ public class MainFrame extends JFrame {
         add(new MainMenuPanel());
         pack();
         setVisible(true);
+
     }
 
     public static void main(String[] args) {
