@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class MainFrame extends JFrame {
+
     ClientRequestSender client;
     private Logger logger = LoggerFactory.getLogger(MainFrame.class);
     static void trySignup(ClientRequestSender newClient) {
@@ -27,6 +28,9 @@ public class MainFrame extends JFrame {
     }
 
     MainFrame() {
+        this.setTitle("Java-JABS™ Hokm");
+        ImageIcon img = new ImageIcon("pictures/single poker ga d2f4b3ba-7833-4d61-8b07-9728def16472.png");
+        this.setIconImage(img.getImage());
         // Todo
         ClientRequestSender newClient = null;
         try {
