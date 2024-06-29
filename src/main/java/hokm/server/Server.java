@@ -32,6 +32,7 @@ public class Server extends Thread {
     private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
         database = new Database("database.db");
         database.initialize();
+        logger.info("server initialized");
         Server.serverSocket = serverSocket;
         for (int i = 0; i < workerNumbs; i++) {
             new Server().start();
@@ -144,7 +145,7 @@ public class Server extends Thread {
 
     private void listen() throws IOException {
         Socket socket;
-        logger.info("listening");
+        logger.info("listening on *:{}",serverSocket.getLocalPort());
         while (true) {
             socket = serverSocket.accept();
             synchronized (clientRequests) {
@@ -157,8 +158,10 @@ public class Server extends Thread {
     private void registerUser(RegisterRequest request) {
         String token = DigestUtils.sha256Hex(request.getUsername() + tokenGenerator());
         if (database.createUser(request.getUsername(), token)) {
+            logger.debug("registering user: " + request.getUsername() + "successful");
             sendResponse(true, token);
         } else {
+            logger.debug("registering user: " + request.getUsername() + "failed");
             sendResponse(false);
         }
     }
@@ -167,8 +170,10 @@ public class Server extends Thread {
         // Todo : Convert to logout
         String username;
         if ((username = database.getUsername(request.getToken())) != null) {
+            logger.info("logging user in: {}successful", username);
             sendResponse(true, username);
         } else {
+            logger.debug("logging user in: failed");
             sendResponse(false);
         }
     }
@@ -180,12 +185,14 @@ public class Server extends Thread {
             String token = tokenGenerator();
             Room room = createNewRoom(token);
             room.join(player);
+        logger.info("room created, token:{}", token);
             sendResponse(true, token);
     }
 
     private Room createNewRoom(String token) throws RequestException {
         Room room = new Room();
         if (rooms.putIfAbsent(token, room) != null) {
+            logger.warn("failed to create room :( reason: duplicate room token!");
             throw new RequestException("Couldn't create room!\nTry again.");
         }
         return room;
@@ -214,6 +221,7 @@ public class Server extends Thread {
         Player player = playersByToken.get(request.getToken());
         isInRoom(player,false);
         joinPlayerToRoom(player,request.getGameToken());
+        logger.info("player joined room");
         sendResponse(true);
     }
 
@@ -232,6 +240,7 @@ public class Server extends Thread {
             if (player.isInAGame()) {
                 if (request.isForceLeaveGame()) {
                     // Todo : leave game and room
+                    logger.info("player left the room");
                     sendResponse(true);
                 } else sendResponse(false, "Can't leave room while in a game!");
             }
@@ -252,6 +261,7 @@ public class Server extends Thread {
                 games.add(room.startGame());
             else throw new RequestException("You are not room owner!");
         }
+        logger.info("game started");
         sendResponse(true);
     }
 
@@ -267,6 +277,7 @@ public class Server extends Thread {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
         isInGame(player,true);
+        logger.info("updating game");
         sendResponse(true, gsonAgent.toJson(player.getGameUpdate(request.isMajorUpdate())));
     }
 
@@ -275,6 +286,7 @@ public class Server extends Thread {
         Player player = playersByToken.get(request.getToken());
         isInGame(player,true);
         player.putCard(request.getCard());
+        logger.info("putting card");
         sendResponse(true);
     }
 
@@ -283,6 +295,7 @@ public class Server extends Thread {
         Player player = playersByToken.get(request.getToken());
         isInGame(player,true);
         player.hokm(request.getHokm());
+        logger.info("getting hokm");
         sendResponse(true);
     }
 
@@ -290,6 +303,7 @@ public class Server extends Thread {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
         isInRoom(player,true);
+        logger.info("update room");
         sendResponse(true,gsonAgent.toJson(player.getRoomUpdate()));
     }
 
@@ -299,7 +313,7 @@ public class Server extends Thread {
         try {
             sendBuffer.writeUTF(responseString);
         } catch (IOException e) {
-            // Todo : handle connection lost
+            logger.warn("connection lost!");
         }
     }
 
