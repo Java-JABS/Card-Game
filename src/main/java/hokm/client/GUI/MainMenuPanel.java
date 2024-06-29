@@ -11,12 +11,8 @@ import java.awt.event.MouseListener;
 
 public class MainMenuPanel extends JPanel {
     MainMenuPanel(){
-        //main frame :
-        //this.setSize(getMaximumSize());
-        //this.setResizable(false);
-        this.setLayout(new GridLayout(1,1));
 
-        //main menu panel :
+        this.setLayout(new GridLayout(1,1));
 
         setLayout(new GridLayout(1,1));
 

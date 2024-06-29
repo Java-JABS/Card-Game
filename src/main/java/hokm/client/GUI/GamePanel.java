@@ -139,36 +139,30 @@ public class GamePanel extends JPanel {
 
         // setting down panel :
         downPanel.setLayout(new GridBagLayout());
-
         myProfilePanel.setLayout(new GridBagLayout());
-
         playedCardLabels[0].setPreferredSize(cardsDimension);
         myProfilePanel.add(playedCardLabels[0], new GridBagConstraints());
-
         profileNameLabels[0].setText("Name");
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new Insets(0,0,0,0);
         myProfilePanel.add(profileNameLabels[0], gridBagConstraints);
-
         profilePictureLabels[0].setPreferredSize(profilePicturesDimension);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         myProfilePanel.add(profilePictureLabels[0], gridBagConstraints);
-
         downPanel.add(myProfilePanel, new GridBagConstraints());
-
         cardDeckPanel.setLayout(new GridBagLayout());
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.insets = new Insets(10, 0, 0, 0);
         cardDeckPanel.setPreferredSize(new Dimension(800, 200));
         downPanel.add(cardDeckPanel, gridBagConstraints);
-
         add(downPanel, BorderLayout.PAGE_END);
 
+        // setting center panel :
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
         setProfilePictureLabelsIcon();
@@ -184,11 +178,5 @@ public class GamePanel extends JPanel {
                 }
             },cardsDimension));
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame tmp = new JFrame();
-        tmp.add(new GamePanel());
-        tmp.setVisible(true);
     }
 }

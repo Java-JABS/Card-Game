@@ -14,6 +14,7 @@ import java.awt.*;
 import static java.lang.Thread.sleep;
 
 public class OuterGamePanel extends JPanel {
+
     JLabel team1Sets = new JLabel("0",SwingConstants.CENTER);
     JLabel team1Rounds = new JLabel("0",SwingConstants.CENTER);
     JLabel team2Sets = new JLabel("0",SwingConstants.CENTER);
