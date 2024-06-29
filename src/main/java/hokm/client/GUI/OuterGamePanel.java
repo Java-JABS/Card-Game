@@ -156,6 +156,7 @@ public class OuterGamePanel extends JPanel {
                     topFrame.repaint();
                     topFrame.revalidate();
                 } catch (NullPointerException e){
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     e.printStackTrace();
                 }
             }
