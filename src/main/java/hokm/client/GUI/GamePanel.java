@@ -4,7 +4,8 @@ import hokm.Card;
 
 import hokm.messages.PutCardRequest;
 import hokm.server.RequestException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,11 +27,13 @@ public class GamePanel extends JPanel {
     private final JLabel[] playedCardLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private final ArrayList<CardButton> cardButtons = new ArrayList<>(13);
 
+    private Logger logger = LoggerFactory.getLogger(GamePanel.class);
 
     public GamePanel() {
         setLayout(new BorderLayout());
         initComponents();
     }
+
 
     public ImageIcon getCardIcon(Card card) {
         return new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
@@ -137,7 +140,7 @@ public class GamePanel extends JPanel {
         upPlayerPanel.add(playedCardLabels[2], gridBagConstraints);
         add(upPlayerPanel, BorderLayout.PAGE_START);
 
-        // setting down panel :
+
         downPanel.setLayout(new GridBagLayout());
         myProfilePanel.setLayout(new GridBagLayout());
         playedCardLabels[0].setPreferredSize(cardsDimension);
@@ -162,7 +165,6 @@ public class GamePanel extends JPanel {
         downPanel.add(cardDeckPanel, gridBagConstraints);
         add(downPanel, BorderLayout.PAGE_END);
 
-        // setting center panel :
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
         setProfilePictureLabelsIcon();
@@ -172,6 +174,7 @@ public class GamePanel extends JPanel {
             cardButtons.add(new CardButton(()->{
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
+                    logger.info("Player asks for card_putting request :");
                     topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
                 } catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
