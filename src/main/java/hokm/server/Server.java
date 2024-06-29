@@ -167,7 +167,6 @@ public class Server extends Thread {
     }
 
     private void loginUser(LoginRequest request) {
-        // Todo : Convert to logout
         String username;
         if ((username = database.getUsername(request.getToken())) != null) {
             logger.info("logging user in: {}successful", username);
@@ -251,7 +250,6 @@ public class Server extends Thread {
 
     private void startGame(GameStartRequest request) throws RequestException {
         isLoggedIn(request);
-        // Todo
         Player player = playersByToken.get(request.getToken());
         isInGame(player, false);
         isInRoom(player, true);
