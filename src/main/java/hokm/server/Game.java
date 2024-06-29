@@ -39,9 +39,12 @@ public class Game {
         this.players = players;
         this.room = room;
         if (players.size() != 4) throw new IllegalArgumentException();
-        // set next ruler
         Random random = new Random();
         this.gameState = GameState.NEW_SET;
+        ArrayList<String> names = new ArrayList<>();
+        for (Player player : players)
+            names.add(player.name);
+        minorUpdate.setPlayerNames(names);
         newSet(players.get(random.nextInt(3)));
     }
 
@@ -87,24 +90,25 @@ public class Game {
     public void newRound() {
         waitForEveryoneToGetUpdate.run();
         synchronized (this) {
-            if(gameState!=GameState.NEXT_ROUND)
+            if (gameState != GameState.NEXT_ROUND) {
                 System.out.println("this shouldn't happen!");
+            }
             minorUpdate = new GameUpdate(majorUpdate);
-            // what if there is not 4 cards?!
             Card highestCard = getHighestCard(onTableCards);
             int indexWinnerPlayer = (players.indexOf(currentPlayer) + onTableCards.indexOf(highestCard)) % 4;
             teams[indexWinnerPlayer % 2].round();
             currentPlayer = players.get(indexWinnerPlayer);
             minorUpdate.setCurrentPlayer(indexWinnerPlayer);
-            if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
-                gameState = GameState.NEW_SET;
-                minorUpdate.setGameState(gameState);
-            }
             onTableCards.clear();
             minorUpdate.setOnTableCards(onTableCards);
-            gameState = GameState.PUT_CARD;
-            minorUpdate.setGameState(gameState);
-            majorUpdate.update(minorUpdate);
+            if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
+                gameState = GameState.NEW_SET;
+                newSet(players.get((players.indexOf(ruler) + 1) % 4));
+            } else {
+                minorUpdate.setGameState(gameState);
+                gameState = GameState.PUT_CARD;
+                majorUpdate.update(minorUpdate);
+            }
         }
     }
 
