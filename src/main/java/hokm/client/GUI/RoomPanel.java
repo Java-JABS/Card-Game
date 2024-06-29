@@ -28,7 +28,7 @@ public class RoomPanel extends JPanel {
 
         this.gameToken = gameToken;
         roomLabel.setLayout(new GridBagLayout());
-        ImageIcon roomLabelPicture = new ImageIcon(this.getClass().getClassLoader().getResource("pictures/MainMenuLabelPicture.jpeg"));
+        ImageIcon roomLabelPicture = Assets.getImageIcon("MainMenuLabelPicture.jpeg");
         roomLabel.setIcon(roomLabelPicture);
 
         startButton.setPreferredSize(new Dimension(300,100));

@@ -29,8 +29,7 @@ public class MainFrame extends JFrame {
 
     MainFrame() {
         this.setTitle("Java-JABS™ Hokm");
-        ImageIcon img = new ImageIcon("pictures/single poker ga d2f4b3ba-7833-4d61-8b07-9728def16472.png");
-        this.setIconImage(img.getImage());
+        this.setIconImage(Assets.getImageIcon("single poker ga d2f4b3ba-7833-4d61-8b07-9728def16472.png").getImage());
         // Todo
         ClientRequestSender newClient = null;
         try {

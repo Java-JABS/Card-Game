@@ -69,7 +69,7 @@ public class CardButton extends JButton {
     }
 
     public void setCard(Card card) {
-        iconLabel.setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png"))).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
+        iconLabel.setIcon(new ImageIcon(Assets.getCardImageIcon(card).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
         this.card = card;
     }
 }
