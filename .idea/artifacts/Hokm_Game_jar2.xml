@@ -10,7 +10,7 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.17.0/commons-codec-1.17.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/protobuf/protobuf-java/3.25.1/protobuf-java-3.25.1.jar" path-in-jar="/" />
       <element id="directory" name="pictures">
-        <element id="dir-copy" path="$PROJECT_DIR$/pictures" />
+        <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources/pictures" />
       </element>
     </root>
   </artifact>

@@ -155,7 +155,7 @@ public class GamePanel extends JPanel {
     }
 
     public ImageIcon getCardIcon(Card card) {
-        return new ImageIcon(new ImageIcon(this.getClass().getClassLoader().getResource("pictures/cards/" + card.suit() + "/" + card.value() + ".png")).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
+        return new ImageIcon(Assets.getCardImageIcon(card).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH));
     }
 
     public void setPlayedCardLabelsIcon(ArrayList<Card> list, int index) {
@@ -191,9 +191,9 @@ public class GamePanel extends JPanel {
     public void setProfilePictureLabelsIcon(int rulerIndex) {
         for (int i = 0; i < this.profilePictureLabels.length; i++) {
             if(i!=rulerIndex){
-                this.profilePictureLabels[i].setIcon(new ImageIcon(new ImageIcon("pictures/personIcon.png").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
+                this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon("personIcon.png").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
             }else {
-                this.profilePictureLabels[i].setIcon(new ImageIcon(new ImageIcon("pictures/rulerIcon.jpg").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
+                this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon("rulerIcon.jpg").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
             }
         }
     }
