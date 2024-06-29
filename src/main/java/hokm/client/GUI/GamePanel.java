@@ -134,7 +134,6 @@ public class GamePanel extends JPanel {
         // setting center panel :
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
-        setProfilePictureLabelsIcon();
 
         for (int i = 0; i < 13; i++) {
             int finalI = i;
@@ -189,9 +188,13 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void setProfilePictureLabelsIcon() {
-        for (JLabel label : profilePictureLabels) {
-            label.setIcon(new ImageIcon(new ImageIcon("pictures/Person.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
+    public void setProfilePictureLabelsIcon(int rulerIndex) {
+        for (int i = 0; i < this.profilePictureLabels.length; i++) {
+            if(i!=rulerIndex){
+                this.profilePictureLabels[i].setIcon(new ImageIcon(new ImageIcon("pictures/personIcon.png").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
+            }else {
+                this.profilePictureLabels[i].setIcon(new ImageIcon(new ImageIcon("pictures/rulerIcon.jpg").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
+            }
         }
     }
 

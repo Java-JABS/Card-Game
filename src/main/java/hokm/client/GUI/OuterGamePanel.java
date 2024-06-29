@@ -173,6 +173,7 @@ public class OuterGamePanel extends JPanel {
                                         JOptionPane.WARNING_MESSAGE, 0, null, buttons, null);
                                 topFrame.client.sendMessage(new HokmRequest(buttons[returnValue]));
                             }
+                            gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler()-gameUpdate.getYourIndex());
                     }
 
                     gameUpdate=newGameUpdate;
