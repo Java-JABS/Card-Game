@@ -5,6 +5,8 @@ import hokm.client.ClientRequestSender;
 import hokm.messages.GameStartRequest;
 import hokm.messages.RoomUpdateRequest;
 import hokm.server.RequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +23,7 @@ public class RoomPanel extends JPanel {
     JTextField showToken = new JTextField(SwingConstants.CENTER);
     JButton startButton = new JButton("Start");
     RoomUpdate roomUpdate = new RoomUpdate();
+    private Logger logger = LoggerFactory.getLogger(RoomPanel.class);
     public RoomPanel(String gameToken){
 
         this.gameToken = gameToken;
@@ -43,12 +46,14 @@ public class RoomPanel extends JPanel {
             public void mouseClicked(MouseEvent mouseEvent) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try{
+                    logger.info("Request for game start.");
                     topFrame.client.sendMessage(new GameStartRequest());
                     topFrame.remove(RoomPanel.this);
                     topFrame.add(new OuterGameLabel());
                     topFrame.repaint();
                     topFrame.revalidate();
                 } catch (RequestException e) {
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
 
@@ -99,6 +104,7 @@ public class RoomPanel extends JPanel {
             while (true){
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
+                    logger.info("Request for room update:-)");
                     RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
                     if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
                         if(!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())){
@@ -118,8 +124,10 @@ public class RoomPanel extends JPanel {
                     roomUpdate=newRoomUpdate;
                     sleep(1000);
                 } catch (InterruptedException e) {
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     throw new RuntimeException(e);
                 }catch (RequestException e) {
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                     topFrame.remove(RoomPanel.this);
                     topFrame.add(new MainMenuPanel());
