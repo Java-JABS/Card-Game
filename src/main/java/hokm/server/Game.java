@@ -50,13 +50,15 @@ public class Game {
     }
 
     private void newSet(Player ruler) {
-
+        waitForEveryoneToGetUpdate.run();
         synchronized (this) {
             if (gameState != GameState.NEW_SET) {
                 throw new RuntimeException();
             }
             if (!players.contains(ruler)) throw new RuntimeException();
             dast = new Dast(true);
+            for(Player player: players)
+                player.dast.clear();
             this.ruler = ruler;
             currentPlayer = ruler;
             minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
@@ -66,6 +68,8 @@ public class Game {
             minorUpdate.setGameState(gameState);
             goal(teams[0], teams[1]);
             goal(teams[1], teams[0]);
+            for(Team team :teams)
+                team.clearRound();
             gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
             minorUpdate.setTeams(teams);
             minorUpdate.setGameState(gameState);
