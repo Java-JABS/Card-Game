@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
 
     MainFrame() {
         this.setTitle("Java-JABS™ Hokm");
-        this.setIconImage(Assets.getImageIcon("single poker ga d2f4b3ba-7833-4d61-8b07-9728def16472.png").getImage());
+        this.setIconImage(Assets.getImageIcon("icon.png").getImage());
         // Todo
         ClientRequestSender newClient = null;
         try {
@@ -65,6 +65,7 @@ public class MainFrame extends JFrame {
         }
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(new MainMenuPanel());
+        setLocationRelativeTo(null);
         pack();
         setVisible(true);
 

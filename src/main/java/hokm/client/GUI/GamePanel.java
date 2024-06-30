@@ -26,8 +26,8 @@ public class GamePanel extends JPanel {
     private final ArrayList<CardButton> cardButtons = new ArrayList<>(13);
 
     GamePanel() {
-
         initComponents();
+        SwingUtilities.getWindowAncestor(this).pack();
     }
 
     private void initComponents() {

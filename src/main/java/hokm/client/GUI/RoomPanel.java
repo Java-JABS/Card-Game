@@ -29,7 +29,7 @@ public class RoomPanel extends JPanel {
 
         this.gameToken = gameToken;
         roomLabel.setLayout(new GridBagLayout());
-        ImageIcon roomLabelPicture = Assets.getImageIcon("hokm_new_intro.png");
+        ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("intro.jpg").getImage().getScaledInstance(1000,-1,Image.SCALE_SMOOTH));
         roomLabel.setIcon(roomLabelPicture);
 
         startButton.setPreferredSize(new Dimension(300, 100));
@@ -143,6 +143,6 @@ public class RoomPanel extends JPanel {
                 }
             }
         }).start();
-
+        SwingUtilities.getWindowAncestor(this).pack();
     }
 }
