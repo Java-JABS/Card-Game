@@ -65,8 +65,8 @@ public class MainFrame extends JFrame {
         }
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(new MainMenuPanel());
-        setLocationRelativeTo(null);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
 
     }

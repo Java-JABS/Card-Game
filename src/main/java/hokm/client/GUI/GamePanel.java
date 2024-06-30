@@ -42,6 +42,7 @@ public class GamePanel extends JPanel {
         this.setOpaque(false);
         for (int i = 0; i < this.profileNameLabels.length; i++) {
             this.profileNameLabels[i].setBackground(Color.RED);
+            this.profileNameLabels[i].setForeground(Color.WHITE);
         }
 
 
@@ -201,5 +202,7 @@ public class GamePanel extends JPanel {
     public void setCurrentPlayer(int index){
         for (int i = 0; i < profileNameLabels.length; i++)
             profileNameLabels[i].setOpaque(i==index);
+        repaint();
+        revalidate();
     }
 }
