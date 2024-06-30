@@ -111,7 +111,7 @@ public class RoomPanel extends JPanel {
             while (true) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
-                    logger.info("Request for room update:-)");
+                    logger.debug("Request for room update:-)");
                     RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
                     if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
                         if (!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())) {

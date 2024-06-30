@@ -151,7 +151,7 @@ public class OuterGamePanel extends JPanel {
                     sleep(1000);
                     MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                     try {
-                        logger.info("Request for Game Update :-)");
+                        logger.debug("Request for Game Update :-)");
                         String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
                         GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
                         switch (newGameUpdate.getNumber() - gameUpdate.getNumber()) {
