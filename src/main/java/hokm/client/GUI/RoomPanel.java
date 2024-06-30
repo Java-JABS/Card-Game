@@ -143,6 +143,5 @@ public class RoomPanel extends JPanel {
                 }
             }
         }).start();
-        SwingUtilities.getWindowAncestor(this).pack();
     }
 }

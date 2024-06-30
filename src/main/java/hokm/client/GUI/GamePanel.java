@@ -27,7 +27,6 @@ public class GamePanel extends JPanel {
 
     GamePanel() {
         initComponents();
-        SwingUtilities.getWindowAncestor(this).pack();
     }
 
     private void initComponents() {

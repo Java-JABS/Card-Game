@@ -134,6 +134,5 @@ public class MainMenuPanel extends JPanel {
         mainMenuLabel.add(createNewGameButton, createNewGameButtonGrid);
 
         add(mainMenuLabel);
-        SwingUtilities.getWindowAncestor(this).pack();
     }
 }
