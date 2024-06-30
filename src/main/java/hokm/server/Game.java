@@ -63,7 +63,7 @@ public class Game {
             for (Team team : teams)
                 team.clearRound();
             minorUpdate.setTeams(teams);
-            gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
+            gameState = (teams[0].getSet() >= 2 || teams[1].getSet() >= 2) ? GameState.END : GameState.HOKM;
             minorUpdate.setGameState(gameState);
             if (gameState == GameState.END) {
                 waitForEveryoneToGetUpdate.run();
