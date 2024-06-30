@@ -41,4 +41,15 @@ public class Database {
         }
         return false;
     }
+    boolean deleteUser(String username) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE username = ?;")) {
+            preparedStatement.setString(1,username);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            if(e.getErrorCode() != 19)
+                e.printStackTrace();
+        }
+        return false;
+    }
 }
