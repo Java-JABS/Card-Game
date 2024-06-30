@@ -34,6 +34,18 @@ public class GameUpdate implements Cloneable {
             return null;
         }
     }
+    public void updatesFrom(GameUpdate pastUpdate) throws IllegalAccessException {
+        if (pastUpdate==null)
+            return;
+        for(Field field : GameUpdate.class.getDeclaredFields()){
+            Object pastObject = field.get(pastUpdate);
+            if(pastObject!= null){
+                Object object = field.get(this);
+                if (object != null && object.equals(pastObject))
+                    field.set(this,null);
+            }
+        }
+    }
     public GameState getGameState() {
         return gameState;
     }

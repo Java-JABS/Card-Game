@@ -7,6 +7,7 @@ import hokm.messages.GameUpdateRequest;
 import hokm.messages.HokmRequest;
 import hokm.server.GameState;
 import hokm.server.RequestException;
+import hokm.server.Team;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,7 @@ public class OuterGamePanel extends JPanel {
     JLabel team2Sets = new JLabel("0",SwingConstants.CENTER);
     JLabel team2Rounds = new JLabel("0",SwingConstants.CENTER);
     GamePanel gamePanel = new GamePanel();
-    GameUpdate gameUpdate = new GameUpdate();
+    GameUpdate gameUpdate =new GameUpdate() ;
     private Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
 
     OuterGamePanel(){
@@ -143,57 +144,66 @@ public class OuterGamePanel extends JPanel {
         upperPanel.add(this.team2Sets, team2SetsGrid);
         upperPanel.add(this.team2Rounds, team2RoundsGrid);
         this.add(upperPanel, BorderLayout.NORTH);
-
-        new Thread(()->{
-            while (true){
-                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+        new Thread(() -> {
+            while (true) {
                 try {
-                    logger.info("Request for Game Update :-)");
-                    String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
-                    GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
-                    switch (newGameUpdate.getNumber() - gameUpdate.getNumber()){
-                        case 0:
-                            break;
-                        default:
-                            newGameUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new GameUpdateRequest(true)), GameUpdate.class);
-                        case 1:
-                            if(newGameUpdate.getDast()!=null){
-                                gamePanel.setDeckCardButtons(newGameUpdate.getDast());
-                            }
-                            if(newGameUpdate.getOnTableCards()!=null){
-                                System.out.println(newGameUpdate.getOnTableCards().toString()   );
-                                gamePanel.setPlayedCardLabelsIcon(newGameUpdate.getOnTableCards(),newGameUpdate.getYourIndex()-newGameUpdate.getCurrentPlayer());
-                            }
-                            if(newGameUpdate.getPlayerNames()!=null){
-                                gamePanel.setProfileNameLabelsText(newGameUpdate.getPlayerNames(),newGameUpdate.getYourIndex());
-                            }
-                            if(newGameUpdate.getGameState()== GameState.HOKM&&newGameUpdate.getYourIndex()== newGameUpdate.getCurrentRuler()){
-                                CardsSuit[] buttons = CardsSuit.values();
-                                int returnValue = JOptionPane.showOptionDialog(null, "Narrative", "Narrative",
-                                        JOptionPane.WARNING_MESSAGE, 0, null, buttons, null);
-                                topFrame.client.sendMessage(new HokmRequest(buttons[returnValue]));
-                            }
-                            gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler()-gameUpdate.getYourIndex());
-                    }
-
-                    gameUpdate=newGameUpdate;
                     sleep(1000);
+                    MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+                    try {
+                        logger.info("Request for Game Update :-)");
+                        String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
+                        System.out.println(mess);
+                        GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
+                        switch (newGameUpdate.getNumber() - gameUpdate.getNumber()) {
+                            case 0:
+                                break;
+                            default:
+                                logger.warn("Update is behind so get a major update!");
+                                newGameUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new GameUpdateRequest(true)), GameUpdate.class);
+                            case 1:
+                                newGameUpdate.updatesFrom(gameUpdate);
+                                gameUpdate.update(newGameUpdate);
+                                if (newGameUpdate.getDast() != null) {
+                                    gamePanel.setDeckCardButtons(gameUpdate.getDast());
+                                }
+                                if (newGameUpdate.getOnTableCards() != null) {
+                                    gamePanel.setPlayedCardLabelsIcon(gameUpdate.getOnTableCards(), gameUpdate.getYourIndex() - gameUpdate.getCurrentPlayer());
+                                }
+                                if (newGameUpdate.getPlayerNames() != null) {
+                                    gamePanel.setProfileNameLabelsText(gameUpdate.getPlayerNames(), gameUpdate.getYourIndex());
+                                }
+                                if (gameUpdate.getGameState() == GameState.HOKM && gameUpdate.getYourIndex() == gameUpdate.getCurrentRuler()) {
+                                    CardsSuit[] buttons = CardsSuit.values();
+                                    int returnValue = JOptionPane.showOptionDialog(null, "Your are the Ruler", "Select The Rule:",
+                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, buttons, null);
+                                    topFrame.client.sendMessage(new HokmRequest(buttons[returnValue]));
+                                }
+                                if (newGameUpdate.getTeams() != null) {
+                                    Team[] teams = gameUpdate.getTeams();
+                                    team1Rounds.setText(String.valueOf(teams[0].getRound()));
+                                    team2Rounds.setText(String.valueOf(teams[1].getRound()));
+                                    team1Sets.setText(String.valueOf(teams[0].getSet()));
+                                    team1Sets.setText(String.valueOf(teams[1].getSet()));
+                                }
+                                if (newGameUpdate.getCurrentRuler()!=null) {
+                                    gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler() - gameUpdate.getYourIndex());
+                                }
+                        }
+                    } catch (RequestException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                        topFrame.remove(OuterGamePanel.this);
+                        topFrame.add(new MainMenuPanel());
+                        topFrame.repaint();
+                        topFrame.revalidate();
+                    } catch (NullPointerException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
                 } catch (InterruptedException e) {
-                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     throw new RuntimeException(e);
-                }catch (RequestException e) {
-                    logger.warn("Failed to request, Reason: {}", e.getMessage());
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-                    topFrame.remove(OuterGamePanel.this);
-                    topFrame.add(new MainMenuPanel());
-                    topFrame.repaint();
-                    topFrame.revalidate();
-                } catch (NullPointerException e){
-                    logger.warn("Failed to request, Reason: {}", e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }).start();
+
 
     }
 }
