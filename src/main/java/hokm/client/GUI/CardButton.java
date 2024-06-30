@@ -75,4 +75,8 @@ public class CardButton extends JButton {
         iconLabel.setIcon(new ImageIcon(Assets.getCardImageIcon(card).getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
         this.card = card;
     }
+
+    public void setMouseEntered(boolean mouseEntered) {
+        isMouseEntered = mouseEntered;
+    }
 }

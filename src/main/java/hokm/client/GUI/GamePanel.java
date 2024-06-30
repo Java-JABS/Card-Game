@@ -171,6 +171,8 @@ public class GamePanel extends JPanel {
 
     public void setDeckCardButtons(ArrayList<Card> list) {
         cardDeckPanel.removeAll();
+        for (CardButton cardButton: cardButtons)
+            cardButton.setMouseEntered(false);
         for (int i = 0; i < list.size(); i++) {
             CardButton cardButton = cardButtons.get(i);
             cardButton.setCard(list.get(i));
