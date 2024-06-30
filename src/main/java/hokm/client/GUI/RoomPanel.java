@@ -101,7 +101,6 @@ public class RoomPanel extends JPanel {
         showToken.setForeground(Color.WHITE);
         showToken.setPreferredSize(new Dimension(300, 30));
         showToken.setEditable(false);
-        showToken.setBackground(Color.WHITE);
         showToken.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         showToken.setFont(new Font("Arial", Font.BOLD, 15));
         GridBagConstraints showTokenGrid = new GridBagConstraints();
