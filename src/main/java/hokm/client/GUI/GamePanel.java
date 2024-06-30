@@ -184,17 +184,15 @@ public class GamePanel extends JPanel {
 
     public void setProfileNameLabelsText(ArrayList<String> list, int index) {
         for (int i = 0; i < list.size(); i++) {
-            profileNameLabels[(i +   index + 4) % 4].setText(list.get(i));
+            profileNameLabels[(i -   index + 4) % 4].setText(list.get(i));
         }
     }
 
     public void setProfilePictureLabelsIcon(int rulerIndex) {
+        rulerIndex=(rulerIndex+4)%4;
         for (int i = 0; i < this.profilePictureLabels.length; i++) {
-            if(i!=rulerIndex){
-                this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon("personIcon.png").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
-            }else {
-                this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon("rulerIcon.jpg").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
-            }
+                this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon((i==rulerIndex)?"rulerIcon.jpg":"personIcon.png").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
+
         }
     }
 
