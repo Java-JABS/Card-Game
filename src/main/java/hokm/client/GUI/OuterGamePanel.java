@@ -152,7 +152,6 @@ public class OuterGamePanel extends JPanel {
                     try {
                         logger.info("Request for Game Update :-)");
                         String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
-                        System.out.println(mess);
                         GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
                         switch (newGameUpdate.getNumber() - gameUpdate.getNumber()) {
                             case 0:

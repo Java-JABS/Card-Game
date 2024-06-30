@@ -126,8 +126,7 @@ public class GameUpdate implements Cloneable {
                 if (object != null) {
                     field.set(this, object);
                 }
-            } catch (IllegalAccessException e) {
-                System.out.println("Couldn't Update GameUpdate");
+            } catch (IllegalAccessException ignored) {
             }
         }
     }
