@@ -54,6 +54,7 @@ public class GamePanel extends JPanel {
         // setting right player panel :
         rightPlayerPanel.setLayout(new GridBagLayout());
         profileNameLabels[1].setText("Name");
+        profileNameLabels[1].setOpaque(true);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -137,6 +138,10 @@ public class GamePanel extends JPanel {
         // setting center panel :
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
+
+        for (int i = 0; i < this.profileNameLabels.length; i++) {
+            this.profileNameLabels[i].setOpaque(true);
+        }
 
         for (int i = 0; i < 13; i++) {
             int finalI = i;
