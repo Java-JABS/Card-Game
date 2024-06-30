@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
 public class Game {
     private final ArrayList<Player> players;
     private final Team[] teams = {new Team(), new Team()};
@@ -109,7 +111,9 @@ public class Game {
             minorUpdate.setOnTableCards(onTableCards);
             if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
                 gameState = GameState.NEW_SET;
-                newSet(players.get((players.indexOf(ruler) + 1) % 4));
+                int rulerIndex = players.indexOf(ruler);
+                int winnerTeam = (teams[0].getRound() == 7)? 0 : 1;
+                newSet(players.get((rulerIndex + abs(rulerIndex%2-winnerTeam)) % 4));
             } else {
                 minorUpdate.setGameState(gameState);
                 gameState = GameState.PUT_CARD;
