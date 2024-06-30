@@ -58,6 +58,19 @@ public class Game {
                 throw new RuntimeException();
             }
             if (!players.contains(ruler)) throw new RuntimeException();
+            goal(teams[0], teams[1]);
+            goal(teams[1], teams[0]);
+            for (Team team : teams)
+                team.clearRound();
+            minorUpdate.setTeams(teams);
+            gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
+            minorUpdate.setGameState(gameState);
+            if (gameState == GameState.END) {
+                waitForEveryoneToGetUpdate.run();
+                room.endGame();
+                majorUpdate.update(minorUpdate);
+                return;
+            }
             dast = new Dast(true);
             for (Player player : players)
                 player.dast.clear();
@@ -66,20 +79,7 @@ public class Game {
             minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             minorUpdate.setCurrentRuler(players.indexOf(ruler));
             ruler.dast.addAll(dast.popFromStart(5));
-            gameState = GameState.HOKM;
-            minorUpdate.setGameState(gameState);
-            goal(teams[0], teams[1]);
-            goal(teams[1], teams[0]);
-            for (Team team : teams)
-                team.clearRound();
-            gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
-            minorUpdate.setTeams(teams);
-            minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
-            if (gameState == GameState.END) {
-                waitForEveryoneToGetUpdate.run();
-                room.endGame();
-            }
         }
     }
 
