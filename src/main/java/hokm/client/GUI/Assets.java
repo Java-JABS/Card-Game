@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Assets {
+    
     public static ImageIcon getImageIcon(String filePath) {
         return new ImageIcon(Assets.class.getClassLoader().getResource("pictures/" + filePath));
     }
@@ -19,9 +20,9 @@ public class Assets {
     public static void playSound(String path) {
         try {
             // Load the sound file
-            File soundPath = new File(path);
-            if (soundPath.exists()) {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(soundPath);
+            File soundFile = new File(path);
+            if (soundFile.exists()) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(soundFile);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
                 clip.start();

@@ -153,7 +153,7 @@ public class GamePanel extends JPanel {
             cardButtons.add(new CardButton(() -> {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
-                    Assets.playSound("musics/throw.wav");
+                    Assets.playSound("src/main/resources/musics/throw.wav");
                     topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
                     Thread.sleep(1000);
                 } catch (RequestException e) {
@@ -189,7 +189,7 @@ public class GamePanel extends JPanel {
             GridBagConstraints bGrid = new GridBagConstraints();
             bGrid.gridx = i;
             bGrid.insets = new Insets(0, -15, 0, -15);
-            Assets.playSound("musics/flapCard.wav");
+            Assets.playSound("src/main/resources/musics/flapCard.wav");
             cardDeckPanel.add(cardButton, bGrid);
             Thread.sleep(1000);
         }
@@ -216,4 +216,5 @@ public class GamePanel extends JPanel {
         repaint();
         revalidate();
     }
+
 }
