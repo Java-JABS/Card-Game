@@ -97,6 +97,7 @@ public class GamePanel extends JPanel {
         // setting up player panel :
         upPlayerPanel.setLayout(new GridBagLayout());
         profilePictureLabels[2].setPreferredSize(profilePicturesDimension);
+
         upPlayerPanel.add(profilePictureLabels[2], new GridBagConstraints());
         profileNameLabels[2].setText("Name");
         gridBagConstraints = new GridBagConstraints();
@@ -106,7 +107,7 @@ public class GamePanel extends JPanel {
         playedCardLabels[2].setPreferredSize(cardsDimension);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new Insets(0, 0, 10, 0);
+        gridBagConstraints.insets = new Insets(20, 0, 10, 0);
         upPlayerPanel.add(playedCardLabels[2], gridBagConstraints);
         add(upPlayerPanel, BorderLayout.PAGE_START);
 
@@ -114,7 +115,11 @@ public class GamePanel extends JPanel {
         downPanel.setLayout(new GridBagLayout());
         myProfilePanel.setLayout(new GridBagLayout());
         playedCardLabels[0].setPreferredSize(cardsDimension);
-        myProfilePanel.add(playedCardLabels[0], new GridBagConstraints());
+        GridBagConstraints g = new GridBagConstraints();
+        g.gridx = 0;
+        g.gridy = 0;
+        g.insets = new Insets(0,0,20,0);
+        myProfilePanel.add(playedCardLabels[0],g);
         profileNameLabels[0].setText("Name");
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
