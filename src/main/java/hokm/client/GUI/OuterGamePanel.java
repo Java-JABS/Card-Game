@@ -145,6 +145,7 @@ public class OuterGamePanel extends JPanel {
         upperPanel.add(this.team2Rounds, team2RoundsGrid);
         this.add(upperPanel, BorderLayout.NORTH);
         new Thread(() -> {
+            boolean isTeamNamesSet = false;
             while (true) {
                 try {
                     sleep(1000);
@@ -186,6 +187,14 @@ public class OuterGamePanel extends JPanel {
                                 }
                                 if (newGameUpdate.getCurrentRuler() != null) {
                                     gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler() - gameUpdate.getYourIndex());
+                                }
+                                if (!isTeamNamesSet){
+                                    isTeamNamesSet=true;
+                                    team1.setText((gameUpdate.getYourIndex()%2==0)?"Your team":"Opponent Team");
+                                    team2.setText((gameUpdate.getYourIndex()%2!=0)?"Your team":"Opponent Team");
+                                }
+                                if(newGameUpdate.getRule()!=null){
+                                    team.setText(gameUpdate.getRule().toString());
                                 }
                         }
                     } catch (RequestException e) {
