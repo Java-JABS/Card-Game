@@ -2,19 +2,20 @@ package hokm;
 
 import java.util.ArrayList;
 
-public class RoomUpdate implements Cloneable{
+public class RoomUpdate implements Cloneable {
     ArrayList<String> playerNames;
 
-    Boolean isGameStarted =false;
+    Boolean isGameStarted = false;
 
     Integer number = 0;
     Integer yourIndex;
-    public void setGameStarted(Boolean gameStarted) {
-        isGameStarted = gameStarted;
-    }
 
     public Boolean getGameStarted() {
         return isGameStarted;
+    }
+
+    public void setGameStarted(Boolean gameStarted) {
+        isGameStarted = gameStarted;
     }
 
     public ArrayList<String> getPlayerNames() {
@@ -42,9 +43,9 @@ public class RoomUpdate implements Cloneable{
         this.yourIndex = yourIndex;
     }
 
-    public RoomUpdate clone(){
+    public RoomUpdate clone() {
         try {
-            return  (RoomUpdate) super.clone();
+            return (RoomUpdate) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;

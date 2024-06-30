@@ -36,7 +36,7 @@ public class Database {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            if(e.getErrorCode()!=19)
+            if (e.getErrorCode() != 19)
                 e.printStackTrace();
         }
         return false;

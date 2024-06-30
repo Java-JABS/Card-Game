@@ -8,24 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MainFrame extends JFrame {
 
     ClientRequestSender client;
-    private Logger logger = LoggerFactory.getLogger(MainFrame.class);
-    static void trySignup(ClientRequestSender newClient) {
-        while (true) {
-            try {
-                assert newClient != null;
-                newClient.setToken(newClient.sendMessage(new RegisterRequest(JOptionPane.showInputDialog("Enter a new username:"))));
-                return;
-            } catch (RequestException ex) {
-                JOptionPane.showMessageDialog(null, "This username is taken!\nPlease try again!", "Warning", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
+    private final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
     MainFrame() {
         this.setTitle("Java-JABS™ Hokm");
@@ -66,7 +58,7 @@ public class MainFrame extends JFrame {
             }
         }
         client = newClient;
-        try (FileWriter file = new FileWriter("config.txt");) {
+        try (FileWriter file = new FileWriter("config.txt")) {
             logger.info("Saving server information to config.txt :");
             file.write(ClientRequestSender.gsonAgent.toJson(client));
         } catch (IOException ignored) {
@@ -76,6 +68,18 @@ public class MainFrame extends JFrame {
         pack();
         setVisible(true);
 
+    }
+
+    static void trySignup(ClientRequestSender newClient) {
+        while (true) {
+            try {
+                assert newClient != null;
+                newClient.setToken(newClient.sendMessage(new RegisterRequest(JOptionPane.showInputDialog("Enter a new username:"))));
+                return;
+            } catch (RequestException ex) {
+                JOptionPane.showMessageDialog(null, "This username is taken!\nPlease try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
 
     public static void main(String[] args) {

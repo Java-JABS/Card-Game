@@ -18,15 +18,15 @@ import static java.lang.Thread.sleep;
 
 public class OuterGamePanel extends JPanel {
 
-    JLabel team1Sets = new JLabel("0",SwingConstants.CENTER);
-    JLabel team1Rounds = new JLabel("0",SwingConstants.CENTER);
-    JLabel team2Sets = new JLabel("0",SwingConstants.CENTER);
-    JLabel team2Rounds = new JLabel("0",SwingConstants.CENTER);
+    JLabel team1Sets = new JLabel("0", SwingConstants.CENTER);
+    JLabel team1Rounds = new JLabel("0", SwingConstants.CENTER);
+    JLabel team2Sets = new JLabel("0", SwingConstants.CENTER);
+    JLabel team2Rounds = new JLabel("0", SwingConstants.CENTER);
     GamePanel gamePanel = new GamePanel();
-    GameUpdate gameUpdate =new GameUpdate() ;
-    private Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
+    GameUpdate gameUpdate = new GameUpdate();
+    private final Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
 
-    OuterGamePanel(){
+    OuterGamePanel() {
         team1Sets.setOpaque(true);
         team1Sets.setBackground(Color.GRAY);
         team1Sets.setForeground(Color.WHITE);
@@ -43,96 +43,96 @@ public class OuterGamePanel extends JPanel {
         this.setOpaque(false);
 
         setLayout(new BorderLayout());
-        add(gamePanel,BorderLayout.CENTER);
+        add(gamePanel, BorderLayout.CENTER);
 
         JPanel upperPanel = new JPanel();
         upperPanel.setOpaque(false);
         upperPanel.setLayout(new GridBagLayout());
 
-        JLabel team = new JLabel("Team",SwingConstants.CENTER);
+        JLabel team = new JLabel("Team", SwingConstants.CENTER);
         team.setBackground(Color.GRAY);
         team.setForeground(Color.WHITE);
         team.setOpaque(true);
-        team.setPreferredSize(new Dimension(50,25));
+        team.setPreferredSize(new Dimension(50, 25));
         team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints teamGrid = new GridBagConstraints();
         teamGrid.gridx = 0;
         teamGrid.gridy = 0;
-        teamGrid.insets = new Insets(1,1,1,1);
+        teamGrid.insets = new Insets(1, 1, 1, 1);
 
-        JLabel sets = new JLabel("Set",SwingConstants.CENTER);
+        JLabel sets = new JLabel("Set", SwingConstants.CENTER);
         sets.setBackground(Color.GRAY);
         sets.setForeground(Color.WHITE);
         sets.setOpaque(true);
-        sets.setPreferredSize(new Dimension(50,25));
+        sets.setPreferredSize(new Dimension(50, 25));
         sets.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints setsGrid = new GridBagConstraints();
         setsGrid.gridx = 1;
         setsGrid.gridy = 0;
-        setsGrid.insets = new Insets(1,1,1,1);
+        setsGrid.insets = new Insets(1, 1, 1, 1);
 
-        JLabel round = new JLabel("Round",SwingConstants.CENTER);
+        JLabel round = new JLabel("Round", SwingConstants.CENTER);
         round.setBackground(Color.GRAY);
         round.setForeground(Color.WHITE);
         round.setOpaque(true);
-        round.setPreferredSize(new Dimension(50,25));
+        round.setPreferredSize(new Dimension(50, 25));
         round.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints roundGrid = new GridBagConstraints();
         roundGrid.gridx = 2;
         roundGrid.gridy = 0;
-        roundGrid.insets = new Insets(1,1,1,1);
+        roundGrid.insets = new Insets(1, 1, 1, 1);
 
 
-        JLabel team1 = new JLabel("Team1",SwingConstants.CENTER);
+        JLabel team1 = new JLabel("Team1", SwingConstants.CENTER);
         team1.setBackground(Color.GRAY);
         team1.setForeground(Color.WHITE);
         team1.setOpaque(true);
-        team1.setPreferredSize(new Dimension(50,25));
+        team1.setPreferredSize(new Dimension(50, 25));
         team1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team1Grid = new GridBagConstraints();
         team1Grid.gridx = 0;
         team1Grid.gridy = 1;
-        team1Grid.insets = new Insets(1,1,1,1);
+        team1Grid.insets = new Insets(1, 1, 1, 1);
 
 
-        JLabel team2 = new JLabel("Team2",SwingConstants.CENTER);
+        JLabel team2 = new JLabel("Team2", SwingConstants.CENTER);
         team2.setOpaque(true);
         team2.setBackground(Color.GRAY);
         team2.setForeground(Color.WHITE);
-        team2.setPreferredSize(new Dimension(50,25));
+        team2.setPreferredSize(new Dimension(50, 25));
         team2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team2Grid = new GridBagConstraints();
         team2Grid.gridx = 0;
         team2Grid.gridy = 2;
-        team2Grid.insets = new Insets(1,1,1,1);
+        team2Grid.insets = new Insets(1, 1, 1, 1);
 
         this.team1Sets.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        this.team1Sets.setPreferredSize(new Dimension(50,25));
+        this.team1Sets.setPreferredSize(new Dimension(50, 25));
         GridBagConstraints team1SetsGrid = new GridBagConstraints();
         team1SetsGrid.gridx = 1;
         team1SetsGrid.gridy = 1;
-        team1SetsGrid.insets = new Insets(1,1,1,1);
+        team1SetsGrid.insets = new Insets(1, 1, 1, 1);
 
-        this.team1Rounds.setPreferredSize(new Dimension(50,25));
+        this.team1Rounds.setPreferredSize(new Dimension(50, 25));
         this.team1Rounds.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team1RoundsGrid = new GridBagConstraints();
         team1RoundsGrid.gridx = 2;
         team1RoundsGrid.gridy = 1;
-        team1RoundsGrid.insets = new Insets(1,1,1,1);
+        team1RoundsGrid.insets = new Insets(1, 1, 1, 1);
 
-        this.team2Sets.setPreferredSize(new Dimension(50,25));
+        this.team2Sets.setPreferredSize(new Dimension(50, 25));
         this.team2Sets.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team2SetsGrid = new GridBagConstraints();
         team2SetsGrid.gridx = 1;
         team2SetsGrid.gridy = 2;
-        team2SetsGrid.insets = new Insets(1,1,1,1);
+        team2SetsGrid.insets = new Insets(1, 1, 1, 1);
 
-        this.team2Rounds.setPreferredSize(new Dimension(50,25));
+        this.team2Rounds.setPreferredSize(new Dimension(50, 25));
         this.team2Rounds.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team2RoundsGrid = new GridBagConstraints();
         team2RoundsGrid.gridx = 2;
         team2RoundsGrid.gridy = 2;
-        team2RoundsGrid.insets = new Insets(1,1,1,1);
+        team2RoundsGrid.insets = new Insets(1, 1, 1, 1);
 
         upperPanel.add(team, teamGrid);
         upperPanel.add(sets, setsGrid);
@@ -185,7 +185,7 @@ public class OuterGamePanel extends JPanel {
                                     team1Sets.setText(String.valueOf(teams[0].getSet()));
                                     team1Sets.setText(String.valueOf(teams[1].getSet()));
                                 }
-                                if (newGameUpdate.getCurrentRuler()!=null) {
+                                if (newGameUpdate.getCurrentRuler() != null) {
                                     gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler() - gameUpdate.getYourIndex());
                                 }
                         }

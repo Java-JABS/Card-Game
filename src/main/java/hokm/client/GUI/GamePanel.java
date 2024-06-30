@@ -1,7 +1,6 @@
 package hokm.client.GUI;
 
 import hokm.Card;
-
 import hokm.messages.PutCardRequest;
 import hokm.server.RequestException;
 
@@ -26,6 +25,11 @@ public class GamePanel extends JPanel {
     private final JLabel[] playedCardLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private final ArrayList<CardButton> cardButtons = new ArrayList<>(13);
 
+    GamePanel() {
+
+        initComponents();
+    }
+
     private void initComponents() {
 
         this.setLayout(new BorderLayout());
@@ -40,7 +44,6 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < this.profileNameLabels.length; i++) {
             this.profileNameLabels[i].setForeground(Color.WHITE);
         }
-
 
 
         Dimension cardsDimension = new Dimension(80, 120);
@@ -102,7 +105,7 @@ public class GamePanel extends JPanel {
         playedCardLabels[2].setPreferredSize(cardsDimension);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new Insets(0,0,10,0);
+        gridBagConstraints.insets = new Insets(0, 0, 10, 0);
         upPlayerPanel.add(playedCardLabels[2], gridBagConstraints);
         add(upPlayerPanel, BorderLayout.PAGE_START);
 
@@ -115,7 +118,7 @@ public class GamePanel extends JPanel {
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new Insets(0,0,0,0);
+        gridBagConstraints.insets = new Insets(0, 0, 0, 0);
         myProfilePanel.add(profileNameLabels[0], gridBagConstraints);
         profilePictureLabels[0].setPreferredSize(profilePicturesDimension);
         gridBagConstraints = new GridBagConstraints();
@@ -137,21 +140,15 @@ public class GamePanel extends JPanel {
 
         for (int i = 0; i < 13; i++) {
             int finalI = i;
-            cardButtons.add(new CardButton(()->{
+            cardButtons.add(new CardButton(() -> {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
                     topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
                 } catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
-            },cardsDimension));
+            }, cardsDimension));
         }
-    }
-
-
-    GamePanel() {
-
-        initComponents();
     }
 
     public ImageIcon getCardIcon(Card card) {
@@ -159,18 +156,18 @@ public class GamePanel extends JPanel {
     }
 
     public void setPlayedCardLabelsIcon(ArrayList<Card> list, int index) {
-        for(JLabel label:playedCardLabels){
+        for (JLabel label : playedCardLabels) {
             label.setIcon(null);
         }
         for (int i = 0; i < list.size(); i++) {
-            playedCardLabels[(i - list.size()-index+8) % 4].setIcon(getCardIcon(list.get(i)));
+            playedCardLabels[(i - list.size() - index + 8) % 4].setIcon(getCardIcon(list.get(i)));
         }
     }
 
     public void setDeckCardButtons(ArrayList<Card> list) {
         cardDeckPanel.removeAll();
-        for (int i = 0; i < list.size() ; i++) {
-            CardButton cardButton=cardButtons.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            CardButton cardButton = cardButtons.get(i);
             cardButton.setCard(list.get(i));
             add(cardButton);
             GridBagConstraints bGrid = new GridBagConstraints();
@@ -184,14 +181,14 @@ public class GamePanel extends JPanel {
 
     public void setProfileNameLabelsText(ArrayList<String> list, int index) {
         for (int i = 0; i < list.size(); i++) {
-            profileNameLabels[(i -   index + 4) % 4].setText(list.get(i));
+            profileNameLabels[(i - index + 4) % 4].setText(list.get(i));
         }
     }
 
     public void setProfilePictureLabelsIcon(int rulerIndex) {
-        rulerIndex=(rulerIndex+4)%4;
+        rulerIndex = (rulerIndex + 4) % 4;
         for (int i = 0; i < this.profilePictureLabels.length; i++) {
-                this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon((i==rulerIndex)?"rulerIcon.jpg":"personIcon.png").getImage().getScaledInstance(80,-1,Image.SCALE_SMOOTH)));
+            this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon((i == rulerIndex) ? "rulerIcon.jpg" : "personIcon.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
 
         }
     }

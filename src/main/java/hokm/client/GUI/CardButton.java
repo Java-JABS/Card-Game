@@ -6,15 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Objects;
 
 public class CardButton extends JButton {
-    private Card card;
+    final Runnable mouseClick;
     private final JLabel iconLabel = new JLabel();
     private final int deltaY = 40;
-    final Runnable mouseClick;
+    private Card card;
 
-    public CardButton(Runnable mouseClick,Dimension cardPreferredSize) {
+    public CardButton(Runnable mouseClick, Dimension cardPreferredSize) {
         this.mouseClick = mouseClick;
         setLayout(new GridBagLayout());
         add(iconLabel);

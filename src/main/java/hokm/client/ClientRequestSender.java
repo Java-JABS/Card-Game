@@ -2,7 +2,8 @@ package hokm.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import hokm.messages.*;
+import hokm.messages.ClientRequest;
+import hokm.messages.ServerResponse;
 import hokm.server.RequestException;
 
 import java.io.DataInputStream;
@@ -11,10 +12,10 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientRequestSender {
-    final String hostAddress;
-    final int port;
     public static final GsonBuilder builder = new GsonBuilder();
     public static final Gson gsonAgent = builder.create();
+    final String hostAddress;
+    final int port;
     private String token;
 
     public ClientRequestSender(String hostAddress, int port) {
@@ -29,7 +30,7 @@ public class ClientRequestSender {
             message.setToken(token);
             sendBuffer.writeUTF(gsonAgent.toJson(message));
             ServerResponse response = gsonAgent.fromJson(receiveBuffer.readUTF(), ServerResponse.class);
-            if(!response.wasSuccessful()) throw new RequestException(response.getAdditionalInfo());
+            if (response.wasNotSuccessful()) throw new RequestException(response.getAdditionalInfo());
             return response.getAdditionalInfo();
         } catch (IOException e) {
             throw new RuntimeException();

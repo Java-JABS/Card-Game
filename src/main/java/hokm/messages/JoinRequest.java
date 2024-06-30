@@ -1,11 +1,11 @@
 package hokm.messages;
 
 public class JoinRequest extends ClientRequest {
-    private String gameToken;
+    private final String gameToken;
 
     public JoinRequest(String gameToken) {
         super(ClientRequestType.JOIN);
-        this.gameToken=gameToken;
+        this.gameToken = gameToken;
     }
 
     public String getGameToken() {

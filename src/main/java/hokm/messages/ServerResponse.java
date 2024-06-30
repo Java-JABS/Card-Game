@@ -9,8 +9,8 @@ public class ServerResponse {
         this.additionalInfo = info;
     }
 
-    public boolean wasSuccessful() {
-        return this.success;
+    public boolean wasNotSuccessful() {
+        return !this.success;
     }
 
     public String getAdditionalInfo() {

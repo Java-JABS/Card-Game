@@ -1,7 +1,6 @@
 package hokm.server;
 
 import hokm.*;
-import hokm.messages.ClientState;
 
 import java.util.Objects;
 
@@ -11,9 +10,8 @@ public class Player {
     Dast dast = new Dast();
     private Game game;
     private Room room;
-    private ClientState state;
 
-    public Player(String name,String token) {
+    public Player(String name, String token) {
         this.name = name;
         this.token = token;
     }
@@ -38,8 +36,8 @@ public class Player {
         return game.getUpdate(this, isMajorUpdate);
     }
 
-    public boolean putCard(Card card) throws RequestException {
-        return game.putCard(this, card);
+    public void putCard(Card card) throws RequestException {
+        game.putCard(this, card);
     }
 
     public void hokm(CardsSuit suit) throws RequestException {
@@ -67,8 +65,9 @@ public class Player {
             this.room = room;
         }
     }
+
     public RoomUpdate getRoomUpdate() {
-        return room.getUpdate(this);
+        return room.getUpdate();
     }
 
 }

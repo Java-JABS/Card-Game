@@ -45,14 +45,14 @@ public class Room {
         }
     }
 
-    public Game startGame() throws RequestException {
+    public void startGame() throws RequestException {
         synchronized (this) {
-            if (players.size() == capacity) {
+            if (isReady()) {
                 game = new Game(players, this);
                 for (Player player : players)
                     player.setGame(game);
                 roomUpdate.setGameStarted(true);
-                return game;
+                return;
 
             }
             throw new RequestException("Room is not reached its capacity! (" + capacity + ")");
@@ -65,7 +65,7 @@ public class Room {
         }
     }
 
-    public RoomUpdate getUpdate(Player player) {
+    public RoomUpdate getUpdate() {
         synchronized (this) {
             return roomUpdate.clone();
         }

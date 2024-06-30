@@ -19,24 +19,25 @@ public class RoomPanel extends JPanel {
 
     String gameToken;
     JLabel roomLabel = new JLabel();
-    JTextArea names= new JTextArea();
+    JTextArea names = new JTextArea();
     JTextField showToken = new JTextField(SwingConstants.CENTER);
     JButton startButton = new JButton("Start");
     RoomUpdate roomUpdate = new RoomUpdate();
-    private Logger logger = LoggerFactory.getLogger(RoomPanel.class);
-    public RoomPanel(String gameToken){
+    private final Logger logger = LoggerFactory.getLogger(RoomPanel.class);
+
+    public RoomPanel(String gameToken) {
 
         this.gameToken = gameToken;
         roomLabel.setLayout(new GridBagLayout());
         ImageIcon roomLabelPicture = Assets.getImageIcon("MainMenuLabelPicture.jpeg");
         roomLabel.setIcon(roomLabelPicture);
 
-        startButton.setPreferredSize(new Dimension(300,100));
+        startButton.setPreferredSize(new Dimension(300, 100));
         startButton.setFont(new Font("Arial", Font.BOLD, 30));
         GridBagConstraints startButtonGrid = new GridBagConstraints();
         startButtonGrid.gridx = 0;
         startButtonGrid.gridy = 1;
-        startButtonGrid.insets = new Insets(5,5,5,5);
+        startButtonGrid.insets = new Insets(5, 5, 5, 5);
         startButton.setFocusable(false);
         startButton.addActionListener(actionEvent -> {
 
@@ -45,7 +46,7 @@ public class RoomPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
-                try{
+                try {
                     logger.info("Request for game start.");
                     topFrame.client.sendMessage(new GameStartRequest());
                     topFrame.remove(RoomPanel.this);
@@ -58,14 +59,20 @@ public class RoomPanel extends JPanel {
                 }
 
             }
+
             @Override
-            public void mousePressed(MouseEvent mouseEvent) {}
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
             @Override
-            public void mouseReleased(MouseEvent mouseEvent) {}
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
                 startButton.setBackground(Color.green);
             }
+
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
                 startButton.setBackground(new JButton().getBackground());
@@ -73,7 +80,7 @@ public class RoomPanel extends JPanel {
         });
 
         names.setEditable(false);
-        names.setPreferredSize(new Dimension(300,150));
+        names.setPreferredSize(new Dimension(300, 150));
         names.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         names.setLineWrap(true);
         names.setWrapStyleWord(true);
@@ -81,9 +88,9 @@ public class RoomPanel extends JPanel {
         GridBagConstraints namesGrid = new GridBagConstraints();
         namesGrid.gridx = 0;
         namesGrid.gridy = 2;
-        namesGrid.insets = new Insets(5,5,5,5);
+        namesGrid.insets = new Insets(5, 5, 5, 5);
 
-        showToken.setPreferredSize(new Dimension(300,30));
+        showToken.setPreferredSize(new Dimension(300, 30));
         showToken.setEditable(false);
         showToken.setBackground(Color.WHITE);
         showToken.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -91,49 +98,47 @@ public class RoomPanel extends JPanel {
         GridBagConstraints showTokenGrid = new GridBagConstraints();
         showTokenGrid.gridx = 0;
         showTokenGrid.gridy = 0;
-        showTokenGrid.insets = new Insets(5,5,5,5);
+        showTokenGrid.insets = new Insets(5, 5, 5, 5);
 
-        setLayout(new GridLayout(1,1));
+        setLayout(new GridLayout(1, 1));
         this.roomLabel.add(startButton, startButtonGrid);
         this.roomLabel.add(names, namesGrid);
         this.roomLabel.add(showToken, showTokenGrid);
 
         this.add(roomLabel);
-        new Thread(()->{
+        new Thread(() -> {
             showToken.setText(" Room token : " + this.gameToken);
-            while (true){
+            while (true) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
                     logger.info("Request for room update:-)");
                     RoomUpdate newRoomUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new RoomUpdateRequest()), RoomUpdate.class);
                     if (newRoomUpdate.getNumber() - roomUpdate.getNumber() != 0) {
-                        if(!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())){
-                            String roomMembers = " Players in room :\n";
+                        if (!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())) {
+                            StringBuilder roomMembers = new StringBuilder(" Players in room :\n");
                             for (int i = 0; i < newRoomUpdate.getPlayerNames().size(); i++) {
-                                roomMembers = roomMembers +" Player <" + (i+1) + ">: " + newRoomUpdate.getPlayerNames().get(i) + "\n";
+                                roomMembers.append(" Player <").append(i + 1).append(">: ").append(newRoomUpdate.getPlayerNames().get(i)).append("\n");
                             }
-                            names.setText(roomMembers);
+                            names.setText(roomMembers.toString());
                         }
                     }
-                    if(roomUpdate.getGameStarted()){
+                    if (roomUpdate.getGameStarted()) {
                         topFrame.remove(RoomPanel.this);
                         topFrame.add(new OuterGameLabel());
                         topFrame.repaint();
                         topFrame.revalidate();
                     }
-                    roomUpdate=newRoomUpdate;
+                    roomUpdate = newRoomUpdate;
                     sleep(1000);
                 } catch (InterruptedException e) {
-                    logger.warn("Failed to request, Reason: {}", e.getMessage());
                     throw new RuntimeException(e);
-                }catch (RequestException e) {
-                    logger.warn("Failed to request, Reason: {}", e.getMessage());
+                } catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                     topFrame.remove(RoomPanel.this);
                     topFrame.add(new MainMenuPanel());
                     topFrame.repaint();
                     topFrame.revalidate();
-                }catch (Exception e){
+                } catch (Exception e) {
                     break;
                 }
             }

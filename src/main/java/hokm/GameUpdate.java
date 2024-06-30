@@ -5,7 +5,6 @@ import hokm.server.Team;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GameUpdate implements Cloneable {
     Integer number = 0;
@@ -34,18 +33,20 @@ public class GameUpdate implements Cloneable {
             return null;
         }
     }
+
     public void updatesFrom(GameUpdate pastUpdate) throws IllegalAccessException {
-        if (pastUpdate==null)
+        if (pastUpdate == null)
             return;
-        for(Field field : GameUpdate.class.getDeclaredFields()){
+        for (Field field : GameUpdate.class.getDeclaredFields()) {
             Object pastObject = field.get(pastUpdate);
-            if(pastObject!= null){
+            if (pastObject != null) {
                 Object object = field.get(this);
                 if (object != null && object.equals(pastObject))
-                    field.set(this,null);
+                    field.set(this, null);
             }
         }
     }
+
     public GameState getGameState() {
         return gameState;
     }
@@ -62,7 +63,7 @@ public class GameUpdate implements Cloneable {
         this.rule = rule;
     }
 
-    public int getCurrentRuler() {
+    public Integer getCurrentRuler() {
         return currentRuler;
     }
 

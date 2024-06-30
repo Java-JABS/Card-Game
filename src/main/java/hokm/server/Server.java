@@ -13,21 +13,18 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 
 public class Server extends Thread {
     private static final ArrayList<Socket> clientRequests = new ArrayList<>();
     private static final GsonBuilder builder = new GsonBuilder();
     private static final Gson gsonAgent = builder.create();
-    private static final HashSet<Game> games = new HashSet<>();
     private static final HashMap<String, Room> rooms = new HashMap<>();
     private static final HashMap<String, Player> playersByToken = new HashMap<>();
     private static ServerSocket serverSocket;
     private static Database database;
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
     private DataOutputStream sendBuffer;
-    private DataInputStream receiveBuffer;
-    private static Logger logger = LoggerFactory.getLogger(Server.class);
 
     private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
         database = new Database("database.db");
@@ -55,7 +52,7 @@ public class Server extends Thread {
         StringBuilder token = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
-            token.append((char) ('a'+random.nextInt(26)));
+            token.append((char) ('a' + random.nextInt(26)));
         }
         return token.toString();
     }
@@ -84,7 +81,7 @@ public class Server extends Thread {
         String clientRequestJson;
 
         try {
-            receiveBuffer = new DataInputStream(
+            DataInputStream receiveBuffer = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream())
             );
             sendBuffer = new DataOutputStream(
@@ -145,7 +142,7 @@ public class Server extends Thread {
 
     private void listen() throws IOException {
         Socket socket;
-        logger.info("listening on *:{}",serverSocket.getLocalPort());
+        logger.info("listening on *:{}", serverSocket.getLocalPort());
         while (true) {
             socket = serverSocket.accept();
             synchronized (clientRequests) {
@@ -158,10 +155,10 @@ public class Server extends Thread {
     private void registerUser(RegisterRequest request) {
         String token = DigestUtils.sha256Hex(request.getUsername() + tokenGenerator());
         if (database.createUser(request.getUsername(), token)) {
-            logger.debug("registering user: " + request.getUsername() + "successful");
+            logger.debug("registering user: {}successful", request.getUsername());
             sendResponse(true, token);
         } else {
-            logger.debug("registering user: " + request.getUsername() + "failed");
+            logger.debug("registering user: {}failed", request.getUsername());
             sendResponse(false);
         }
     }
@@ -178,14 +175,14 @@ public class Server extends Thread {
     }
 
     private void createRoom(RoomCreateRequest request) throws RequestException {
-            isLoggedIn(request);
-            Player player = playersByToken.get(request.getToken());
-            isInRoom(player,false);
-            String token = tokenGenerator();
-            Room room = createNewRoom(token);
-            room.join(player);
+        isLoggedIn(request);
+        Player player = playersByToken.get(request.getToken());
+        isInRoom(player, false);
+        String token = tokenGenerator();
+        Room room = createNewRoom(token);
+        room.join(player);
         logger.info("room created, token:{}", token);
-            sendResponse(true, token);
+        sendResponse(true, token);
     }
 
     private Room createNewRoom(String token) throws RequestException {
@@ -202,12 +199,11 @@ public class Server extends Thread {
             String name = database.getUsername(request.getToken());
             if (name != null) {
                 playersByToken.put(request.getToken(), new Player(name, request.getToken()));
-            }
-            else throw new RequestException( "You are not signed up!");
+            } else throw new RequestException("You are not signed up!");
         }
     }
 
-    private void isInRoom(Player player,boolean isInRoom) throws RequestException {
+    private void isInRoom(Player player, boolean isInRoom) throws RequestException {
         if (player.isInARoom() != isInRoom) {
             if (isInRoom)
                 throw new RequestException("Player is not in a room!");
@@ -218,24 +214,24 @@ public class Server extends Thread {
     private void joinRoom(JoinRequest request) throws RequestException {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        isInRoom(player,false);
-        joinPlayerToRoom(player,request.getGameToken());
+        isInRoom(player, false);
+        joinPlayerToRoom(player, request.getGameToken());
         logger.info("player joined room");
         sendResponse(true);
     }
 
-    private void joinPlayerToRoom(Player player,String roomToken) throws RequestException {
+    private void joinPlayerToRoom(Player player, String roomToken) throws RequestException {
         Room room = rooms.get(roomToken);
-        if (room==null) throw new RequestException("Room doesn't exists!");
+        if (room == null) throw new RequestException("Room doesn't exists!");
         room.join(player);
     }
 
     private void leave(LeaveRequest request) throws RequestException {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        isInRoom(player,true);
+        isInRoom(player, true);
         // Todo: create a leaveGame method
-         {
+        {
             if (player.isInAGame()) {
                 if (request.isForceLeaveGame()) {
                     // Todo : leave game and room
@@ -256,7 +252,7 @@ public class Server extends Thread {
         Room room = player.getRoom();
         synchronized (room) {
             if (room.getPlayers().get(0).equals(player))
-                games.add(room.startGame());
+                room.startGame();
             else throw new RequestException("You are not room owner!");
         }
         logger.info("game started");
@@ -274,7 +270,7 @@ public class Server extends Thread {
     private void gameUpdate(GameUpdateRequest request) throws RequestException {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        isInGame(player,true);
+        isInGame(player, true);
         logger.info("updating game");
         sendResponse(true, gsonAgent.toJson(player.getGameUpdate(request.isMajorUpdate())));
     }
@@ -282,7 +278,7 @@ public class Server extends Thread {
     private void putCard(PutCardRequest request) throws RequestException {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        isInGame(player,true);
+        isInGame(player, true);
         player.putCard(request.getCard());
         logger.info("putting card");
         sendResponse(true);
@@ -291,7 +287,7 @@ public class Server extends Thread {
     private void hokm(HokmRequest request) throws RequestException {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        isInGame(player,true);
+        isInGame(player, true);
         player.hokm(request.getHokm());
         logger.info("getting hokm");
         sendResponse(true);
@@ -300,9 +296,9 @@ public class Server extends Thread {
     private void roomUpdate(RoomUpdateRequest request) throws RequestException {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
-        isInRoom(player,true);
+        isInRoom(player, true);
         logger.info("update room");
-        sendResponse(true,gsonAgent.toJson(player.getRoomUpdate()));
+        sendResponse(true, gsonAgent.toJson(player.getRoomUpdate()));
     }
 
     private void sendResponse(boolean success, String problem) {

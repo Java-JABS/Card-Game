@@ -15,14 +15,8 @@ import static java.lang.Math.abs;
 public class Game {
     private final ArrayList<Player> players;
     private final Team[] teams = {new Team(), new Team()};
-    private CardsSuit rule;
-    private Player ruler;
-    private Player currentPlayer;
     private final Dast onTableCards = new Dast();
-    private Dast dast;
-    private GameState gameState;
     private final GameUpdate majorUpdate = new GameUpdate();
-    private GameUpdate minorUpdate;
     private final int[] lastUpdate = new int[4];
     private final Room room;
     private final Runnable waitForEveryoneToGetUpdate = () -> {
@@ -36,6 +30,12 @@ public class Game {
             }
         }
     };
+    private CardsSuit rule;
+    private Player ruler;
+    private Player currentPlayer;
+    private Dast dast;
+    private GameState gameState;
+    private GameUpdate minorUpdate;
 
     public Game(ArrayList<Player> players, Room room) {
         this.players = players;
@@ -59,7 +59,7 @@ public class Game {
             }
             if (!players.contains(ruler)) throw new RuntimeException();
             dast = new Dast(true);
-            for(Player player: players)
+            for (Player player : players)
                 player.dast.clear();
             this.ruler = ruler;
             currentPlayer = ruler;
@@ -70,7 +70,7 @@ public class Game {
             minorUpdate.setGameState(gameState);
             goal(teams[0], teams[1]);
             goal(teams[1], teams[0]);
-            for(Team team :teams)
+            for (Team team : teams)
                 team.clearRound();
             gameState = (teams[0].getSet() == 7 || teams[1].getSet() == 7) ? GameState.END : GameState.HOKM;
             minorUpdate.setTeams(teams);
@@ -112,8 +112,8 @@ public class Game {
             if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
                 gameState = GameState.NEW_SET;
                 int rulerIndex = players.indexOf(ruler);
-                int winnerTeam = (teams[0].getRound() == 7)? 0 : 1;
-                newSet(players.get((rulerIndex + abs(rulerIndex%2-winnerTeam)) % 4));
+                int winnerTeam = (teams[0].getRound() == 7) ? 0 : 1;
+                newSet(players.get((rulerIndex + abs(rulerIndex % 2 - winnerTeam)) % 4));
             } else {
                 minorUpdate.setGameState(gameState);
                 gameState = GameState.PUT_CARD;
@@ -137,9 +137,9 @@ public class Game {
     }
 
     /**
-     * @return if 4 card has been put and newRound should be started
+     *
      */
-    public boolean putCard(Player player, Card card) throws RequestException {
+    public void putCard(Player player, Card card) throws RequestException {
         synchronized (this) {
             if (gameState != GameState.PUT_CARD)
                 throw new RequestException("Can not put card right now!");
@@ -162,12 +162,11 @@ public class Game {
                 minorUpdate.setGameState(gameState);
                 majorUpdate.update(minorUpdate);
                 new Thread(this::newRound).start();
-                return true;
+                return;
             }
             gameState = GameState.PUT_CARD;
             minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
-            return false;
         }
     }
 
