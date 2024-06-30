@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 import static java.lang.Thread.sleep;
@@ -56,6 +59,7 @@ public class OuterGamePanel extends JPanel {
         team.setPreferredSize(new Dimension(175, 25));
         team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints teamGrid = new GridBagConstraints();
+        teamGrid.insets = new Insets(5,0,0,0);
         teamGrid.gridx = 0;
         teamGrid.gridy = 0;
         teamGrid.insets = new Insets(1, 1, 1, 1);
@@ -67,6 +71,7 @@ public class OuterGamePanel extends JPanel {
         sets.setPreferredSize(new Dimension(50, 25));
         sets.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints setsGrid = new GridBagConstraints();
+        setsGrid.insets = new Insets(5,0,0,0);
         setsGrid.gridx = 1;
         setsGrid.gridy = 0;
         setsGrid.insets = new Insets(1, 1, 1, 1);
@@ -78,6 +83,7 @@ public class OuterGamePanel extends JPanel {
         round.setPreferredSize(new Dimension(50, 25));
         round.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints roundGrid = new GridBagConstraints();
+        roundGrid.insets = new Insets(5,0,0,0);
         roundGrid.gridx = 2;
         roundGrid.gridy = 0;
         roundGrid.insets = new Insets(1, 1, 1, 1);
@@ -134,15 +140,39 @@ public class OuterGamePanel extends JPanel {
         team2RoundsGrid.gridy = 2;
         team2RoundsGrid.insets = new Insets(1, 1, 1, 1);
 
-        upperPanel.add(team, teamGrid);
-        upperPanel.add(sets, setsGrid);
-        upperPanel.add(round, roundGrid);
-        upperPanel.add(team1, team1Grid);
-        upperPanel.add(team2, team2Grid);
-        upperPanel.add(this.team1Sets, team1SetsGrid);
-        upperPanel.add(this.team1Rounds, team1RoundsGrid);
-        upperPanel.add(this.team2Sets, team2SetsGrid);
-        upperPanel.add(this.team2Rounds, team2RoundsGrid);
+        JPanel scoreTablePanel = new JPanel();
+        scoreTablePanel.setLayout(new GridBagLayout());
+        GridBagConstraints scoreTablePanelGrid = new GridBagConstraints();
+        scoreTablePanelGrid.gridx = 0;
+        scoreTablePanelGrid.gridy = 0;
+        scoreTablePanelGrid.insets = new Insets(0,0,0,5);
+        scoreTablePanel.add(team, teamGrid);
+        scoreTablePanel.add(sets, setsGrid);
+        scoreTablePanel.add(round, roundGrid);
+        scoreTablePanel.add(team1, team1Grid);
+        scoreTablePanel.add(team2, team2Grid);
+        scoreTablePanel.add(this.team1Sets, team1SetsGrid);
+        scoreTablePanel.add(this.team1Rounds, team1RoundsGrid);
+        scoreTablePanel.add(this.team2Sets, team2SetsGrid);
+        scoreTablePanel.add(this.team2Rounds, team2RoundsGrid);
+        scoreTablePanel.setOpaque(false);
+        upperPanel.add(scoreTablePanel, scoreTablePanelGrid);
+
+        JLabel hokmIconLabel = new JLabel();
+        hokmIconLabel.setForeground(Color.BLACK);
+        Border b = new LineBorder(Color.BLACK, 1);
+        TitledBorder b2 = BorderFactory.createTitledBorder(b, "HOKM");
+        b2.setTitleColor(Color.WHITE);
+        hokmIconLabel.setBorder(b2);
+        hokmIconLabel.setPreferredSize(new Dimension(90,90));
+        GridBagConstraints hokmIconLabelGrid = new GridBagConstraints();
+        hokmIconLabelGrid.gridx = 1;
+        hokmIconLabelGrid.gridy = 0;
+        hokmIconLabelGrid.insets = new Insets(0,5,0,0);
+        upperPanel.add(hokmIconLabel, hokmIconLabelGrid);
+
+
+
         this.add(upperPanel, BorderLayout.NORTH);
         new Thread(() -> {
             boolean isTeamNamesSet = false;
@@ -194,7 +224,12 @@ public class OuterGamePanel extends JPanel {
                                     team2.setText((gameUpdate.getYourIndex()%2!=0)?"Your team":"Opponent Team");
                                 }
                                 if(newGameUpdate.getRule()!=null){
-                                    team.setText("Hokm : " + gameUpdate.getRule().toString());
+                                    switch (gameUpdate.getRule()){
+                                        case DIAMONDS :hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Diamond-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
+                                        case SPADES :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Spades-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
+                                        case CLUBS:    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Clubs-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
+                                        case HEARTS :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Hearts-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
+                                    }
                                 }
                                 if(newGameUpdate.getCurrentPlayer()!=null){
                                     gamePanel.setCurrentPlayer((gameUpdate.getCurrentPlayer()-gameUpdate.getYourIndex()+4)%4);

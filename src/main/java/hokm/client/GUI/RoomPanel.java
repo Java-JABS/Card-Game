@@ -32,6 +32,8 @@ public class RoomPanel extends JPanel {
         ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("intro.jpg").getImage().getScaledInstance(1000,-1,Image.SCALE_SMOOTH));
         roomLabel.setIcon(roomLabelPicture);
 
+        startButton.setBackground(Color.BLACK);
+        startButton.setForeground(Color.WHITE);
         startButton.setPreferredSize(new Dimension(300, 100));
         startButton.setFont(new Font("Arial", Font.BOLD, 30));
         GridBagConstraints startButtonGrid = new GridBagConstraints();
@@ -70,12 +72,15 @@ public class RoomPanel extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-                startButton.setBackground(Color.green);
+
+                startButton.setBackground(Color.WHITE);
+                startButton.setForeground(Color.BLACK);
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-                startButton.setBackground(new JButton().getBackground());
+                startButton.setBackground(Color.BLACK);
+                startButton.setForeground(Color.WHITE);
             }
         });
 
