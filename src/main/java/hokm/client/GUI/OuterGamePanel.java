@@ -196,6 +196,9 @@ public class OuterGamePanel extends JPanel {
                                 if(newGameUpdate.getRule()!=null){
                                     team.setText("Hokm : " + gameUpdate.getRule().toString());
                                 }
+                                if(newGameUpdate.getCurrentPlayer()!=null){
+                                    gamePanel.setCurrentPlayer(gameUpdate.getCurrentPlayer()-gameUpdate.getYourIndex());
+                                }
                         }
                     } catch (RequestException e) {
                         JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);

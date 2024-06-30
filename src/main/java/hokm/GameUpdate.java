@@ -71,7 +71,7 @@ public class GameUpdate implements Cloneable {
         this.currentRuler = currentRuler;
     }
 
-    public int getCurrentPlayer() {
+    public Integer getCurrentPlayer() {
         return currentPlayer;
     }
 

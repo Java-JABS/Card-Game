@@ -42,7 +42,7 @@ public class GamePanel extends JPanel {
         this.cardDeckPanel.setOpaque(false);
         this.setOpaque(false);
         for (int i = 0; i < this.profileNameLabels.length; i++) {
-            this.profileNameLabels[i].setForeground(Color.WHITE);
+            this.profileNameLabels[i].setForeground(Color.RED);
         }
 
 
@@ -140,7 +140,7 @@ public class GamePanel extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
 
         for (int i = 0; i < this.profileNameLabels.length; i++) {
-            this.profileNameLabels[i].setOpaque(true);
+            this.profileNameLabels[i].setOpaque(false);
         }
 
         for (int i = 0; i < 13; i++) {
@@ -199,5 +199,8 @@ public class GamePanel extends JPanel {
         }
     }
 
-
+    public void setCurrentPlayer(int index){
+        for (int i = 0; i < profileNameLabels.length; i++)
+            profileNameLabels[i].setOpaque(i==index);
+    }
 }
