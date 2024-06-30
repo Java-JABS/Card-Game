@@ -182,7 +182,7 @@ public class OuterGamePanel extends JPanel {
                                     team1Rounds.setText(String.valueOf(teams[0].getRound()));
                                     team2Rounds.setText(String.valueOf(teams[1].getRound()));
                                     team1Sets.setText(String.valueOf(teams[0].getSet()));
-                                    team1Sets.setText(String.valueOf(teams[1].getSet()));
+                                    team2Sets.setText(String.valueOf(teams[1].getSet()));
                                 }
                                 if (newGameUpdate.getCurrentRuler() != null) {
                                     gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler() - gameUpdate.getYourIndex());
