@@ -12,6 +12,7 @@ public class CardButton extends JButton {
     private final JLabel iconLabel = new JLabel();
     private final int deltaY = 40;
     private Card card;
+    private boolean isMouseEntered = false;
 
     public CardButton(Runnable mouseClick, Dimension cardPreferredSize) {
         this.mouseClick = mouseClick;
@@ -47,10 +48,12 @@ public class CardButton extends JButton {
                 setLocation(point);
                 setVerticalTextPosition(SwingConstants.BOTTOM);
                 setHorizontalTextPosition(SwingConstants.CENTER);
+                isMouseEntered=true;
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
+                if(!isMouseEntered) return;
                 Dimension size = getSize();
                 size.height -= deltaY;
                 setSize(size);
@@ -59,6 +62,7 @@ public class CardButton extends JButton {
                 setLocation(point);
                 setVerticalTextPosition(SwingConstants.BOTTOM);
                 setHorizontalTextPosition(SwingConstants.CENTER);
+                isMouseEntered=false;
             }
         });
     }
