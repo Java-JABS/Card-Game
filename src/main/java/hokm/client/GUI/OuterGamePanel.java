@@ -53,7 +53,7 @@ public class OuterGamePanel extends JPanel {
         team.setBackground(Color.GRAY);
         team.setForeground(Color.WHITE);
         team.setOpaque(true);
-        team.setPreferredSize(new Dimension(50, 25));
+        team.setPreferredSize(new Dimension(150, 25));
         team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints teamGrid = new GridBagConstraints();
         teamGrid.gridx = 0;
@@ -87,7 +87,7 @@ public class OuterGamePanel extends JPanel {
         team1.setBackground(Color.GRAY);
         team1.setForeground(Color.WHITE);
         team1.setOpaque(true);
-        team1.setPreferredSize(new Dimension(50, 25));
+        team1.setPreferredSize(new Dimension(150, 25));
         team1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team1Grid = new GridBagConstraints();
         team1Grid.gridx = 0;
@@ -99,7 +99,7 @@ public class OuterGamePanel extends JPanel {
         team2.setOpaque(true);
         team2.setBackground(Color.GRAY);
         team2.setForeground(Color.WHITE);
-        team2.setPreferredSize(new Dimension(50, 25));
+        team2.setPreferredSize(new Dimension(150, 25));
         team2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints team2Grid = new GridBagConstraints();
         team2Grid.gridx = 0;
@@ -194,7 +194,7 @@ public class OuterGamePanel extends JPanel {
                                     team2.setText((gameUpdate.getYourIndex()%2!=0)?"Your team":"Opponent Team");
                                 }
                                 if(newGameUpdate.getRule()!=null){
-                                    team.setText(gameUpdate.getRule().toString());
+                                    team.setText("Hokm : " + gameUpdate.getRule().toString());
                                 }
                         }
                     } catch (RequestException e) {
