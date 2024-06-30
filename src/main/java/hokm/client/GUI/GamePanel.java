@@ -188,8 +188,7 @@ public class GamePanel extends JPanel {
     public void setProfilePictureLabelsIcon(int rulerIndex) {
         rulerIndex = (rulerIndex + 4) % 4;
         for (int i = 0; i < this.profilePictureLabels.length; i++) {
-            this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon((i == rulerIndex) ? "rulerIcon.jpg" : "personIcon.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
-
+            this.profilePictureLabels[i].setIcon(new ImageIcon(Assets.getImageIcon((i == rulerIndex) ? "rulerIcon.png" : "personIcon.png").getImage().getScaledInstance(80, -1, Image.SCALE_SMOOTH)));
         }
     }
 
