@@ -41,7 +41,7 @@ public class GamePanel extends JPanel {
         this.cardDeckPanel.setOpaque(false);
         this.setOpaque(false);
         for (int i = 0; i < this.profileNameLabels.length; i++) {
-            this.profileNameLabels[i].setForeground(Color.RED);
+            this.profileNameLabels[i].setBackground(Color.RED);
         }
 
 
