@@ -84,6 +84,8 @@ public class RoomPanel extends JPanel {
             }
         });
 
+        names.setBackground(Color.BLACK);
+        names.setForeground(Color.WHITE);
         names.setEditable(false);
         names.setPreferredSize(new Dimension(300, 150));
         names.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -95,6 +97,8 @@ public class RoomPanel extends JPanel {
         namesGrid.gridy = 2;
         namesGrid.insets = new Insets(5, 5, 5, 5);
 
+        showToken.setBackground(Color.BLACK);
+        showToken.setForeground(Color.WHITE);
         showToken.setPreferredSize(new Dimension(300, 30));
         showToken.setEditable(false);
         showToken.setBackground(Color.WHITE);
