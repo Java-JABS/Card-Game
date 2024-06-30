@@ -45,6 +45,14 @@ public class MainMenuPanel extends JPanel {
                     topFrame.repaint();
                 } catch (RequestException e) {
                     logger.warn("Unable to create room, Reason: {}", e.getMessage());
+                    if(e.getMessage().equals("Player is already in a room!"))
+                    {
+                        logger.info("Try to join previous room.");
+                        topFrame.remove(MainMenuPanel.this);
+                        topFrame.add(new RoomPanel(""));
+                        topFrame.revalidate();
+                        topFrame.repaint();
+                    }
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
@@ -90,6 +98,14 @@ public class MainMenuPanel extends JPanel {
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
+                    if(e.getMessage().equals("Player is already in a room!"))
+                    {
+                        logger.info("Try to join previous room.");
+                        topFrame.remove(MainMenuPanel.this);
+                        topFrame.add(new RoomPanel(""));
+                        topFrame.revalidate();
+                        topFrame.repaint();
+                    }
                     logger.warn("Unable to Join , Reason : {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
