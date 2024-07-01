@@ -174,7 +174,7 @@ public class OuterGamePanel extends JPanel {
         upperPanel.add(hokmIconLabel, hokmIconLabelGrid);
 
         JButton leaveGameButton = new JButton("Leave Game");
-        leaveGameButton.setPreferredSize(new Dimension(78,78));
+        leaveGameButton.setPreferredSize(new Dimension(150,50));
         leaveGameButton.setBackground(new Color(0xC48D2F));
         leaveGameButton.setFont(new Font("Arial", Font.BOLD, 15));
         GridBagConstraints leaveGameButtonGrid = new GridBagConstraints();

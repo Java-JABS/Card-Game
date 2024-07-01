@@ -14,6 +14,8 @@ import java.awt.geom.RoundRectangle2D;
 
 public class MainMenuPanel extends JPanel {
     private final Logger logger = LoggerFactory.getLogger(MainFrame.class);
+    Color blackGUI = new Color(0xDC000000, false);
+    Color whiteGUI = new Color(0x9FEBEBF1, true);
 
     MainMenuPanel() {
 
@@ -26,7 +28,7 @@ public class MainMenuPanel extends JPanel {
         ImageIcon mainMenuLabelPicture = new ImageIcon(Assets.getImageIcon("intro.jpg").getImage().getScaledInstance(1000, -1, Image.SCALE_SMOOTH));
         mainMenuLabel.setIcon(mainMenuLabelPicture);
         JButton createNewGameButton = new JButton("Create New Game");
-        createNewGameButton.setBackground(Color.BLACK);
+        createNewGameButton.setBackground(blackGUI);
         createNewGameButton.setForeground(Color.WHITE);
         createNewGameButton.setFocusable(false);
         createNewGameButton.setPreferredSize(new Dimension(300, 100));
@@ -73,19 +75,21 @@ public class MainMenuPanel extends JPanel {
             public void mouseEntered(MouseEvent mouseEvent) {
 
 
-                createNewGameButton.setBackground(Color.WHITE);
+                createNewGameButton.setBackground(whiteGUI);
                 createNewGameButton.setForeground(Color.BLACK);
+                repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-                createNewGameButton.setBackground(Color.BLACK);
+                createNewGameButton.setBackground(blackGUI);
                 createNewGameButton.setForeground(Color.WHITE);
+                repaint();
             }
         });
 
         JButton joinExistingGameButton = new JButton("Join Existing Game");
-        joinExistingGameButton.setBackground(Color.BLACK);
+        joinExistingGameButton.setBackground(blackGUI);
         joinExistingGameButton.setForeground(Color.WHITE);
         joinExistingGameButton.setFocusable(false);
         joinExistingGameButton.setPreferredSize(new Dimension(300, 100));
@@ -132,14 +136,16 @@ public class MainMenuPanel extends JPanel {
             public void mouseEntered(MouseEvent mouseEvent) {
 
 
-                joinExistingGameButton.setBackground(Color.WHITE);
+                joinExistingGameButton.setBackground(whiteGUI);
                 joinExistingGameButton.setForeground(Color.BLACK);
+                repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-                joinExistingGameButton.setBackground(Color.BLACK);
+                joinExistingGameButton.setBackground(blackGUI);
                 joinExistingGameButton.setForeground(Color.WHITE);
+                repaint();
             }
         });
 

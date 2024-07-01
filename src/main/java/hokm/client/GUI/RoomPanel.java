@@ -21,9 +21,12 @@ public class RoomPanel extends JPanel {
     JLabel roomLabel = new JLabel();
     JTextArea names = new JTextArea();
     JTextField showToken = new JTextField(SwingConstants.CENTER);
-    JButton startButton = new JButton("Start");
+    JButton startButton = new JButton("Start Game");
+    JButton leaveRoomButton = new JButton("Leave Room");
     RoomUpdate roomUpdate = new RoomUpdate();
     private final Logger logger = LoggerFactory.getLogger(RoomPanel.class);
+    Color blackGUI = new Color(0xDC000000, false);
+    Color whiteGUI = new Color(0x9FEBEBF1, true);
 
     public RoomPanel(String gameToken) {
 
@@ -32,9 +35,57 @@ public class RoomPanel extends JPanel {
         ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("intro.jpg").getImage().getScaledInstance(1000,-1,Image.SCALE_SMOOTH));
         roomLabel.setIcon(roomLabelPicture);
 
-        startButton.setBackground(Color.BLACK);
+        leaveRoomButton.setBackground(blackGUI);
+        leaveRoomButton.setForeground(Color.WHITE);
+        leaveRoomButton.setOpaque(true);
+        leaveRoomButton.setPreferredSize(new Dimension(300, 70));
+        leaveRoomButton.setFont(new Font("Arial", Font.BOLD, 30));
+        GridBagConstraints leaveRoomButtonGrid = new GridBagConstraints();
+        leaveRoomButtonGrid.gridx = 0;
+        leaveRoomButtonGrid.gridy = 2;
+        leaveRoomButtonGrid.insets = new Insets(5, 5, 5, 5);
+        leaveRoomButton.setFocusable(false);
+        leaveRoomButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+
+                leaveRoomButton.setBackground(whiteGUI);
+                leaveRoomButton.setForeground(Color.BLACK);
+                repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+                leaveRoomButton.setBackground(blackGUI);
+                leaveRoomButton.setForeground(Color.WHITE);
+                repaint();
+            }
+        });
+
+
+
+
+
+        startButton.setBackground(blackGUI);
         startButton.setForeground(Color.WHITE);
-        startButton.setPreferredSize(new Dimension(300, 100));
+        startButton.setOpaque(true);
+        startButton.setPreferredSize(new Dimension(300, 70));
         startButton.setFont(new Font("Arial", Font.BOLD, 30));
         GridBagConstraints startButtonGrid = new GridBagConstraints();
         startButtonGrid.gridx = 0;
@@ -73,14 +124,15 @@ public class RoomPanel extends JPanel {
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
 
-                startButton.setBackground(Color.WHITE);
+                startButton.setBackground(whiteGUI);
                 startButton.setForeground(Color.BLACK);
+                repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-                startButton.setBackground(Color.BLACK);
-                startButton.setForeground(Color.WHITE);
+                startButton.setBackground(blackGUI);
+                startButton.setForeground(Color.WHITE);repaint();
             }
         });
 
@@ -94,7 +146,7 @@ public class RoomPanel extends JPanel {
         names.setFont(new Font("Arial", Font.BOLD, 20));
         GridBagConstraints namesGrid = new GridBagConstraints();
         namesGrid.gridx = 0;
-        namesGrid.gridy = 2;
+        namesGrid.gridy = 3;
         namesGrid.insets = new Insets(5, 5, 5, 5);
 
         showToken.setBackground(Color.BLACK);
@@ -110,6 +162,7 @@ public class RoomPanel extends JPanel {
 
         setLayout(new GridLayout(1, 1));
         this.roomLabel.add(startButton, startButtonGrid);
+        this.roomLabel.add(leaveRoomButton, leaveRoomButtonGrid);
         this.roomLabel.add(names, namesGrid);
         this.roomLabel.add(showToken, showTokenGrid);
 
@@ -125,7 +178,7 @@ public class RoomPanel extends JPanel {
                         if (!newRoomUpdate.getPlayerNames().equals(roomUpdate.getPlayerNames())) {
                             StringBuilder roomMembers = new StringBuilder(" Players in room :\n");
                             for (int i = 0; i < newRoomUpdate.getPlayerNames().size(); i++) {
-                                roomMembers.append(" Player <").append(i + 1).append(">: ").append(newRoomUpdate.getPlayerNames().get(i)).append("\n");
+                                roomMembers.append(" Player <").append(i + 1).append("> : ").append(newRoomUpdate.getPlayerNames().get(i)).append("\n");
                             }
                             names.setText(roomMembers.toString());
                         }
