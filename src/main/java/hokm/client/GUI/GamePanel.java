@@ -183,9 +183,7 @@ public class GamePanel extends JPanel {
 
     public void setDeckCardButtons(ArrayList<Card> list) {
         cardDeckPanel.removeAll();
-        for (CardButton cardButton: cardButtons)
-            cardButton.setMouseEntered(false);
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = list.size() -1; i >= 0; i--) {
             CardButton cardButton = cardButtons.get(i);
             cardButton.setCard(list.get(i));
             add(cardButton);
@@ -194,7 +192,8 @@ public class GamePanel extends JPanel {
             bGrid.insets = new Insets(0, -15, 0, -15);
             cardDeckPanel.add(cardButton, bGrid);
         }
-        repaint();
+        for (CardButton cardButton: cardButtons)
+            cardButton.setMouseEntered(false);
     }
 
     public void setProfileNameLabelsText(ArrayList<String> list, int index) {

@@ -208,11 +208,13 @@ public class OuterGamePanel extends JPanel {
 
         this.add(upperPanel, BorderLayout.NORTH);
         new Thread(() -> {
+            MainFrame topFrame = null;
+            while (topFrame ==null){topFrame= (MainFrame) SwingUtilities.getWindowAncestor(this);}
+            topFrame.setExtendedState(topFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
             boolean isTeamNamesSet = false;
             while (true) {
                 try {
                     sleep(1000);
-                    MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                     try {
                         logger.debug("Request for Game Update :-)");
                         String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
@@ -282,7 +284,5 @@ public class OuterGamePanel extends JPanel {
                 }
             }
         }).start();
-
-
     }
 }
