@@ -195,7 +195,6 @@ public class GamePanel extends JPanel {
             cardDeckPanel.add(cardButton, bGrid);
         }
         repaint();
-        revalidate();
     }
 
     public void setProfileNameLabelsText(ArrayList<String> list, int index) {
@@ -216,6 +215,5 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < profileNameLabels.length; i++)
             profileNameLabels[i].setOpaque(i==index);
         repaint();
-        revalidate();
     }
 }
