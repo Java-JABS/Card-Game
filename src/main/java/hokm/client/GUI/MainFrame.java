@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
 
 
     MainFrame() {
+        Assets.playBackgroundMusic("introHokm.wav");
         this.setTitle("Java-JABS™ Hokm");
         this.setIconImage(Assets.getImageIcon("icon.png").getImage());
         // Todo
