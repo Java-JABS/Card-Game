@@ -16,6 +16,8 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import static java.lang.Thread.sleep;
 
@@ -143,9 +145,9 @@ public class OuterGamePanel extends JPanel {
         JPanel scoreTablePanel = new JPanel();
         scoreTablePanel.setLayout(new GridBagLayout());
         GridBagConstraints scoreTablePanelGrid = new GridBagConstraints();
-        scoreTablePanelGrid.gridx = 0;
+        scoreTablePanelGrid.gridx = 1;
         scoreTablePanelGrid.gridy = 0;
-        scoreTablePanelGrid.insets = new Insets(0,0,0,5);
+        scoreTablePanelGrid.insets = new Insets(0,0,0,0);
         scoreTablePanel.add(team, teamGrid);
         scoreTablePanel.add(sets, setsGrid);
         scoreTablePanel.add(round, roundGrid);
@@ -164,12 +166,42 @@ public class OuterGamePanel extends JPanel {
         TitledBorder b2 = BorderFactory.createTitledBorder(b, "HOKM");
         b2.setTitleColor(Color.WHITE);
         hokmIconLabel.setBorder(b2);
-        hokmIconLabel.setPreferredSize(new Dimension(90,90));
+        hokmIconLabel.setPreferredSize(new Dimension(78,78));
         GridBagConstraints hokmIconLabelGrid = new GridBagConstraints();
-        hokmIconLabelGrid.gridx = 1;
+        hokmIconLabelGrid.gridx = 2;
         hokmIconLabelGrid.gridy = 0;
-        hokmIconLabelGrid.insets = new Insets(0,5,0,0);
+        hokmIconLabelGrid.insets = new Insets(0,50,0,0);
         upperPanel.add(hokmIconLabel, hokmIconLabelGrid);
+
+        JButton leaveGameButton = new JButton("Leave Game");
+        leaveGameButton.setPreferredSize(new Dimension(78,78));
+        leaveGameButton.setBackground(new Color(0xC48D2F));
+        leaveGameButton.setFont(new Font("Arial", Font.BOLD, 15));
+        GridBagConstraints leaveGameButtonGrid = new GridBagConstraints();
+        leaveGameButtonGrid.gridx = 0;
+        leaveGameButtonGrid.gridy = 0;
+        leaveGameButtonGrid.insets = new Insets(0,0,0,50);
+        leaveGameButton.setFocusable(false);
+        leaveGameButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+
+            }
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {}
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+                leaveGameButton.setBackground(new Color(0xC21532));
+            }
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+                leaveGameButton.setBackground(new Color(0xC48D2F));
+
+            }
+        });
+        upperPanel.add(leaveGameButton, leaveGameButtonGrid);
 
 
 
@@ -225,10 +257,10 @@ public class OuterGamePanel extends JPanel {
                                 }
                                 if(newGameUpdate.getRule()!=null){
                                     switch (gameUpdate.getRule()){
-                                        case DIAMONDS :hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Diamond-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
-                                        case SPADES :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Spades-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
-                                        case CLUBS:    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Clubs-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
-                                        case HEARTS :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Hearts-Hokm.png").getImage().getScaledInstance(90, -1, Image.SCALE_SMOOTH)));break;
+                                        case DIAMONDS :hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Diamond-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
+                                        case SPADES :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Spades-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
+                                        case CLUBS:    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Clubs-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
+                                        case HEARTS :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Hearts-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
                                     }
                                 }
                                 if(newGameUpdate.getCurrentPlayer()!=null){
