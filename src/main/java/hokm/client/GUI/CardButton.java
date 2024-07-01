@@ -40,7 +40,6 @@ public class CardButton extends JButton {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-                Assets.playSound("src/main/resources/musics/flapCard.wav");
                 Dimension size = getSize();
                 size.height += deltaY;
                 setSize(size);

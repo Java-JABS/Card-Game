@@ -160,13 +160,9 @@ public class GamePanel extends JPanel {
             cardButtons.add(new CardButton(() -> {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
-                    Assets.playSound("src/main/resources/musics/throw.wav");
                     topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
-                    Thread.sleep(1000);
                 } catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
                 }
             }, cardsDimension));
         }
@@ -185,7 +181,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void setDeckCardButtons(ArrayList<Card> list) throws InterruptedException {
+    public void setDeckCardButtons(ArrayList<Card> list) {
         cardDeckPanel.removeAll();
         for (int i = list.size() -1; i >= 0; i--) {
             CardButton cardButton = cardButtons.get(i);
@@ -194,9 +190,7 @@ public class GamePanel extends JPanel {
             GridBagConstraints bGrid = new GridBagConstraints();
             bGrid.gridx = i;
             bGrid.insets = new Insets(0, -15, 0, -15);
-            Assets.playSound("src/main/resources/musics/flapCard.wav");
             cardDeckPanel.add(cardButton, bGrid);
-            Thread.sleep(1000);
         }
         for (CardButton cardButton: cardButtons)
             cardButton.setMouseEntered(false);
@@ -221,5 +215,4 @@ public class GamePanel extends JPanel {
             profileNameLabels[i].setOpaque(i==index);
         repaint();
     }
-
 }

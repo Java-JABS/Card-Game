@@ -22,7 +22,6 @@ public class MainFrame extends JFrame {
 
 
     MainFrame() {
-        Assets.playSound("src/main/resources/musics/introHokm.wav");
         this.setTitle("Java-JABS™ Hokm");
         this.setIconImage(Assets.getImageIcon("icon.png").getImage());
         // Todo
@@ -87,7 +86,6 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-
         new MainFrame();
     }
 
