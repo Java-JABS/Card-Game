@@ -176,7 +176,7 @@ public class OuterGamePanel extends JPanel {
         JButton leaveGameButton = new JButton();
 
         leaveGameButton.setPreferredSize(new Dimension(50,50));
-        leaveGameButton.setIcon(new ImageIcon(Assets.getImageIcon("LeaveGameIcon.jpg").getImage().getScaledInstance(50, -1, Image.SCALE_SMOOTH)));
+        leaveGameButton.setIcon(new ImageIcon(Assets.getImageIcon("LeaveGameIcon.png").getImage().getScaledInstance(50, -1, Image.SCALE_SMOOTH)));
         leaveGameButton.setFont(new Font("Arial", Font.BOLD, 15));
         leaveGameButton.setBorder(null);
         GridBagConstraints leaveGameButtonGrid = new GridBagConstraints();
