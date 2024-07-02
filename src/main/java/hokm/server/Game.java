@@ -35,6 +35,7 @@ public class Game {
     private Player currentPlayer;
     private Dast dast;
     private GameState gameState;
+    private GameState previousGameState;
     private GameUpdate minorUpdate;
 
     public Game(ArrayList<Player> players, Room room) {
@@ -42,12 +43,13 @@ public class Game {
         this.room = room;
         if (players.size() != 4) throw new IllegalArgumentException();
         Random random = new Random();
-        this.gameState = GameState.NEW_SET;
         ArrayList<String> names = new ArrayList<>();
         for (Player player : players)
             names.add(player.name);
         minorUpdate = new GameUpdate(majorUpdate);
         minorUpdate.setPlayerNames(names);
+        gameState = GameState.NEW_SET;
+        minorUpdate.setGameState(gameState);
         newSet(players.get(random.nextInt(3)));
     }
 
@@ -63,7 +65,8 @@ public class Game {
             for (Team team : teams)
                 team.clearRound();
             minorUpdate.setTeams(teams);
-            gameState = (teams[0].getSet() >= 2 || teams[1].getSet() >= 2) ? GameState.END : GameState.HOKM;
+            previousGameState=gameState;
+            gameState = (teams[0].getSet() >= 1 || teams[1].getSet() >= 1) ? GameState.END : GameState.HOKM;
             minorUpdate.setGameState(gameState);
             if (gameState == GameState.END) {
                 waitForEveryoneToGetUpdate.run();
@@ -105,17 +108,20 @@ public class Game {
             Card highestCard = getHighestCard(onTableCards);
             int indexWinnerPlayer = (players.indexOf(currentPlayer) + onTableCards.indexOf(highestCard)) % 4;
             teams[indexWinnerPlayer % 2].round();
+            minorUpdate.setTeams(teams);
             currentPlayer = players.get(indexWinnerPlayer);
             minorUpdate.setCurrentPlayer(indexWinnerPlayer);
             onTableCards.clear();
             minorUpdate.setOnTableCards(onTableCards);
             if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
+                previousGameState=gameState;
                 gameState = GameState.NEW_SET;
                 int rulerIndex = players.indexOf(ruler);
                 int winnerTeam = (teams[0].getRound() == 7) ? 0 : 1;
                 newSet(players.get((rulerIndex + abs(rulerIndex % 2 - winnerTeam)) % 4));
             } else {
                 minorUpdate.setGameState(gameState);
+                previousGameState=gameState;
                 gameState = GameState.PUT_CARD;
                 majorUpdate.update(minorUpdate);
             }
@@ -158,12 +164,14 @@ public class Game {
             currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % 4);
             minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             if (onTableCards.size() == 4) {
+                previousGameState=gameState;
                 gameState = GameState.NEXT_ROUND;
                 minorUpdate.setGameState(gameState);
                 majorUpdate.update(minorUpdate);
                 new Thread(this::newRound).start();
                 return;
             }
+            previousGameState=gameState;
             gameState = GameState.PUT_CARD;
             minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
@@ -184,6 +192,7 @@ public class Game {
             for (Player playerI : players)
                 if (playerI != ruler) playerI.dast.addAll(dast.popFromStart(13));
             minorUpdate.setOnTableCards(onTableCards);
+            previousGameState=gameState;
             gameState = GameState.PUT_CARD;
             minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
@@ -199,7 +208,11 @@ public class Game {
                 gameUpdate = majorUpdate.clone();
                 gameUpdate.setYourIndex(players.indexOf(player));
                 gameUpdate.setDast(player.dast);
-            } else gameUpdate = minorUpdate.clone();
+            } else {
+                gameUpdate = minorUpdate.clone();
+                if((player==ruler && (previousGameState==GameState.HOKM|| gameState==GameState.HOKM)) || previousGameState==GameState.HOKM)
+                    gameUpdate.setDast(player.dast);
+            }
             notify();
             return gameUpdate;
         }
