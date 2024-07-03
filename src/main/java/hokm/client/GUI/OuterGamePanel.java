@@ -29,9 +29,11 @@ public class OuterGamePanel extends JPanel {
     JLabel team2Rounds = new JLabel("0", SwingConstants.CENTER);
     GamePanel gamePanel = new GamePanel();
     GameUpdate gameUpdate = new GameUpdate();
+    private final OuterGameLabel topPanel;
     private final Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
 
-    OuterGamePanel() {
+    OuterGamePanel(OuterGameLabel topPanel) {
+        this.topPanel = topPanel;
         team1Sets.setOpaque(true);
         team1Sets.setBackground(Color.GRAY);
         team1Sets.setForeground(Color.WHITE);
@@ -216,9 +218,9 @@ public class OuterGamePanel extends JPanel {
                 try {
                     sleep(1000);
                     try {
-                        logger.debug("Request for Game Update :-)");
-                        String mess = topFrame.client.sendMessage(new GameUpdateRequest(true));
-                        GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(mess, GameUpdate.class);
+                        GameUpdate lastGameUpdate  = gameUpdate;
+                        logger.trace("Request for Game Update :-)");
+                        GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new GameUpdateRequest(gameUpdate.getNumber()==0)), GameUpdate.class);
                         switch (newGameUpdate.getNumber() - gameUpdate.getNumber()) {
                             case 0:
                                 break;
@@ -228,13 +230,20 @@ public class OuterGamePanel extends JPanel {
                             case 1:
                                 newGameUpdate.updatesFrom(gameUpdate);
                                 gameUpdate.update(newGameUpdate);
+                                if(newGameUpdate.getGameState()==GameState.NEW_SET || (lastGameUpdate.getGameState()==GameState.HOKM && lastGameUpdate.getCurrentRuler()== lastGameUpdate.getYourIndex())){
+                                    logger.debug("Clearing Table");
+                                    gamePanel.clearDeckCardButtons();}
                                 if (newGameUpdate.getDast() != null) {
+                                    logger.debug("Updating Dast");
+                                    gamePanel.clearDeckCardButtons();
                                     gamePanel.setDeckCardButtons(gameUpdate.getDast());
                                 }
                                 if (newGameUpdate.getOnTableCards() != null) {
+                                    logger.debug("Updating table cards");
                                     gamePanel.setPlayedCardLabelsIcon(gameUpdate.getOnTableCards(), gameUpdate.getYourIndex() - gameUpdate.getCurrentPlayer());
                                 }
                                 if (newGameUpdate.getPlayerNames() != null) {
+                                    logger.debug("Updating player names");
                                     gamePanel.setProfileNameLabelsText(gameUpdate.getPlayerNames(), gameUpdate.getYourIndex());
                                 }
                                 if (gameUpdate.getGameState() == GameState.HOKM && gameUpdate.getYourIndex() == gameUpdate.getCurrentRuler()) {
@@ -244,6 +253,7 @@ public class OuterGamePanel extends JPanel {
                                     topFrame.client.sendMessage(new HokmRequest(buttons[returnValue]));
                                 }
                                 if (newGameUpdate.getTeams() != null) {
+                                    logger.debug("Updating team goals");
                                     Team[] teams = gameUpdate.getTeams();
                                     team1Rounds.setText(String.valueOf(teams[0].getRound()));
                                     team2Rounds.setText(String.valueOf(teams[1].getRound()));
@@ -251,6 +261,7 @@ public class OuterGamePanel extends JPanel {
                                     team2Sets.setText(String.valueOf(teams[1].getSet()));
                                 }
                                 if (newGameUpdate.getCurrentRuler() != null) {
+                                    logger.debug("Updating profile pictures");
                                     gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler() - gameUpdate.getYourIndex());
                                 }
                                 if (!isTeamNamesSet){
@@ -259,6 +270,7 @@ public class OuterGamePanel extends JPanel {
                                     team2.setText((gameUpdate.getYourIndex()%2!=0)?"Your team":"Opponent Team");
                                 }
                                 if(newGameUpdate.getRule()!=null){
+                                    logger.debug("Updating rule");
                                     switch (gameUpdate.getRule()){
                                         case DIAMONDS :hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Diamond-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
                                         case SPADES :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Spades-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
@@ -267,15 +279,21 @@ public class OuterGamePanel extends JPanel {
                                     }
                                 }
                                 if(newGameUpdate.getCurrentPlayer()!=null){
+                                    logger.debug("Updating current player");
                                     gamePanel.setCurrentPlayer((gameUpdate.getCurrentPlayer()-gameUpdate.getYourIndex()+4)%4);
+                                }
+                                if(gameUpdate.getGameState()==GameState.NEXT_ROUND){
+                                    sleep(1000);
                                 }
                         }
                     } catch (RequestException e) {
                         JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-                        topFrame.remove(OuterGamePanel.this);
-                        topFrame.add(new MainMenuPanel());
+                        topFrame.remove(topPanel);
+                        topFrame.add(new RoomPanel());
                         topFrame.repaint();
                         topFrame.revalidate();
+                        topFrame.pack();        
+                        break;
                     } catch (NullPointerException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }

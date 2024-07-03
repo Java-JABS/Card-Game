@@ -17,7 +17,7 @@ import static java.lang.Thread.sleep;
 
 public class RoomPanel extends JPanel {
 
-    String gameToken;
+    String gameToken="";
     JLabel roomLabel = new JLabel();
     JTextArea names = new JTextArea();
     JTextField showToken = new JTextField(SwingConstants.CENTER);
@@ -28,9 +28,8 @@ public class RoomPanel extends JPanel {
     Color blackGUI = new Color(0xDC000000, false);
     Color whiteGUI = new Color(0x9FEBEBF1, true);
 
-    public RoomPanel(String gameToken) {
+    public RoomPanel() {
 
-        this.gameToken = gameToken;
         roomLabel.setLayout(new GridBagLayout());
         ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("intro.jpg").getImage().getScaledInstance(1000,-1,Image.SCALE_SMOOTH));
         roomLabel.setIcon(roomLabelPicture);
@@ -199,10 +198,17 @@ public class RoomPanel extends JPanel {
                     topFrame.add(new MainMenuPanel());
                     topFrame.repaint();
                     topFrame.revalidate();
+                    break;
                 } catch (Exception e) {
                     break;
                 }
             }
         }).start();
+    }
+
+    RoomPanel(String gameToken){
+        // Todo: to be removed
+        this();
+        this.gameToken = gameToken;
     }
 }

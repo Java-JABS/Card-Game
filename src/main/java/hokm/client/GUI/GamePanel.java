@@ -161,6 +161,9 @@ public class GamePanel extends JPanel {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
                     topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
+                        cardDeckPanel.remove(cardButtons.get(finalI));
+                    cardDeckPanel.repaint();
+                    cardDeckPanel.revalidate();
                 } catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
@@ -181,8 +184,14 @@ public class GamePanel extends JPanel {
         }
     }
 
+    public void clearDeckCardButtons(){
+        for (CardButton cardButton:cardButtons)
+            cardDeckPanel.remove(cardButton);
+        repaint();
+        revalidate();
+    }
+
     public void setDeckCardButtons(ArrayList<Card> list) {
-        cardDeckPanel.removeAll();
         for (int i = list.size() -1; i >= 0; i--) {
             CardButton cardButton = cardButtons.get(i);
             cardButton.setCard(list.get(i));
