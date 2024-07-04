@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
     private final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
 
-    MainFrame() {
+    public MainFrame() {
         Assets.playBackgroundMusic("introHokm.wav");
         this.setTitle("Java-JABS™ Hokm");
         this.setIconImage(Assets.getImageIcon("icon.png").getImage());
@@ -84,9 +84,4 @@ public class MainFrame extends JFrame {
             }
         }
     }
-
-    public static void main(String[] args) {
-        new MainFrame();
-    }
-
 }
