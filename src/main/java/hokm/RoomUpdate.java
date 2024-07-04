@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class RoomUpdate implements Cloneable {
     ArrayList<String> playerNames;
+    String token;
 
     Boolean isGameStarted = false;
 
@@ -51,5 +52,13 @@ public class RoomUpdate implements Cloneable {
             return null;
         }
 
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

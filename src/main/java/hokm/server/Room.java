@@ -12,13 +12,16 @@ public class Room {
     RoomUpdate roomUpdate = new RoomUpdate();
     ArrayList<String> names = new ArrayList<>();
     private Game game;
+    final String token;
 
-    public Room(int capacity) {
+    public Room(int capacity, String token) {
         this.capacity = capacity;
+        this.token = token;
+        roomUpdate.setToken(token);
     }
 
-    public Room() {
-        this(4);
+    public Room(String token) {
+        this(4, token);
     }
 
     public void join(Player newPlayer) throws RequestException {

@@ -45,7 +45,7 @@ public class MainMenuPanel extends JPanel {
                     logger.info("Try to create a room");
                     String roomToken = topFrame.client.sendMessage(new RoomCreateRequest());
                     topFrame.remove(MainMenuPanel.this);
-                    topFrame.add(new RoomPanel(roomToken));
+                    topFrame.add(new RoomPanel());
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
@@ -54,7 +54,7 @@ public class MainMenuPanel extends JPanel {
                     {
                         logger.info("Try to join previous room.");
                         topFrame.remove(MainMenuPanel.this);
-                        topFrame.add(new RoomPanel(""));
+                        topFrame.add(new RoomPanel());
                         topFrame.revalidate();
                         topFrame.repaint();
                     }
@@ -107,7 +107,7 @@ public class MainMenuPanel extends JPanel {
                     logger.info("Try to join a room.");
                     topFrame.client.sendMessage(new JoinRequest(token));
                     topFrame.remove(MainMenuPanel.this);
-                    topFrame.add(new RoomPanel(token));
+                    topFrame.add(new RoomPanel());
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
@@ -115,7 +115,7 @@ public class MainMenuPanel extends JPanel {
                     {
                         logger.info("Try to join previous room.");
                         topFrame.remove(MainMenuPanel.this);
-                        topFrame.add(new RoomPanel(""));
+                        topFrame.add(new RoomPanel());
                         topFrame.revalidate();
                         topFrame.repaint();
                     }

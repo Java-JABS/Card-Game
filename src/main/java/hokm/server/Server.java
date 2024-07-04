@@ -186,7 +186,7 @@ public class Server extends Thread {
     }
 
     private Room createNewRoom(String token) throws RequestException {
-        Room room = new Room();
+        Room room = new Room(token);
         if (rooms.putIfAbsent(token, room) != null) {
             logger.warn("failed to create room :( reason: duplicate room token!");
             throw new RequestException(RequestErrorMessage.CREATE_ROOM);

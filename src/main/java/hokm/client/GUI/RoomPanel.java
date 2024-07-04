@@ -17,7 +17,6 @@ import static java.lang.Thread.sleep;
 
 public class RoomPanel extends JPanel {
 
-    String gameToken="";
     JLabel roomLabel = new JLabel();
     JTextArea names = new JTextArea();
     JTextField showToken = new JTextField(SwingConstants.CENTER);
@@ -167,7 +166,6 @@ public class RoomPanel extends JPanel {
 
         this.add(roomLabel);
         new Thread(() -> {
-            showToken.setText(" Room token : " + this.gameToken);
             while (true) {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
                 try {
@@ -182,6 +180,7 @@ public class RoomPanel extends JPanel {
                             names.setText(roomMembers.toString());
                         }
                     }
+                    showToken.setText(newRoomUpdate.getToken());
                     if (roomUpdate.getGameStarted()) {
                         topFrame.remove(RoomPanel.this);
                         topFrame.add(new OuterGameLabel());
@@ -204,11 +203,5 @@ public class RoomPanel extends JPanel {
                 }
             }
         }).start();
-    }
-
-    RoomPanel(String gameToken){
-        // Todo: to be removed
-        this();
-        this.gameToken = gameToken;
     }
 }
