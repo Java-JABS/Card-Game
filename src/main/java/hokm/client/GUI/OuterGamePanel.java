@@ -217,6 +217,7 @@ public class OuterGamePanel extends JPanel {
             MainFrame topFrame = null;
             while (topFrame ==null){topFrame= (MainFrame) SwingUtilities.getWindowAncestor(this);}
             topFrame.setExtendedState(topFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            topFrame.setMinimumSize(new Dimension(1140,1000));
             boolean isTeamNamesSet = false;
             while (true) {
                 try {
@@ -293,6 +294,7 @@ public class OuterGamePanel extends JPanel {
                     } catch (RequestException e) {
                         if (e.getErrorMessage() == RequestErrorMessage.NOT_IN_GAME) {
                             JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                            topFrame.setMinimumSize(new Dimension(0,0));
                             topFrame.remove(topPanel);
                             topFrame.add(new RoomPanel());
                             topFrame.repaint();

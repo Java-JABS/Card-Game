@@ -30,7 +30,6 @@ public class GamePanel extends JPanel {
     }
 
     private void initComponents() {
-
         this.setLayout(new BorderLayout());
         this.rightPlayerPanel.setOpaque(false);
         this.leftPlayerPanel.setOpaque(false);
@@ -56,13 +55,13 @@ public class GamePanel extends JPanel {
         profileNameLabels[1].setText("Name");
         profileNameLabels[1].setOpaque(true);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,0,0,450);
+        gridBagConstraints.insets = new Insets(0,0,0,350);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         rightPlayerPanel.add(profileNameLabels[1], gridBagConstraints);
         profilePictureLabels[1].setPreferredSize(profilePicturesDimension);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,0,0,450);
+        gridBagConstraints.insets = new Insets(0,0,0,350);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         rightPlayerPanel.add(profilePictureLabels[1], gridBagConstraints);
@@ -78,7 +77,7 @@ public class GamePanel extends JPanel {
         leftPlayerPanel.setLayout(new GridBagLayout());
         profileNameLabels[3].setText("Name");
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,450,0,0);
+        gridBagConstraints.insets = new Insets(0,350,0,0);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         leftPlayerPanel.add(profileNameLabels[3], gridBagConstraints);
@@ -92,7 +91,7 @@ public class GamePanel extends JPanel {
         profilePictureLabels[3].setPreferredSize(profilePicturesDimension);
         profilePictureLabels[3].setAlignmentY(1.5F);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,450,0,0);
+        gridBagConstraints.insets = new Insets(0,350,0,0);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         leftPlayerPanel.add(profilePictureLabels[3], gridBagConstraints);

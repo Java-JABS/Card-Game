@@ -180,7 +180,7 @@ public class RoomPanel extends JPanel {
                             names.setText(roomMembers.toString());
                         }
                     }
-                    showToken.setText(newRoomUpdate.getToken());
+                    showToken.setText(" Room token: " + newRoomUpdate.getToken());
                     if (roomUpdate.getGameStarted()) {
                         topFrame.remove(RoomPanel.this);
                         topFrame.add(new OuterGameLabel());
