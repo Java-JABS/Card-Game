@@ -3,12 +3,11 @@ package hokm.client.GUI;
 import hokm.client.ClientRequestSender;
 import hokm.messages.LoginRequest;
 import hokm.messages.RegisterRequest;
-import hokm.server.RequestException;
+import hokm.messages.RequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;

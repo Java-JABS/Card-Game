@@ -6,7 +6,8 @@ import hokm.client.ClientRequestSender;
 import hokm.messages.GameUpdateRequest;
 import hokm.messages.HokmRequest;
 import hokm.server.GameState;
-import hokm.server.RequestException;
+import hokm.messages.RequestErrorMessage;
+import hokm.messages.RequestException;
 import hokm.server.Team;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 
 import static java.lang.Thread.sleep;
 
@@ -287,13 +289,19 @@ public class OuterGamePanel extends JPanel {
                                 }
                         }
                     } catch (RequestException e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-                        topFrame.remove(topPanel);
-                        topFrame.add(new RoomPanel());
-                        topFrame.repaint();
-                        topFrame.revalidate();
-                        topFrame.pack();        
-                        break;
+                        if (e.getErrorMessage() == RequestErrorMessage.NOT_IN_GAME) {
+                            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                            topFrame.remove(topPanel);
+                            topFrame.add(new RoomPanel());
+                            topFrame.repaint();
+                            topFrame.revalidate();
+                            topFrame.pack();
+                            break;
+                        }
+                        else {
+                            topFrame.dispatchEvent(new WindowEvent(topFrame, WindowEvent.WINDOW_CLOSING));
+                            // Todo : be more verbose with client
+                        }
                     } catch (NullPointerException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }

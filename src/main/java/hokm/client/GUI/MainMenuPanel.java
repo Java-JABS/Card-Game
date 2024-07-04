@@ -2,7 +2,8 @@ package hokm.client.GUI;
 
 import hokm.messages.JoinRequest;
 import hokm.messages.RoomCreateRequest;
-import hokm.server.RequestException;
+import hokm.messages.RequestErrorMessage;
+import hokm.messages.RequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.RoundRectangle2D;
 
 public class MainMenuPanel extends JPanel {
     private final Logger logger = LoggerFactory.getLogger(MainFrame.class);
@@ -111,7 +111,7 @@ public class MainMenuPanel extends JPanel {
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
-                    if(e.getMessage().equals("Player is already in a room!"))
+                    if(e.getErrorMessage()== RequestErrorMessage.IN_ROOM)
                     {
                         logger.info("Try to join previous room.");
                         topFrame.remove(MainMenuPanel.this);

@@ -2,7 +2,7 @@ package hokm.client.GUI;
 
 import hokm.Card;
 import hokm.messages.PutCardRequest;
-import hokm.server.RequestException;
+import hokm.messages.RequestException;
 
 import javax.swing.*;
 import java.awt.*;

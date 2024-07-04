@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import hokm.messages.ClientRequest;
 import hokm.messages.ServerResponse;
-import hokm.server.RequestException;
+import hokm.messages.RequestErrorMessage;
+import hokm.messages.RequestException;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,7 +31,7 @@ public class ClientRequestSender {
             message.setToken(token);
             sendBuffer.writeUTF(gsonAgent.toJson(message));
             ServerResponse response = gsonAgent.fromJson(receiveBuffer.readUTF(), ServerResponse.class);
-            if (response.wasNotSuccessful()) throw new RequestException(response.getAdditionalInfo());
+            if (response.wasNotSuccessful()) throw new RequestException(gsonAgent.fromJson(response.getAdditionalInfo(), RequestErrorMessage.class));
             return response.getAdditionalInfo();
         } catch (IOException e) {
             throw new RuntimeException();

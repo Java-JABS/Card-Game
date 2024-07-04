@@ -4,6 +4,8 @@ import hokm.Card;
 import hokm.CardsSuit;
 import hokm.Dast;
 import hokm.GameUpdate;
+import hokm.messages.RequestErrorMessage;
+import hokm.messages.RequestException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -148,15 +150,15 @@ public class Game {
     public void putCard(Player player, Card card) throws RequestException {
         synchronized (this) {
             if (gameState != GameState.PUT_CARD)
-                throw new RequestException("Can not put card right now!");
+                throw new RequestException(RequestErrorMessage.NOT_PUT_STATE);
             //change exeptionTypes :)
             if (!players.contains(player)) throw new RuntimeException();
-            if (!player.dast.contains(card)) throw new RequestException("You don't Have this Card!");
-            if (onTableCards.size() == 4) throw new RequestException("You can not put card right now!");
-            if (player != currentPlayer) throw new RequestException("It's not your turn!");
+            if (!player.dast.contains(card)) throw new RequestException(RequestErrorMessage.NOT_HAVE_CARD);
+            if (onTableCards.size() == 4) throw new RequestException(RequestErrorMessage.NOT_PUT_STATE);
+            if (player != currentPlayer) throw new RequestException(RequestErrorMessage.NOT_YOUR_TURN);
             if (!onTableCards.isEmpty()) if (card.suit() != onTableCards.get(0).suit())
                 if (player.dast.contains(onTableCards.get(0).suit()))
-                    throw new RequestException("You should select a " + onTableCards.get(0).suit().toString().toLowerCase() + " card!");
+                    throw new RequestException(RequestErrorMessage.NOT_GROUND_SUIT);
             minorUpdate = new GameUpdate(majorUpdate);
             player.dast.remove(card);
             onTableCards.add(card);
@@ -181,9 +183,9 @@ public class Game {
     public void hokm(Player player, CardsSuit rule) throws RequestException {
         synchronized (this) {
             if (gameState != GameState.HOKM)
-                throw new RequestException("Can not hokm right now!");
+                throw new RequestException(RequestErrorMessage.NOT_HOKM_STATE);
             if (!players.contains(player)) throw new RuntimeException();
-            if (player != ruler) throw new RequestException("You are not the ruler!");
+            if (player != ruler) throw new RequestException(RequestErrorMessage.NOT_RULER);
             if (rule == null) throw new RuntimeException();
             this.rule = rule;
             minorUpdate = new GameUpdate(majorUpdate);

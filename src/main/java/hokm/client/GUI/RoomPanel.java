@@ -4,7 +4,7 @@ import hokm.RoomUpdate;
 import hokm.client.ClientRequestSender;
 import hokm.messages.GameStartRequest;
 import hokm.messages.RoomUpdateRequest;
-import hokm.server.RequestException;
+import hokm.messages.RequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

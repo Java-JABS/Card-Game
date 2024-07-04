@@ -1,6 +1,8 @@
 package hokm.server;
 
 import hokm.RoomUpdate;
+import hokm.messages.RequestErrorMessage;
+import hokm.messages.RequestException;
 
 import java.util.ArrayList;
 
@@ -21,8 +23,8 @@ public class Room {
 
     public void join(Player newPlayer) throws RequestException {
         synchronized (this) {
-            if (newPlayer.getRoom() != null) throw new RequestException("You are already in a room!");
-            if (players.size() >= capacity) throw new RequestException("Room is full!");
+            if (newPlayer.getRoom() != null) throw new RequestException(RequestErrorMessage.IN_ROOM);
+            if (players.size() >= capacity) throw new RequestException(RequestErrorMessage.ROOM_FULL);
             players.add(newPlayer);
             newPlayer.setRoom(this);
             names.add(newPlayer.name);
@@ -55,7 +57,7 @@ public class Room {
                 return;
 
             }
-            throw new RequestException("Room is not reached its capacity! (" + capacity + ")");
+            throw new RequestException(RequestErrorMessage.ROOM_NOT_FULL);
         }
     }
 

@@ -126,7 +126,7 @@ public class Server extends Thread {
                         break;
                 }
             } catch (RequestException e) {
-                sendResponse(false, e.getMessage());
+                sendResponse(false, gsonAgent.toJson(e.getErrorMessage()));
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 sendResponse(false, "Server Side Error!");
@@ -189,7 +189,7 @@ public class Server extends Thread {
         Room room = new Room();
         if (rooms.putIfAbsent(token, room) != null) {
             logger.warn("failed to create room :( reason: duplicate room token!");
-            throw new RequestException("Couldn't create room!\nTry again.");
+            throw new RequestException(RequestErrorMessage.CREATE_ROOM);
         }
         return room;
     }
@@ -199,15 +199,15 @@ public class Server extends Thread {
             String name = database.getUsername(request.getToken());
             if (name != null) {
                 playersByToken.put(request.getToken(), new Player(name, request.getToken()));
-            } else throw new RequestException("You are not signed up!");
+            } else throw new RequestException(RequestErrorMessage.NOT_SIGNED_UP);
         }
     }
 
     private void isInRoom(Player player, boolean isInRoom) throws RequestException {
         if (player.isInARoom() != isInRoom) {
             if (isInRoom)
-                throw new RequestException("Player is not in a room!");
-            else throw new RequestException("Player is already in a room!");
+                throw new RequestException(RequestErrorMessage.NOT_IN_ROOM);
+            else throw new RequestException(RequestErrorMessage.IN_ROOM);
         }
     }
 
@@ -222,7 +222,7 @@ public class Server extends Thread {
 
     private void joinPlayerToRoom(Player player, String roomToken) throws RequestException {
         Room room = rooms.get(roomToken);
-        if (room == null) throw new RequestException("Room doesn't exists!");
+        if (room == null) throw new RequestException(RequestErrorMessage.ROOM_NOT_EXISTS);
         room.join(player);
     }
 
@@ -253,7 +253,7 @@ public class Server extends Thread {
         synchronized (room) {
             if (room.getPlayers().get(0).equals(player))
                 room.startGame();
-            else throw new RequestException("You are not room owner!");
+            else throw new RequestException(RequestErrorMessage.NOT_ROOM_OWNER);
         }
         logger.info("game started");
         sendResponse(true);
@@ -262,8 +262,8 @@ public class Server extends Thread {
     private void isInGame(Player player, boolean isInGame) throws RequestException {
         if (player.isInAGame() != isInGame) {
             if (isInGame)
-                throw new RequestException("Player is not in a game!");
-            else throw new RequestException("Player is already in a game!");
+                throw new RequestException(RequestErrorMessage.NOT_IN_GAME);
+            else throw new RequestException(RequestErrorMessage.IN_GAME);
         }
     }
 
@@ -271,7 +271,7 @@ public class Server extends Thread {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
         isInGame(player, true);
-        logger.info("updating game");
+        logger.debug("updating game");
         sendResponse(true, gsonAgent.toJson(player.getGameUpdate(request.isMajorUpdate())));
     }
 

@@ -1,6 +1,7 @@
 package hokm.server;
 
 import hokm.*;
+import hokm.messages.RequestException;
 
 import java.util.Objects;
 
