@@ -178,7 +178,8 @@ public class OuterGamePanel extends JPanel {
         upperPanel.add(hokmIconLabel, hokmIconLabelGrid);
 
         JButton leaveGameButton = new JButton();
-
+        leaveGameButton.setOpaque(true);
+        leaveGameButton.setBackground(new Color(0x0FFFFFF, true));
         leaveGameButton.setPreferredSize(new Dimension(50,50));
         leaveGameButton.setIcon(new ImageIcon(Assets.getImageIcon("LeaveGameIcon.png").getImage().getScaledInstance(50, -1, Image.SCALE_SMOOTH)));
         leaveGameButton.setFont(new Font("Arial", Font.BOLD, 15));
@@ -199,11 +200,12 @@ public class OuterGamePanel extends JPanel {
             public void mouseReleased(MouseEvent mouseEvent) {}
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-                leaveGameButton.setBorder(BorderFactory.createLineBorder(Color.RED, 7));
+                leaveGameButton.setBorder(BorderFactory.createLineBorder(new Color(0xDA1629), 5));
             }
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
                 leaveGameButton.setBorder(null);
+                repaint();
             }
         });
         upperPanel.add(leaveGameButton, leaveGameButtonGrid);
