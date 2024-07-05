@@ -55,13 +55,13 @@ public class GamePanel extends JPanel {
         profileNameLabels[1].setText("Name");
         profileNameLabels[1].setOpaque(true);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,0,0,350);
+        gridBagConstraints.insets = new Insets(0,0,0,550);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         rightPlayerPanel.add(profileNameLabels[1], gridBagConstraints);
         profilePictureLabels[1].setPreferredSize(profilePicturesDimension);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,0,0,350);
+        gridBagConstraints.insets = new Insets(0,0,0,550);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         rightPlayerPanel.add(profilePictureLabels[1], gridBagConstraints);
@@ -69,7 +69,7 @@ public class GamePanel extends JPanel {
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new Insets(0, 0, 0, 50);
+        gridBagConstraints.insets = new Insets(0, 0, 0, 30);
         rightPlayerPanel.add(playedCardLabels[1], gridBagConstraints);
         add(rightPlayerPanel, BorderLayout.EAST);
 
@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
         leftPlayerPanel.setLayout(new GridBagLayout());
         profileNameLabels[3].setText("Name");
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,350,0,0);
+        gridBagConstraints.insets = new Insets(0,550,0,0);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         leftPlayerPanel.add(profileNameLabels[3], gridBagConstraints);
@@ -86,12 +86,12 @@ public class GamePanel extends JPanel {
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new Insets(0, 50, 0, 0);
+        gridBagConstraints.insets = new Insets(0, 30, 0, 0);
         leftPlayerPanel.add(playedCardLabels[3], gridBagConstraints);
         profilePictureLabels[3].setPreferredSize(profilePicturesDimension);
         profilePictureLabels[3].setAlignmentY(1.5F);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,350,0,0);
+        gridBagConstraints.insets = new Insets(0,550,0,0);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         leftPlayerPanel.add(profilePictureLabels[3], gridBagConstraints);
