@@ -167,9 +167,9 @@ public class OuterGamePanel extends JPanel {
         JLabel hokmIconLabel = new JLabel();
         hokmIconLabel.setForeground(Color.BLACK);
         Border b = new LineBorder(Color.BLACK, 1);
-        TitledBorder b2 = BorderFactory.createTitledBorder(b, "HOKM");
-        b2.setTitleColor(Color.WHITE);
-        hokmIconLabel.setBorder(b2);
+//        TitledBorder b2 = BorderFactory.createTitledBorder(b, "HOKM");
+//        b2.setTitleColor(Color.WHITE);
+        hokmIconLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         hokmIconLabel.setPreferredSize(new Dimension(78,78));
         GridBagConstraints hokmIconLabelGrid = new GridBagConstraints();
         hokmIconLabelGrid.gridx = 2;
