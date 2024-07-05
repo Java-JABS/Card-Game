@@ -278,12 +278,7 @@ public class OuterGamePanel extends JPanel {
                                 }
                                 if(newGameUpdate.getRule()!=null){
                                     logger.debug("Updating rule");
-                                    switch (gameUpdate.getRule()){
-                                        case DIAMONDS :hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Diamond-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
-                                        case SPADES :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Spades-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
-                                        case CLUBS:    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Clubs-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
-                                        case HEARTS :  hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon("Hearts-Hokm.png").getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
-                                    }
+                                    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon(gameUpdate.getRule().toString()).getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
                                 }
                                 if(newGameUpdate.getCurrentPlayer()!=null){
                                     logger.debug("Updating current player");
@@ -295,7 +290,7 @@ public class OuterGamePanel extends JPanel {
                         }
                     } catch (RequestException e) {
                         if (e.getErrorMessage() == RequestErrorMessage.NOT_IN_GAME) {
-                            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "The game has ended!", "Warning", JOptionPane.WARNING_MESSAGE);
                             topFrame.setMinimumSize(new Dimension(0,0));
                             topFrame.remove(topPanel);
                             topFrame.add(new RoomPanel());
@@ -305,8 +300,8 @@ public class OuterGamePanel extends JPanel {
                             break;
                         }
                         else {
+                            JOptionPane.showMessageDialog(null, "Unknown error happend!\nexisting!", "Warning", JOptionPane.WARNING_MESSAGE);
                             topFrame.dispatchEvent(new WindowEvent(topFrame, WindowEvent.WINDOW_CLOSING));
-                            // Todo : be more verbose with client
                         }
                     } catch (NullPointerException | IllegalAccessException e) {
                         throw new RuntimeException(e);
