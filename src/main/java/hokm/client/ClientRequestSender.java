@@ -3,9 +3,9 @@ package hokm.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import hokm.messages.ClientRequest;
-import hokm.messages.ServerResponse;
 import hokm.messages.RequestErrorMessage;
 import hokm.messages.RequestException;
+import hokm.messages.ServerResponse;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,14 +24,15 @@ public class ClientRequestSender {
         this.port = port;
     }
 
-    public <T extends ClientRequest> String sendMessage(T message) throws RequestException {
+    public synchronized <T extends ClientRequest> String sendMessage(T message) throws RequestException {
         try (Socket socket = new Socket(hostAddress, port)) {
             DataOutputStream sendBuffer = new DataOutputStream(socket.getOutputStream());
             DataInputStream receiveBuffer = new DataInputStream(socket.getInputStream());
             message.setToken(token);
             sendBuffer.writeUTF(gsonAgent.toJson(message));
             ServerResponse response = gsonAgent.fromJson(receiveBuffer.readUTF(), ServerResponse.class);
-            if (response.wasNotSuccessful()) throw new RequestException(gsonAgent.fromJson(response.getAdditionalInfo(), RequestErrorMessage.class));
+            if (response.wasNotSuccessful())
+                throw new RequestException(gsonAgent.fromJson(response.getAdditionalInfo(), RequestErrorMessage.class));
             return response.getAdditionalInfo();
         } catch (IOException e) {
             throw new RuntimeException();

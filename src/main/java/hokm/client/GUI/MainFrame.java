@@ -16,8 +16,8 @@ import java.util.Scanner;
 
 public class MainFrame extends JFrame {
 
-    ClientRequestSender client;
     private final Logger logger = LoggerFactory.getLogger(MainFrame.class);
+    ClientRequestSender client;
 
 
     public MainFrame() {

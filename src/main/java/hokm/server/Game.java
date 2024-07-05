@@ -67,7 +67,7 @@ public class Game {
             for (Team team : teams)
                 team.clearRound();
             minorUpdate.setTeams(teams);
-            previousGameState=gameState;
+            previousGameState = gameState;
             gameState = (teams[0].getSet() >= 1 || teams[1].getSet() >= 1) ? GameState.END : GameState.HOKM;
             minorUpdate.setGameState(gameState);
             if (gameState == GameState.END) {
@@ -116,14 +116,14 @@ public class Game {
             onTableCards.clear();
             minorUpdate.setOnTableCards(onTableCards);
             if (teams[0].getRound() == 7 || teams[1].getRound() == 7) {
-                previousGameState=gameState;
+                previousGameState = gameState;
                 gameState = GameState.NEW_SET;
                 int rulerIndex = players.indexOf(ruler);
                 int winnerTeam = (teams[0].getRound() == 7) ? 0 : 1;
                 newSet(players.get((rulerIndex + abs(rulerIndex % 2 - winnerTeam)) % 4));
             } else {
                 minorUpdate.setGameState(gameState);
-                previousGameState=gameState;
+                previousGameState = gameState;
                 gameState = GameState.PUT_CARD;
                 majorUpdate.update(minorUpdate);
             }
@@ -166,14 +166,14 @@ public class Game {
             currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % 4);
             minorUpdate.setCurrentPlayer(players.indexOf(currentPlayer));
             if (onTableCards.size() == 4) {
-                previousGameState=gameState;
+                previousGameState = gameState;
                 gameState = GameState.NEXT_ROUND;
                 minorUpdate.setGameState(gameState);
                 majorUpdate.update(minorUpdate);
                 new Thread(this::newRound).start();
                 return;
             }
-            previousGameState=gameState;
+            previousGameState = gameState;
             gameState = GameState.PUT_CARD;
             minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
@@ -194,7 +194,7 @@ public class Game {
             for (Player playerI : players)
                 if (playerI != ruler) playerI.dast.addAll(dast.popFromStart(13));
             minorUpdate.setOnTableCards(onTableCards);
-            previousGameState=gameState;
+            previousGameState = gameState;
             gameState = GameState.PUT_CARD;
             minorUpdate.setGameState(gameState);
             majorUpdate.update(minorUpdate);
@@ -212,14 +212,15 @@ public class Game {
                 gameUpdate.setDast(player.dast);
             } else {
                 gameUpdate = minorUpdate.clone();
-                if((player==ruler && (previousGameState==GameState.HOKM|| gameState==GameState.HOKM)) || previousGameState==GameState.HOKM)
+                if ((player == ruler && (previousGameState == GameState.HOKM || gameState == GameState.HOKM)) || previousGameState == GameState.HOKM)
                     gameUpdate.setDast(player.dast);
             }
             notify();
             return gameUpdate;
         }
     }
-    public void endGame(){
+
+    public void endGame() {
         synchronized (this) {
             room.endGame();
         }

@@ -48,12 +48,12 @@ public class CardButton extends JButton {
                 setLocation(point);
                 setVerticalTextPosition(SwingConstants.BOTTOM);
                 setHorizontalTextPosition(SwingConstants.CENTER);
-                isMouseEntered=true;
+                isMouseEntered = true;
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-                if(!isMouseEntered) return;
+                if (!isMouseEntered) return;
                 Dimension size = getSize();
                 size.height -= deltaY;
                 setSize(size);
@@ -62,7 +62,7 @@ public class CardButton extends JButton {
                 setLocation(point);
                 setVerticalTextPosition(SwingConstants.BOTTOM);
                 setHorizontalTextPosition(SwingConstants.CENTER);
-                isMouseEntered=false;
+                isMouseEntered = false;
             }
         });
     }

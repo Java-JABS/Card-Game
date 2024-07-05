@@ -20,6 +20,7 @@ public enum RequestErrorMessage {
 
     ;
     final String message;
+
     RequestErrorMessage(String message) {
         this.message = message;
     }

@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
     private final JPanel cardDeckPanel = new JPanel(new GridBagLayout());
 
     private final JLabel[] profilePictureLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
-    private final JLabel[] profileNameLabels = {new JLabel("",SwingConstants.CENTER), new JLabel("",SwingConstants.CENTER), new JLabel("",SwingConstants.CENTER), new JLabel("",SwingConstants.CENTER)};
+    private final JLabel[] profileNameLabels = {new JLabel("", SwingConstants.CENTER), new JLabel("", SwingConstants.CENTER), new JLabel("", SwingConstants.CENTER), new JLabel("", SwingConstants.CENTER)};
     private final JLabel[] playedCardLabels = {new JLabel(), new JLabel(), new JLabel(), new JLabel()};
     private final ArrayList<CardButton> cardButtons = new ArrayList<>(13);
 
@@ -39,9 +39,9 @@ public class GamePanel extends JPanel {
         this.centerPanel.setOpaque(false);
         this.cardDeckPanel.setOpaque(false);
         this.setOpaque(false);
-        for (int i = 0; i < this.profileNameLabels.length; i++) {
-            this.profileNameLabels[i].setBackground(new Color(0xB1431C));
-            this.profileNameLabels[i].setForeground(Color.WHITE);
+        for (JLabel profileNameLabel : this.profileNameLabels) {
+            profileNameLabel.setBackground(new Color(0xB1431C));
+            profileNameLabel.setForeground(Color.WHITE);
         }
 
 
@@ -55,13 +55,13 @@ public class GamePanel extends JPanel {
         profileNameLabels[1].setText("Name");
         profileNameLabels[1].setOpaque(true);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,0,0,550);
+        gridBagConstraints.insets = new Insets(0, 0, 0, 550);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         rightPlayerPanel.add(profileNameLabels[1], gridBagConstraints);
         profilePictureLabels[1].setPreferredSize(profilePicturesDimension);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,0,0,550);
+        gridBagConstraints.insets = new Insets(0, 0, 0, 550);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         rightPlayerPanel.add(profilePictureLabels[1], gridBagConstraints);
@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
         leftPlayerPanel.setLayout(new GridBagLayout());
         profileNameLabels[3].setText("Name");
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,550,0,0);
+        gridBagConstraints.insets = new Insets(0, 550, 0, 0);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         leftPlayerPanel.add(profileNameLabels[3], gridBagConstraints);
@@ -91,7 +91,7 @@ public class GamePanel extends JPanel {
         profilePictureLabels[3].setPreferredSize(profilePicturesDimension);
         profilePictureLabels[3].setAlignmentY(1.5F);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(0,550,0,0);
+        gridBagConstraints.insets = new Insets(0, 550, 0, 0);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         leftPlayerPanel.add(profilePictureLabels[3], gridBagConstraints);
@@ -102,9 +102,9 @@ public class GamePanel extends JPanel {
         profilePictureLabels[2].setPreferredSize(profilePicturesDimension);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new Insets(10,0,0,0);
+        gridBagConstraints.insets = new Insets(10, 0, 0, 0);
 
-        upPlayerPanel.add(profilePictureLabels[2],gridBagConstraints);
+        upPlayerPanel.add(profilePictureLabels[2], gridBagConstraints);
         profileNameLabels[2].setText("Name");
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -124,8 +124,8 @@ public class GamePanel extends JPanel {
         GridBagConstraints g = new GridBagConstraints();
         g.gridx = 0;
         g.gridy = 0;
-        g.insets = new Insets(0,0,10,0);
-        myProfilePanel.add(playedCardLabels[0],g);
+        g.insets = new Insets(0, 0, 10, 0);
+        myProfilePanel.add(playedCardLabels[0], g);
         profileNameLabels[0].setText("Name");
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -150,8 +150,8 @@ public class GamePanel extends JPanel {
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
 
-        for (int i = 0; i < this.profileNameLabels.length; i++) {
-            this.profileNameLabels[i].setOpaque(false);
+        for (JLabel profileNameLabel : this.profileNameLabels) {
+            profileNameLabel.setOpaque(false);
         }
 
         for (int i = 0; i < 13; i++) {
@@ -160,7 +160,7 @@ public class GamePanel extends JPanel {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
                 try {
                     topFrame.client.sendMessage(new PutCardRequest(cardButtons.get(finalI).getCard()));
-                        cardDeckPanel.remove(cardButtons.get(finalI));
+                    cardDeckPanel.remove(cardButtons.get(finalI));
                     cardDeckPanel.repaint();
                     cardDeckPanel.revalidate();
                 } catch (RequestException e) {
@@ -183,15 +183,15 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void clearDeckCardButtons(){
-        for (CardButton cardButton:cardButtons)
+    public void clearDeckCardButtons() {
+        for (CardButton cardButton : cardButtons)
             cardDeckPanel.remove(cardButton);
         repaint();
         revalidate();
     }
 
     public void setDeckCardButtons(ArrayList<Card> list) {
-        for (int i = list.size() -1; i >= 0; i--) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             CardButton cardButton = cardButtons.get(i);
             cardButton.setCard(list.get(i));
             add(cardButton);
@@ -200,13 +200,13 @@ public class GamePanel extends JPanel {
             bGrid.insets = new Insets(0, -15, 0, -15);
             cardDeckPanel.add(cardButton, bGrid);
         }
-        for (CardButton cardButton: cardButtons)
+        for (CardButton cardButton : cardButtons)
             cardButton.setMouseEntered(false);
     }
 
     public void setProfileNameLabelsText(ArrayList<String> list, int index) {
         for (int i = 0; i < list.size(); i++) {
-            profileNameLabels[(i - index + 4) % 4].setPreferredSize(new Dimension(profileNameLabels[i].getWidth()+50, profileNameLabels[i].getHeight()+20));
+            profileNameLabels[(i - index + 4) % 4].setPreferredSize(new Dimension(profileNameLabels[i].getWidth() + 50, profileNameLabels[i].getHeight() + 20));
             profileNameLabels[(i - index + 4) % 4].setText(list.get(i));
         }
     }
@@ -218,9 +218,9 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void setCurrentPlayer(int index){
+    public void setCurrentPlayer(int index) {
         for (int i = 0; i < profileNameLabels.length; i++)
-            profileNameLabels[i].setOpaque(i==index);
+            profileNameLabels[i].setOpaque(i == index);
         repaint();
     }
 }

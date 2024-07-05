@@ -80,7 +80,7 @@ public class Player {
     }
 
     public void leaveGame() {
-        synchronized (this){
+        synchronized (this) {
             game.endGame();
         }
     }

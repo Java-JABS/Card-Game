@@ -15,8 +15,4 @@ public class GameUpdateRequest extends ClientRequest {
     public boolean isMajorUpdate() {
         return isMajorUpdate;
     }
-
-    public void setMajorUpdate(boolean majorUpdate) {
-        isMajorUpdate = majorUpdate;
-    }
 }

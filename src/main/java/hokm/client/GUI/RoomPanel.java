@@ -4,8 +4,8 @@ import hokm.RoomUpdate;
 import hokm.client.ClientRequestSender;
 import hokm.messages.GameStartRequest;
 import hokm.messages.LeaveRequest;
-import hokm.messages.RoomUpdateRequest;
 import hokm.messages.RequestException;
+import hokm.messages.RoomUpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,20 +18,20 @@ import static java.lang.Thread.sleep;
 
 public class RoomPanel extends JPanel {
 
+    private final Logger logger = LoggerFactory.getLogger(RoomPanel.class);
     JLabel roomLabel = new JLabel();
     JTextArea names = new JTextArea();
     JTextField showToken = new JTextField(SwingConstants.CENTER);
     JButton startButton = new JButton("Start Game");
     JButton leaveRoomButton = new JButton("Leave Room");
     RoomUpdate roomUpdate = new RoomUpdate();
-    private final Logger logger = LoggerFactory.getLogger(RoomPanel.class);
     Color blackGUI = new Color(0xDC000000, false);
     Color whiteGUI = new Color(0x9FEBEBF1, true);
 
     public RoomPanel() {
 
         roomLabel.setLayout(new GridBagLayout());
-        ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("background.jpg").getImage().getScaledInstance(1920,-1,Image.SCALE_SMOOTH));
+        ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("background.jpg").getImage().getScaledInstance(1920, -1, Image.SCALE_SMOOTH));
         roomLabel.setIcon(roomLabelPicture);
 
         leaveRoomButton.setBackground(blackGUI);
@@ -90,9 +90,6 @@ public class RoomPanel extends JPanel {
         });
 
 
-
-
-
         startButton.setBackground(blackGUI);
         startButton.setForeground(Color.WHITE);
         startButton.setOpaque(true);
@@ -145,7 +142,8 @@ public class RoomPanel extends JPanel {
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
                 startButton.setBackground(blackGUI);
-                startButton.setForeground(Color.WHITE);repaint();
+                startButton.setForeground(Color.WHITE);
+                repaint();
             }
         });
 

@@ -10,9 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,17 +19,15 @@ import static java.lang.Thread.sleep;
 
 public class OuterGamePanel extends JPanel {
 
+    private final Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
     JLabel team1Sets = new JLabel("0", SwingConstants.CENTER);
     JLabel team1Rounds = new JLabel("0", SwingConstants.CENTER);
     JLabel team2Sets = new JLabel("0", SwingConstants.CENTER);
     JLabel team2Rounds = new JLabel("0", SwingConstants.CENTER);
     GamePanel gamePanel = new GamePanel();
     GameUpdate gameUpdate = new GameUpdate();
-    private final OuterGameLabel topPanel;
-    private final Logger logger = LoggerFactory.getLogger(OuterGamePanel.class);
 
     OuterGamePanel(OuterGameLabel topPanel) {
-        this.topPanel = topPanel;
         team1Sets.setOpaque(true);
         team1Sets.setBackground(Color.GRAY);
         team1Sets.setForeground(Color.WHITE);
@@ -62,7 +57,6 @@ public class OuterGamePanel extends JPanel {
         team.setPreferredSize(new Dimension(175, 25));
         team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints teamGrid = new GridBagConstraints();
-        teamGrid.insets = new Insets(5,0,0,0);
         teamGrid.gridx = 0;
         teamGrid.gridy = 0;
         teamGrid.insets = new Insets(1, 1, 1, 1);
@@ -74,7 +68,6 @@ public class OuterGamePanel extends JPanel {
         sets.setPreferredSize(new Dimension(50, 25));
         sets.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints setsGrid = new GridBagConstraints();
-        setsGrid.insets = new Insets(5,0,0,0);
         setsGrid.gridx = 1;
         setsGrid.gridy = 0;
         setsGrid.insets = new Insets(1, 1, 1, 1);
@@ -86,7 +79,6 @@ public class OuterGamePanel extends JPanel {
         round.setPreferredSize(new Dimension(50, 25));
         round.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         GridBagConstraints roundGrid = new GridBagConstraints();
-        roundGrid.insets = new Insets(5,0,0,0);
         roundGrid.gridx = 2;
         roundGrid.gridy = 0;
         roundGrid.insets = new Insets(1, 1, 1, 1);
@@ -148,7 +140,7 @@ public class OuterGamePanel extends JPanel {
         GridBagConstraints scoreTablePanelGrid = new GridBagConstraints();
         scoreTablePanelGrid.gridx = 1;
         scoreTablePanelGrid.gridy = 0;
-        scoreTablePanelGrid.insets = new Insets(0,0,0,0);
+        scoreTablePanelGrid.insets = new Insets(0, 0, 0, 0);
         scoreTablePanel.add(team, teamGrid);
         scoreTablePanel.add(sets, setsGrid);
         scoreTablePanel.add(round, roundGrid);
@@ -163,26 +155,25 @@ public class OuterGamePanel extends JPanel {
 
         JLabel hokmIconLabel = new JLabel();
         hokmIconLabel.setForeground(Color.BLACK);
-        Border b = new LineBorder(Color.BLACK, 1);
         hokmIconLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        hokmIconLabel.setPreferredSize(new Dimension(78,78));
+        hokmIconLabel.setPreferredSize(new Dimension(78, 78));
         GridBagConstraints hokmIconLabelGrid = new GridBagConstraints();
         hokmIconLabelGrid.gridx = 2;
         hokmIconLabelGrid.gridy = 0;
-        hokmIconLabelGrid.insets = new Insets(0,50,0,0);
+        hokmIconLabelGrid.insets = new Insets(0, 50, 0, 0);
         upperPanel.add(hokmIconLabel, hokmIconLabelGrid);
 
         JButton leaveGameButton = new JButton();
         leaveGameButton.setOpaque(true);
         leaveGameButton.setBackground(new Color(0x0FFFFFF, true));
-        leaveGameButton.setPreferredSize(new Dimension(50,50));
+        leaveGameButton.setPreferredSize(new Dimension(50, 50));
         leaveGameButton.setIcon(new ImageIcon(Assets.getImageIcon("LeaveGameIcon.png").getImage().getScaledInstance(50, -1, Image.SCALE_SMOOTH)));
         leaveGameButton.setFont(new Font("Arial", Font.BOLD, 15));
         leaveGameButton.setBorder(null);
         GridBagConstraints leaveGameButtonGrid = new GridBagConstraints();
         leaveGameButtonGrid.gridx = 0;
         leaveGameButtonGrid.gridy = 0;
-        leaveGameButtonGrid.insets = new Insets(0,0,0,50);
+        leaveGameButtonGrid.insets = new Insets(0, 0, 0, 50);
         leaveGameButton.setFocusable(false);
         leaveGameButton.addMouseListener(new MouseListener() {
             @Override
@@ -196,14 +187,20 @@ public class OuterGamePanel extends JPanel {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
+
             @Override
-            public void mousePressed(MouseEvent mouseEvent) {}
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
             @Override
-            public void mouseReleased(MouseEvent mouseEvent) {}
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
                 leaveGameButton.setBorder(BorderFactory.createLineBorder(new Color(0xDA1629), 5));
             }
+
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
                 leaveGameButton.setBorder(null);
@@ -213,21 +210,22 @@ public class OuterGamePanel extends JPanel {
         upperPanel.add(leaveGameButton, leaveGameButtonGrid);
 
 
-
         this.add(upperPanel, BorderLayout.NORTH);
         new Thread(() -> {
             MainFrame topFrame = null;
-            while (topFrame ==null){topFrame= (MainFrame) SwingUtilities.getWindowAncestor(this);}
+            while (topFrame == null) {
+                topFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+            }
             topFrame.setExtendedState(topFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-            topFrame.setMinimumSize(new Dimension(1140,1000));
+            topFrame.setMinimumSize(new Dimension(1140, 1000));
             boolean isTeamNamesSet = false;
             while (true) {
                 try {
                     sleep(1000);
                     try {
-                        GameUpdate lastGameUpdate  = gameUpdate;
+                        GameUpdate lastGameUpdate = gameUpdate;
                         logger.trace("Request for Game Update :-)");
-                        GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new GameUpdateRequest(gameUpdate.getNumber()==0)), GameUpdate.class);
+                        GameUpdate newGameUpdate = ClientRequestSender.gsonAgent.fromJson(topFrame.client.sendMessage(new GameUpdateRequest(gameUpdate.getNumber() == 0)), GameUpdate.class);
                         switch (newGameUpdate.getNumber() - gameUpdate.getNumber()) {
                             case 0:
                                 break;
@@ -237,9 +235,10 @@ public class OuterGamePanel extends JPanel {
                             case 1:
                                 newGameUpdate.updatesFrom(gameUpdate);
                                 gameUpdate.update(newGameUpdate);
-                                if(newGameUpdate.getGameState()==GameState.NEW_SET || (lastGameUpdate.getGameState()==GameState.HOKM && lastGameUpdate.getCurrentRuler()== lastGameUpdate.getYourIndex())){
+                                if (newGameUpdate.getGameState() == GameState.NEW_SET || (lastGameUpdate.getGameState() == GameState.HOKM && lastGameUpdate.getCurrentRuler() == lastGameUpdate.getYourIndex())) {
                                     logger.debug("Clearing Table");
-                                    gamePanel.clearDeckCardButtons();}
+                                    gamePanel.clearDeckCardButtons();
+                                }
                                 if (newGameUpdate.getDast() != null) {
                                     logger.debug("Updating Dast");
                                     gamePanel.clearDeckCardButtons();
@@ -271,35 +270,35 @@ public class OuterGamePanel extends JPanel {
                                     logger.debug("Updating profile pictures");
                                     gamePanel.setProfilePictureLabelsIcon(gameUpdate.getCurrentRuler() - gameUpdate.getYourIndex());
                                 }
-                                if (!isTeamNamesSet){
-                                    isTeamNamesSet=true;
-                                    team1.setText((gameUpdate.getYourIndex()%2==0)?"Your team":"Opponent Team");
-                                    team2.setText((gameUpdate.getYourIndex()%2!=0)?"Your team":"Opponent Team");
+                                if (!isTeamNamesSet) {
+                                    isTeamNamesSet = true;
+                                    team1.setText((gameUpdate.getYourIndex() % 2 == 0) ? "Your team" : "Opponent Team");
+                                    team2.setText((gameUpdate.getYourIndex() % 2 != 0) ? "Your team" : "Opponent Team");
                                 }
-                                if(newGameUpdate.getRule()!=null){
+                                if (newGameUpdate.getRule() != null) {
                                     logger.debug("Updating rule");
-                                    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon(gameUpdate.getRule().toString()).getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));break;
+                                    hokmIconLabel.setIcon(new ImageIcon(Assets.getImageIcon(gameUpdate.getRule().toString()).getImage().getScaledInstance(hokmIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+                                    break;
                                 }
-                                if(newGameUpdate.getCurrentPlayer()!=null){
+                                if (newGameUpdate.getCurrentPlayer() != null) {
                                     logger.debug("Updating current player");
-                                    gamePanel.setCurrentPlayer((gameUpdate.getCurrentPlayer()-gameUpdate.getYourIndex()+4)%4);
+                                    gamePanel.setCurrentPlayer((gameUpdate.getCurrentPlayer() - gameUpdate.getYourIndex() + 4) % 4);
                                 }
-                                if(gameUpdate.getGameState()==GameState.NEXT_ROUND){
+                                if (gameUpdate.getGameState() == GameState.NEXT_ROUND) {
                                     sleep(1000);
                                 }
                         }
                     } catch (RequestException e) {
                         if (e.getErrorMessage() == RequestErrorMessage.NOT_IN_GAME) {
                             JOptionPane.showMessageDialog(null, "The game has ended!", "Warning", JOptionPane.WARNING_MESSAGE);
-                            topFrame.setMinimumSize(new Dimension(0,0));
+                            topFrame.setMinimumSize(new Dimension(0, 0));
                             topFrame.remove(topPanel);
                             topFrame.add(new RoomPanel());
                             topFrame.repaint();
                             topFrame.revalidate();
                             topFrame.pack();
                             break;
-                        }
-                        else {
+                        } else {
                             JOptionPane.showMessageDialog(null, "Unknown error happend!\nexisting!", "Warning", JOptionPane.WARNING_MESSAGE);
                             topFrame.dispatchEvent(new WindowEvent(topFrame, WindowEvent.WINDOW_CLOSING));
                         }

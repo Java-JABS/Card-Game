@@ -9,11 +9,11 @@ import java.util.Collections;
 
 public class Room {
     final int capacity;
+    final String token;
     private final ArrayList<Player> players = new ArrayList<>();
     RoomUpdate roomUpdate = new RoomUpdate();
     ArrayList<String> names = new ArrayList<>();
     private Game game;
-    final String token;
 
     public Room(int capacity, String token) {
         this.capacity = capacity;
@@ -36,7 +36,7 @@ public class Room {
         }
     }
 
-    public void leave(Player player) throws RequestException{
+    public void leave(Player player) throws RequestException {
         synchronized (this) {
             if (roomUpdate.getGameStarted()) throw new RequestException(RequestErrorMessage.IN_GAME);
             names.remove(player.name);
@@ -55,7 +55,7 @@ public class Room {
     public void startGame() throws RequestException {
         synchronized (this) {
             if (isReady()) {
-                ArrayList<Player> shuffledPlayers= (ArrayList<Player>) players.clone();
+                ArrayList<Player> shuffledPlayers = new ArrayList<>(players);
                 Collections.shuffle(shuffledPlayers);
                 game = new Game(shuffledPlayers, this);
                 for (Player player : players)

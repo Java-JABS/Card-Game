@@ -22,24 +22,24 @@ public class Assets {
         return getImageIcon("cards/" + card.suit() + '/' + card.value() + ".png");
     }
 
-    public static URL getResource(String filename){
+    public static URL getResource(String filename) {
         return Assets.class.getClassLoader().getResource(filename);
     }
 
-    public static void playBackgroundMusic(String filename){
-                if(backgroundClip ==null){
-                    try {
-                        backgroundClip = AudioSystem.getClip();
-                    } catch (LineUnavailableException e) {
-                        logger.warn("Audio is not available!");
-                        return;
-                    }
-                }
-                if (backgroundAudioInput !=null){
-                        backgroundClip.stop();
-                }
+    public static void playBackgroundMusic(String filename) {
+        if (backgroundClip == null) {
+            try {
+                backgroundClip = AudioSystem.getClip();
+            } catch (LineUnavailableException e) {
+                logger.warn("Audio is not available!");
+                return;
+            }
+        }
+        if (backgroundAudioInput != null) {
+            backgroundClip.stop();
+        }
         try {
-            backgroundAudioInput =AudioSystem.getAudioInputStream(getResource("musics/"+filename));
+            backgroundAudioInput = AudioSystem.getAudioInputStream(getResource("musics/" + filename));
             backgroundClip.open(backgroundAudioInput);
             backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException e) {

@@ -1,9 +1,9 @@
 package hokm.client.GUI;
 
 import hokm.messages.JoinRequest;
-import hokm.messages.RoomCreateRequest;
 import hokm.messages.RequestErrorMessage;
 import hokm.messages.RequestException;
+import hokm.messages.RoomCreateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,21 +43,14 @@ public class MainMenuPanel extends JPanel {
                 MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
                 try {
                     logger.info("Try to create a room");
-                    String roomToken = topFrame.client.sendMessage(new RoomCreateRequest());
+                    topFrame.client.sendMessage(new RoomCreateRequest());
                     topFrame.remove(MainMenuPanel.this);
                     topFrame.add(new RoomPanel());
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
                     logger.warn("Unable to create room, Reason: {}", e.getMessage());
-                    if(e.getMessage().equals("Player is already in a room!"))
-                    {
-                        logger.info("Try to join previous room.");
-                        topFrame.remove(MainMenuPanel.this);
-                        topFrame.add(new RoomPanel());
-                        topFrame.revalidate();
-                        topFrame.repaint();
-                    }
+                    if (e.getErrorMessage() == RequestErrorMessage.IN_GAME) joinPreviseGame();
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
@@ -73,8 +66,6 @@ public class MainMenuPanel extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-
-
                 createNewGameButton.setBackground(whiteGUI);
                 createNewGameButton.setForeground(Color.BLACK);
                 repaint();
@@ -111,13 +102,8 @@ public class MainMenuPanel extends JPanel {
                     topFrame.revalidate();
                     topFrame.repaint();
                 } catch (RequestException e) {
-                    if(e.getErrorMessage()== RequestErrorMessage.IN_ROOM)
-                    {
-                        logger.info("Try to join previous room.");
-                        topFrame.remove(MainMenuPanel.this);
-                        topFrame.add(new RoomPanel());
-                        topFrame.revalidate();
-                        topFrame.repaint();
+                    if (e.getErrorMessage() == RequestErrorMessage.IN_ROOM) {
+                        joinPreviseGame();
                     }
                     logger.warn("Unable to Join , Reason : {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
@@ -134,8 +120,6 @@ public class MainMenuPanel extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-
-
                 joinExistingGameButton.setBackground(whiteGUI);
                 joinExistingGameButton.setForeground(Color.BLACK);
                 repaint();
@@ -153,5 +137,14 @@ public class MainMenuPanel extends JPanel {
         mainMenuLabel.add(createNewGameButton, createNewGameButtonGrid);
 
         add(mainMenuLabel);
+    }
+
+    void joinPreviseGame() {
+        MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(MainMenuPanel.this);
+        logger.info("Try to join previous room.");
+        topFrame.remove(MainMenuPanel.this);
+        topFrame.add(new RoomPanel());
+        topFrame.revalidate();
+        topFrame.repaint();
     }
 }

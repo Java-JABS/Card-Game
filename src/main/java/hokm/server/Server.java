@@ -21,9 +21,9 @@ public class Server extends Thread {
     private static final Gson gsonAgent = builder.create();
     private static final HashMap<String, Room> rooms = new HashMap<>();
     private static final HashMap<String, Player> playersByToken = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
     private static ServerSocket serverSocket;
     private static Database database;
-    private static final Logger logger = LoggerFactory.getLogger(Server.class);
     private DataOutputStream sendBuffer;
 
     private Server(ServerSocket serverSocket, int workerNumbs) throws IOException, SQLException {
@@ -236,8 +236,7 @@ public class Server extends Thread {
                     player.leaveGame();
                     logger.info("player left the room");
                 } else throw new RequestException(RequestErrorMessage.IN_GAME);
-            }
-            else player.leaveRoom();
+            } else player.leaveRoom();
             sendResponse(true);
         }
     }
