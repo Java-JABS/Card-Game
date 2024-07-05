@@ -191,12 +191,6 @@ public class OuterGamePanel extends JPanel {
                 try {
                     logger.info("Request for leaving game.");
                     topFrame.client.sendMessage(new LeaveRequest(true));
-                    topFrame.setMinimumSize(new Dimension(0,0));
-                    topFrame.remove(topPanel);
-                    topFrame.add(new RoomPanel());
-                    topFrame.repaint();
-                    topFrame.revalidate();
-                    topFrame.pack();
                 } catch (RequestException e) {
                     logger.warn("Failed to request, Reason: {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
