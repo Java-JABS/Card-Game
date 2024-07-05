@@ -30,7 +30,7 @@ public class RoomPanel extends JPanel {
     public RoomPanel() {
 
         roomLabel.setLayout(new GridBagLayout());
-        ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("intro.jpg").getImage().getScaledInstance(1000,-1,Image.SCALE_SMOOTH));
+        ImageIcon roomLabelPicture = new ImageIcon(Assets.getImageIcon("background.jpg").getImage().getScaledInstance(1920,-1,Image.SCALE_SMOOTH));
         roomLabel.setIcon(roomLabelPicture);
 
         leaveRoomButton.setBackground(blackGUI);
