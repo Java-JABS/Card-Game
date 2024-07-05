@@ -5,6 +5,7 @@ import hokm.messages.RequestErrorMessage;
 import hokm.messages.RequestException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Room {
     final int capacity;
@@ -35,12 +36,13 @@ public class Room {
         }
     }
 
-    public boolean leave(Player player) {
+    public void leave(Player player) throws RequestException{
         synchronized (this) {
+            if (roomUpdate.getGameStarted()) throw new RequestException(RequestErrorMessage.IN_GAME);
             names.remove(player.name);
             roomUpdate.setPlayerNames(names);
             player.setRoom(null);
-            return players.remove(player);
+            players.remove(player);
         }
     }
 
@@ -53,7 +55,9 @@ public class Room {
     public void startGame() throws RequestException {
         synchronized (this) {
             if (isReady()) {
-                game = new Game(players, this);
+                ArrayList<Player> shuffledPlayers= (ArrayList<Player>) players.clone();
+                Collections.shuffle(shuffledPlayers);
+                game = new Game(shuffledPlayers, this);
                 for (Player player : players)
                     player.setGame(game);
                 roomUpdate.setGameStarted(true);
@@ -83,6 +87,5 @@ public class Room {
             game = null;
             roomUpdate.setGameStarted(false);
         }
-
     }
 }

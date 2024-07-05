@@ -3,6 +3,7 @@ package hokm.client.GUI;
 import hokm.RoomUpdate;
 import hokm.client.ClientRequestSender;
 import hokm.messages.GameStartRequest;
+import hokm.messages.LeaveRequest;
 import hokm.messages.RoomUpdateRequest;
 import hokm.messages.RequestException;
 import org.slf4j.Logger;
@@ -46,8 +47,20 @@ public class RoomPanel extends JPanel {
         leaveRoomButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-
-
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(RoomPanel.this);
+                try {
+                    logger.info("Request for leave room.");
+                    topFrame.client.sendMessage(new LeaveRequest(false));
+                    topFrame.remove(RoomPanel.this);
+                    topFrame.repaint();
+                    topFrame.revalidate();
+                    topFrame.add(new MainMenuPanel());
+                    topFrame.repaint();
+                    topFrame.revalidate();
+                } catch (RequestException e) {
+                    logger.warn("Failed to leave, Reason: {}", e.getMessage());
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                }
             }
 
             @Override
@@ -101,6 +114,8 @@ public class RoomPanel extends JPanel {
                     logger.info("Request for game start.");
                     topFrame.client.sendMessage(new GameStartRequest());
                     topFrame.remove(RoomPanel.this);
+                    topFrame.repaint();
+                    topFrame.revalidate();
                     topFrame.add(new OuterGameLabel());
                     topFrame.repaint();
                     topFrame.revalidate();
@@ -183,9 +198,12 @@ public class RoomPanel extends JPanel {
                     showToken.setText(" Room token: " + newRoomUpdate.getToken());
                     if (roomUpdate.getGameStarted()) {
                         topFrame.remove(RoomPanel.this);
+                        topFrame.repaint();
+                        topFrame.revalidate();
                         topFrame.add(new OuterGameLabel());
                         topFrame.repaint();
                         topFrame.revalidate();
+                        break;
                     }
                     roomUpdate = newRoomUpdate;
                     sleep(1000);
@@ -194,6 +212,8 @@ public class RoomPanel extends JPanel {
                 } catch (RequestException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                     topFrame.remove(RoomPanel.this);
+                    topFrame.repaint();
+                    topFrame.revalidate();
                     topFrame.add(new MainMenuPanel());
                     topFrame.repaint();
                     topFrame.revalidate();

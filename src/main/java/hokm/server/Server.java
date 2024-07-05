@@ -230,17 +230,15 @@ public class Server extends Thread {
         isLoggedIn(request);
         Player player = playersByToken.get(request.getToken());
         isInRoom(player, true);
-        // Todo: create a leaveGame method
         {
             if (player.isInAGame()) {
                 if (request.isForceLeaveGame()) {
-                    // Todo : leave game and room
+                    player.leaveGame();
                     logger.info("player left the room");
-                    sendResponse(true);
-                } else sendResponse(false, "Can't leave room while in a game!");
+                } else throw new RequestException(RequestErrorMessage.IN_GAME);
             }
-            // Todo : leave room
-            else sendResponse(true);
+            else player.leaveRoom();
+            sendResponse(true);
         }
     }
 

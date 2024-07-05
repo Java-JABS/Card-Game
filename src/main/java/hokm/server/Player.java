@@ -68,7 +68,20 @@ public class Player {
     }
 
     public RoomUpdate getRoomUpdate() {
-        return room.getUpdate();
+        synchronized (this) {
+            return room.getUpdate();
+        }
     }
 
+    public void leaveRoom() throws RequestException {
+        synchronized (this) {
+            room.leave(this);
+        }
+    }
+
+    public void leaveGame() {
+        synchronized (this){
+            game.endGame();
+        }
+    }
 }

@@ -71,9 +71,9 @@ public class Game {
             gameState = (teams[0].getSet() >= 1 || teams[1].getSet() >= 1) ? GameState.END : GameState.HOKM;
             minorUpdate.setGameState(gameState);
             if (gameState == GameState.END) {
-                waitForEveryoneToGetUpdate.run();
-                room.endGame();
                 majorUpdate.update(minorUpdate);
+                waitForEveryoneToGetUpdate.run();
+                endGame();
                 return;
             }
             dast = new Dast(true);
@@ -217,6 +217,11 @@ public class Game {
             }
             notify();
             return gameUpdate;
+        }
+    }
+    public void endGame(){
+        synchronized (this) {
+            room.endGame();
         }
     }
 }

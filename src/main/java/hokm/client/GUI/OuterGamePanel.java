@@ -3,11 +3,8 @@ package hokm.client.GUI;
 import hokm.CardsSuit;
 import hokm.GameUpdate;
 import hokm.client.ClientRequestSender;
-import hokm.messages.GameUpdateRequest;
-import hokm.messages.HokmRequest;
+import hokm.messages.*;
 import hokm.server.GameState;
-import hokm.messages.RequestErrorMessage;
-import hokm.messages.RequestException;
 import hokm.server.Team;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,8 +164,6 @@ public class OuterGamePanel extends JPanel {
         JLabel hokmIconLabel = new JLabel();
         hokmIconLabel.setForeground(Color.BLACK);
         Border b = new LineBorder(Color.BLACK, 1);
-//        TitledBorder b2 = BorderFactory.createTitledBorder(b, "HOKM");
-//        b2.setTitleColor(Color.WHITE);
         hokmIconLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         hokmIconLabel.setPreferredSize(new Dimension(78,78));
         GridBagConstraints hokmIconLabelGrid = new GridBagConstraints();
@@ -192,7 +187,20 @@ public class OuterGamePanel extends JPanel {
         leaveGameButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-
+                MainFrame topFrame = (MainFrame) SwingUtilities.getWindowAncestor(OuterGamePanel.this);
+                try {
+                    logger.info("Request for leaving game.");
+                    topFrame.client.sendMessage(new LeaveRequest(true));
+                    topFrame.setMinimumSize(new Dimension(0,0));
+                    topFrame.remove(topPanel);
+                    topFrame.add(new RoomPanel());
+                    topFrame.repaint();
+                    topFrame.revalidate();
+                    topFrame.pack();
+                } catch (RequestException e) {
+                    logger.warn("Failed to request, Reason: {}", e.getMessage());
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+                }
             }
             @Override
             public void mousePressed(MouseEvent mouseEvent) {}
