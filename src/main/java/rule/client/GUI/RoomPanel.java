@@ -51,12 +51,6 @@ public class RoomPanel extends JPanel {
                 try {
                     logger.info("Request for leave room.");
                     topFrame.client.sendMessage(new LeaveRequest(false));
-                    topFrame.remove(RoomPanel.this);
-                    topFrame.repaint();
-                    topFrame.revalidate();
-                    topFrame.add(new MainMenuPanel());
-                    topFrame.repaint();
-                    topFrame.revalidate();
                 } catch (RequestException e) {
                     logger.warn("Failed to leave, Reason: {}", e.getMessage());
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
