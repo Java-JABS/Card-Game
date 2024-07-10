@@ -221,7 +221,7 @@ public class OuterGamePanel extends JPanel {
             boolean isTeamNamesSet = false;
             while (true) {
                 try {
-                    sleep(1000);
+                    sleep(300);
                     try {
                         GameUpdate lastGameUpdate = gameUpdate;
                         logger.trace("Request for Game Update :-)");
@@ -277,7 +277,7 @@ public class OuterGamePanel extends JPanel {
                                 }
                                 if (newGameUpdate.getRule() != null) {
                                     logger.debug("Updating rule");
-                                    ruleIconLabel.setIcon(new ImageIcon(Assets.getImageIcon(gameUpdate.getRule().toString()).getImage().getScaledInstance(ruleIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+                                    ruleIconLabel.setIcon(new ImageIcon(Assets.getImageIcon(gameUpdate.getRule().toString()+".png").getImage().getScaledInstance(ruleIconLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
                                     break;
                                 }
                                 if (newGameUpdate.getCurrentPlayer() != null) {
