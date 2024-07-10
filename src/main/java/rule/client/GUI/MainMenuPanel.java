@@ -50,7 +50,7 @@ public class MainMenuPanel extends JPanel {
                     topFrame.repaint();
                 } catch (RequestException e) {
                     logger.warn("Unable to create room, Reason: {}", e.getMessage());
-                    if (e.getErrorMessage() == RequestErrorMessage.IN_GAME) joinPreviseGame();
+                    if (e.getErrorMessage() == RequestErrorMessage.IN_ROOM) joinPreviseGame();
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
