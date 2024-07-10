@@ -50,4 +50,11 @@ public class Assets {
             logger.warn("Couldn't get a line to play Audio!");
         }
     }
+
+    public static void pauseBackground(){
+        backgroundClip.stop();
+    }
+    public static void resumeBackground(){
+        backgroundClip.start();
+    }
 }

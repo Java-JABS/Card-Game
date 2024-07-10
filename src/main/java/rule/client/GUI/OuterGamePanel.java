@@ -28,6 +28,7 @@ public class OuterGamePanel extends JPanel {
     GameUpdate gameUpdate = new GameUpdate();
 
     OuterGamePanel(OuterGameLabel topPanel) {
+        Assets.pauseBackground();
         team1Sets.setOpaque(true);
         team1Sets.setBackground(Color.GRAY);
         team1Sets.setForeground(Color.WHITE);
@@ -297,6 +298,7 @@ public class OuterGamePanel extends JPanel {
                             topFrame.repaint();
                             topFrame.revalidate();
                             topFrame.pack();
+                            Assets.resumeBackground();
                             break;
                         } else {
                             JOptionPane.showMessageDialog(null, "Unknown error happend!\nexisting!", "Warning", JOptionPane.WARNING_MESSAGE);
